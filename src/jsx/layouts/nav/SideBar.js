@@ -986,7 +986,7 @@ class SideBar extends Component {
 				<div className="copyright">
 					  <p className="fs-14 font-w200">
 						 <strong className="font-w400">
-							Eclan Dashboard
+							VeggieGo Dashboard
 						 </strong>{" "}
 						 Dashboard © 2021 All Rights Reserved
 					  </p>

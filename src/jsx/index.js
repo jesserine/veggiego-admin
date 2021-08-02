@@ -192,7 +192,7 @@ const Markup = ({ showProfileSideBar }) => {
    path = path[path.length - 1];
    let pagePath = path.split("-").includes("page");
    return (
-      <Router basename="/react">
+      <Router basename="/">
          <div
             id={`${!pagePath ? "main-wrapper" : ""}`}
             className={`${!pagePath ? "show" : "mh100vh"} ${

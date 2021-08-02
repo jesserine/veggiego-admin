@@ -20,7 +20,7 @@ function Home() {
          <div className="form-head d-flex mb-0 mb-lg-4 align-items-start">
             <div className="mr-auto d-none d-lg-block">
                <h2 className="text-black font-w600 mb-1">Dashboard</h2>
-               <p className="mb-0">Welcome to Eclan Ads Campaign Dashboard</p>
+               <p className="mb-0">Welcome to Veggie Go Admin Dashboard</p>
             </div>
             <div className="d-none d-lg-flex align-items-center">
                <div className="text-right">
