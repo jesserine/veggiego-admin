@@ -257,7 +257,7 @@ class SideBar extends Component {
                               Profile
                            </Link>
                         </li>
-						<li>
+						      <li>
                            <Link
                               className={`${
                                  path === "post-details" ? "mm-active" : ""
@@ -988,10 +988,10 @@ class SideBar extends Component {
 						 <strong className="font-w400">
 							VeggieGo Dashboard
 						 </strong>{" "}
-						 Dashboard © 2021 All Rights Reserved
+						© 2021 All Rights Reserved
 					  </p>
 					  <p>
-						 Made with <span class="heart"></span> by DexignZone
+						 Made with <span class="heart"></span> by Astradevlabs
 					  </p>
                 </div>
                

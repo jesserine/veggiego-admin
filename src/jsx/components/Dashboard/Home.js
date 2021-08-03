@@ -32,7 +32,7 @@ function Home() {
                   to="/"
                >
                   <i className="las la-cog scale5" />
-               </Link>
+               </Link> 
             </div>
          </div>
          <div className="row">
