@@ -237,6 +237,51 @@ class SideBar extends Component {
                         </li>
                      </ul>
                   </li>
+
+                  <li className={`${app.includes(path) ? "mm-active" : ""}`}>
+                     <Link
+                        className="has-arrow ai-icon"
+                        to="#"
+                        aria-expanded="false"
+                     >
+                        <i className="flaticon-381-user-9"></i>
+                        <span className="nav-text">Customers</span>
+                     </Link>
+                  </li>
+
+                  <li className={`${app.includes(path) ? "mm-active" : ""}`}>
+                     <Link
+                        className="has-arrow ai-icon"
+                        to="#"
+                        aria-expanded="false"
+                     >
+                        <i className="flaticon-381-route"></i>
+                        <span className="nav-text">Riders</span>
+                     </Link>
+                  </li>
+
+                  <li className={`${app.includes(path) ? "mm-active" : ""}`}>
+                     <Link
+                        className="has-arrow ai-icon"
+                        to="#"
+                        aria-expanded="false"
+                     >
+                        <i className="flaticon-381-star"></i>
+                        <span className="nav-text">Products</span>
+                     </Link>
+                  </li>
+
+                  <li className={`${app.includes(path) ? "mm-active" : ""}`}>
+                     <Link
+                        className="has-arrow ai-icon"
+                        to="#"
+                        aria-expanded="false"
+                     >
+                        <i className="flaticon-381-list-1"></i>
+                        <span className="nav-text">Orders</span>
+                     </Link>
+                  </li>
+
                   <li className={`${app.includes(path) ? "mm-active" : ""}`}>
                      <Link
                         className="has-arrow ai-icon"
