@@ -61,6 +61,12 @@ import DataTable from "../components/table/DataTable";
 import BootstrapTable from "../components/table/BootstrapTable";
 import ApexChart from "../components/charts/apexcharts";
 
+/// Customers
+import CustomerList from '../components/Customers/CustomerList';
+
+/// Riders
+import RidersList from '../components/Riders/RidersList';
+
 /// Widget
 import Widget from "../pages/Widget";
 
@@ -82,7 +88,7 @@ import RechartJs from "../components/charts/rechart";
 
 const Routes = () => {
    const routes = [
-      /// Deshborad
+      /// Dashboard
       { url: "", component: Home },
       { url: "application", component: Application },
       { url: "profile", component: Profile },
@@ -135,6 +141,18 @@ const Routes = () => {
       /// table
       { url: "table-datatable-basic", component: DataTable },
       { url: "table-bootstrap-basic", component: BootstrapTable },
+      
+      // Customer
+      { url: "customers", component: CustomerList },
+
+      /// Riders
+      { url: "riders", component: RidersList },
+
+      /// Orders
+      { url: "orders", component: CustomerList },
+
+      /// Products
+      { url: "products", component: CustomerList },
 
       /// Widget
       { url: "widget-basic", component: Widget },

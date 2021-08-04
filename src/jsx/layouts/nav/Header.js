@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 /// Image
-import profile from "../../../images/profile/pic1.jpg";
+import profile from "../../../images/profile/kmb.jpeg";
 import avatar from "../../../images/avatar/1.jpg";
 import { Dropdown } from "react-bootstrap";
 import ProfileSidebar from "../ProfileSidebar";
@@ -196,7 +196,7 @@ const Header = ({
                            </Link>
                         </div>
                      </li>
-                    
+                     
                      {!path && (
                         <li className="nav-item dropdown header-profile">
                            <Link
@@ -206,7 +206,7 @@ const Header = ({
                               onClick={() => onProfile()}
                            >
                               <div className="header-info">
-                                 <span>Samuel Anderson</span>
+                                 <span>Kent Michael Baguion</span>
                               </div>
                               <img src={profile} width={20} alt="" />
                            </Link>
@@ -285,7 +285,7 @@ const Header = ({
                            </div>
                         </li>
                      )}
-
+                     { console.log(path) }
                      {path && (
                         <li className="nav-item dropdown d-none d-xl-flex">
                            <Link className="btn btn-primary" to="/new-compaign">
@@ -303,7 +303,7 @@ const Header = ({
                            >
                               <div className="header-info">
                                  <span>
-                                    Hello, <strong>Samuel</strong>
+                                    Hello, <strong>Kent</strong>
                                  </span>
                               </div>
 

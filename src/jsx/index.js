@@ -32,6 +32,12 @@ import Spendings from "./components/Dashboard/Spendings";
 import Analytics from "./components/Dashboard/Analytics";
 import NewCompaign from "./components/Dashboard/NewCompaign";
 
+/// Customer
+import CustomerList from './components/Customers/CustomerList';
+
+/// Riders
+import RidersList from './components/Riders/RidersList';
+
 /// Bo
 import UiAlert from "./components/bootstrap/Alert";
 import UiAccordion from "./components/bootstrap/Accordion";
@@ -101,13 +107,26 @@ import Lightgallery from "./components/PluginsMenu/Lightgallery/Lightgallery";
 const Markup = ({ showProfileSideBar }) => {
    const [showProfile, setShowProfile] = useState(false);
    const routes = [
-      /// Deshborad
+      // Dashboard
       { url: "", component: Home },
       { url: "campaign", component: Campaign },
       { url: "social-network-campaign", component: SocialNetworkCampaign },
       { url: "spendings", component: Spendings },
       { url: "analytics", component: Analytics },
       { url: "new-compaign", component: NewCompaign },
+
+      // Customers
+      { url: "customers", component: CustomerList },
+
+      // Riders
+      { url: "riders", component: RidersList },
+
+      // Orders
+      { url: "orders", component: CustomerList },
+
+      // Products
+      { url: "products", component: CustomerList },
+
       /// Bootstrap
       { url: "ui-alert", component: UiAlert },
       { url: "ui-badge", component: UiBadge },

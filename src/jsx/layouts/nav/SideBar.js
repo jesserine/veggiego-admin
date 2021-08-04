@@ -156,6 +156,18 @@ class SideBar extends Component {
             "page-error-404",
             "page-error-500",
             "page-error-503",
+         ],
+         customers = [
+            "customers",
+         ],
+         riders = [
+            "riders"
+         ],
+         products = [
+            "products"
+         ],
+         orders = [
+            "orders"
          ];
       return (
          <div className="deznav">
@@ -168,80 +180,17 @@ class SideBar extends Component {
                   >
                      <Link
                         className="has-arrow ai-icon"
-                        to="#"
-                        aria-expanded="false"
+                        to="/"
                      >
                         <i className="flaticon-381-networking"></i>
                         <span className="nav-text">Dashboard</span>
                      </Link>
-                     <ul aria-expanded="false">
-                        <li>
-                           <Link
-                              to="/"
-                              className={`${path === "" ? "mm-active" : ""}`}
-                           >
-                              Dashboard
-                           </Link>
-                        </li>
-                        <li>
-                           <Link
-                              to="/campaign"
-                              className={`${
-                                 path === "campaign" ? "mm-active" : ""
-                              }`}
-                           >
-                              Campaign
-                           </Link>
-                        </li>
-                        <li>
-                           <Link
-                              to="/social-network-campaign"
-                              className={`${
-                                 path === "social-network-campaign"
-                                    ? "mm-active"
-                                    : ""
-                              }`}
-                           >
-                              Social Network Campaign
-                           </Link>
-                        </li>
-                        <li>
-                           <Link
-                              to="/spendings"
-                              className={`${
-                                 path === "spendings" ? "mm-active" : ""
-                              }`}
-                           >
-                              Spendings
-                           </Link>
-                        </li>
-                        <li>
-                           <Link
-                              to="/analytics"
-                              className={`${
-                                 path === "analytics" ? "mm-active" : ""
-                              }`}
-                           >
-                              Analytics
-                           </Link>
-                        </li>
-                        <li>
-                           <Link
-                              to="/new-compaign"
-                              className={`${
-                                 path === "new-campaign" ? "mm-active" : ""
-                              }`}
-                           >
-                              New Compaign
-                           </Link>
-                        </li>
-                     </ul>
                   </li>
 
-                  <li className={`${app.includes(path) ? "mm-active" : ""}`}>
+                  <li className={`${customers.includes(path) ? "mm-active" : ""}`}>
                      <Link
                         className="has-arrow ai-icon"
-                        to="#"
+                        to="/customers"
                         aria-expanded="false"
                      >
                         <i className="flaticon-381-user-9"></i>
@@ -249,35 +198,35 @@ class SideBar extends Component {
                      </Link>
                   </li>
 
-                  <li className={`${app.includes(path) ? "mm-active" : ""}`}>
+                  <li className={`${riders.includes(path) ? "mm-active" : ""}`}>
                      <Link
                         className="has-arrow ai-icon"
-                        to="#"
+                        to="/riders"
                         aria-expanded="false"
                      >
-                        <i className="flaticon-381-route"></i>
+                        <i className="las la-biking scale5"></i>
                         <span className="nav-text">Riders</span>
                      </Link>
                   </li>
 
-                  <li className={`${app.includes(path) ? "mm-active" : ""}`}>
+                  <li className={`${products.includes(path) ? "mm-active" : ""}`}>
                      <Link
                         className="has-arrow ai-icon"
-                        to="#"
+                        to="/products"
                         aria-expanded="false"
                      >
-                        <i className="flaticon-381-star"></i>
+                        <i className="la la-shopping-cart scale5"></i>
                         <span className="nav-text">Products</span>
                      </Link>
                   </li>
 
-                  <li className={`${app.includes(path) ? "mm-active" : ""}`}>
+                  <li className={`${orders.includes(path) ? "mm-active" : ""}`}>
                      <Link
                         className="has-arrow ai-icon"
-                        to="#"
+                        to="/orders"
                         aria-expanded="false"
                      >
-                        <i className="flaticon-381-list-1"></i>
+                        <i className="las la-carrot scale5"></i>
                         <span className="nav-text">Orders</span>
                      </Link>
                   </li>

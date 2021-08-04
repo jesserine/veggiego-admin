@@ -68,10 +68,6 @@ function ProfileSidebar({ addClass, hideProfile }) {
             </Link>
          </div>
          <hr />
-         <div className="card-campaign mt-5">
-            <h5>Ad Campaign Tutorials Video</h5>
-            <Link to="#" className="fa fa-play" />
-         </div>
       </PerfectScrollbar>
    );
 }
