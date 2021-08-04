@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import profileImage from "../../images/profile/profile.png";
+import profileImage from "../../images/profile/kmb.jpeg";
 
 /// Scroll
 import PerfectScrollbar from "react-perfect-scrollbar";
@@ -47,22 +47,19 @@ function ProfileSidebar({ addClass, hideProfile }) {
             <img src={profileImage} width={140} height={140} alt="" />
          </div>
          <div className="profile-info-bx mb-4">
-            <h4 className="mb-1 fs-22">Samuel Anderson</h4>
+            <h4 className="mb-1 fs-22">Kent Michael Baguion</h4>
             <span>Admin</span>
          </div>
          <div className="text-center mb-5">
             <Link to="#" className="btn text-left light btn-dark d-block mb-3 ">
-               <i className="fa fa-instagram scale5 mr-3" />
-               /samuelanderson.404
+               <i className="fa fa-map-marker scale5 mr-3" />
+               Public Market Bldg B. Grocery Section
             </Link>
-            <Link to="#" className="btn text-left light btn-dark d-block mb-3 ">
-               <i className="fa fa-twitter scale5 mr-3" />
-               /samuel.404nderson
-            </Link>
-            <Link to="#" className="btn text-left light btn-dark d-block mb-4 ">
+            <Link to={{ pathname: "https://www.facebook.com/VeggieGoDelivery" }} target="_blank" className="btn text-left light btn-dark d-block mb-3 ">
                <i className="fa fa-facebook scale5 mr-3" />
-               /talksamuel.404
+               /VeggieGoDelivery
             </Link>
+          
             <Link
                to="/app-profile"
                className="btn btn-outline-dark d-block btn-lg"

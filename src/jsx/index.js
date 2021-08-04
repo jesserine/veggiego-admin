@@ -213,7 +213,6 @@ const Markup = ({ showProfileSideBar }) => {
             )}
             <div
                className={`  ${!pagePath ? "content-body" : ""}`}
-              
             >
                <div className={`${!pagePath ? "container-fluid" : ""}`}>
                   <Switch>
