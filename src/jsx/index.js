@@ -24,7 +24,7 @@ import Error503 from "./pages/Error503";
 /// Widget
 import Widget from "./pages/Widget";
 
-/// Deshboard
+/// Dashboard
 import Home from "./components/Dashboard/Home";
 import Campaign from "./components/Dashboard/Campaign";
 import SocialNetworkCampaign from "./components/Dashboard/SocialNetworkCampaign";
@@ -37,6 +37,12 @@ import CustomerList from './components/Customers/CustomerList';
 
 /// Riders
 import RidersList from './components/Riders/RidersList';
+
+/// Orders 
+import OrdersList from './components/Orders/OrdersList';
+
+/// Products 
+import ProductsList from './components/Products/ProductsList';
 
 /// Bo
 import UiAlert from "./components/bootstrap/Alert";
@@ -122,10 +128,10 @@ const Markup = ({ showProfileSideBar }) => {
       { url: "riders", component: RidersList },
 
       // Orders
-      { url: "orders", component: CustomerList },
+      { url: "orders", component: OrdersList },
 
       // Products
-      { url: "products", component: CustomerList },
+      { url: "products", component: ProductsList },
 
       /// Bootstrap
       { url: "ui-alert", component: UiAlert },

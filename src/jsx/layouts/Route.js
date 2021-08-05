@@ -67,6 +67,12 @@ import CustomerList from '../components/Customers/CustomerList';
 /// Riders
 import RidersList from '../components/Riders/RidersList';
 
+/// Orders
+import OrdersList from '../components/Orders/OrdersList';
+
+/// Products
+import ProductsList from '../components/Products/ProductsList';
+
 /// Widget
 import Widget from "../pages/Widget";
 
@@ -149,10 +155,10 @@ const Routes = () => {
       { url: "riders", component: RidersList },
 
       /// Orders
-      { url: "orders", component: CustomerList },
+      { url: "orders", component: OrdersList },
 
       /// Products
-      { url: "products", component: CustomerList },
+      { url: "products", component: ProductsList },
 
       /// Widget
       { url: "widget-basic", component: Widget },
