@@ -34,6 +34,7 @@ import NewCompaign from "./components/Dashboard/NewCompaign";
 
 /// Customer
 import CustomerList from './components/Customers/CustomerList';
+import CustomerForm from "./components/Customers/CustomerForm";
 
 /// Riders
 import RidersList from './components/Riders/RidersList';
@@ -123,6 +124,7 @@ const Markup = ({ showProfileSideBar }) => {
 
       // Customers
       { url: "customers", component: CustomerList },
+      { url: "customer-form", component: CustomerForm },
 
       // Riders
       { url: "riders", component: RidersList },
