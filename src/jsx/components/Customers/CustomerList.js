@@ -86,13 +86,19 @@ const CustomerList = () => {
                         <thead>
                            <tr>
                               <th className="width80">
-                                 <strong>CUSTOMER NUMBER</strong>
+                                 <strong>ID</strong>
                               </th>
                               <th>
                                  <strong>NAME</strong>
                               </th>
                               <th>
                                  <strong>CONTACT NUMBER</strong>
+                              </th>
+                              <th>
+                                 <strong>ADDRESS</strong>
+                              </th>
+                              <th>
+                                 <strong>LANDMARK</strong>
                               </th>
                               <th>
                                  <strong>CUSTOMER SINCE</strong>
@@ -104,22 +110,23 @@ const CustomerList = () => {
                            </tr>
                         </thead>
                         <tbody>
-                           <tr>
+                        {Object.keys(contactObjects).map((id) => {
+                          return (
+                            <tr key={id}>
                               <td>
-                                 <strong>01</strong>
-                              </td>
-                              <td>Mr. Bobby</td>
-                              <td>Dr. Jackson</td>
-                              <td>01 August 2020</td>
-                              <td>
-                                 <Badge variant="success light">
-                                    Successful
-                                 </Badge>
-                              </td>
+                                 <strong></strong>
+                              </td> 
+                              <td>{contactObjects[id].name}</td>
+                              <td>{contactObjects[id].contactNumber}</td>
+                              <td>{contactObjects[id].address}</td>
+                              <td>{contactObjects[id].landmark}</td>
+                              <td>{contactObjects[id].dateJoined}</td>
+                              <td>{contactObjects[id].isActive== '0'
+                                  ? <Badge variant="danger light"> Inactive </Badge>
+                                  : <Badge variant="success light"> Active </Badge>}</td>
                               <td>
                                  <Dropdown>
                                     <Dropdown.Toggle
-                                       variant="success"
                                        className="light sharp icon-false"
                                     >
                                        {svg1}
@@ -131,56 +138,8 @@ const CustomerList = () => {
                                  </Dropdown>
                               </td>
                            </tr>
-                           <tr>
-                              <td>
-                                 <strong>02</strong>
-                              </td>
-                              <td>Mr. Bobby</td>
-                              <td>Dr. Jackson</td>
-                              <td>01 August 2020</td>
-                              <td>
-                                 <Badge variant="danger light">Canceled</Badge>
-                              </td>
-                              <td>
-                                 <Dropdown>
-                                    <Dropdown.Toggle
-                                       variant="danger"
-                                       className="light sharp icon-false"
-                                    >
-                                       {svg1}
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                       <Dropdown.Item>Edit</Dropdown.Item>
-                                       <Dropdown.Item>Delete</Dropdown.Item>
-                                    </Dropdown.Menu>
-                                 </Dropdown>
-                              </td>
-                           </tr>
-                           <tr>
-                              <td>
-                                 <strong>03</strong>
-                              </td>
-                              <td>Mr. Bobby</td>
-                              <td>Dr. Jackson</td>
-                              <td>01 August 2020</td>
-                              <td>
-                                 <Badge variant="warning light">Pending</Badge>
-                              </td>
-                              <td>
-                                 <Dropdown>
-                                    <Dropdown.Toggle
-                                       variant="warning"
-                                       className="light sharp icon-false"
-                                    >
-                                       {svg1}
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                       <Dropdown.Item>Edit</Dropdown.Item>
-                                       <Dropdown.Item>Delete</Dropdown.Item>
-                                    </Dropdown.Menu>
-                                 </Dropdown>
-                              </td>
-                           </tr>
+                          )
+                        })}
                         </tbody>
                      </Table>
                   </Card.Body>

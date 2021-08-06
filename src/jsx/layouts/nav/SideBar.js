@@ -118,7 +118,7 @@ class SideBar extends Component {
                         className="has-arrow ai-icon"
                         to="/products"
                      >
-                        <i className="la la-shopping-cart scale5"></i>
+                        <i className="las la-carrot scale5"></i>
                         <span className="nav-text">Products</span>
                      </Link>
                   </li>
@@ -128,7 +128,7 @@ class SideBar extends Component {
                         className="has-arrow ai-icon"
                         to="/orders"
                      >
-                        <i className="las la-carrot scale5"></i>
+                        <i className="la la-shopping-cart scale5"></i>
                         <span className="nav-text">Orders</span>
                      </Link>
                   </li>

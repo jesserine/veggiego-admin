@@ -15,7 +15,8 @@ const CustomerForm = (props) => {
       address: '',
       landmark: '',
       housePicture: '',
-      isActive: '0'
+      isActive: '0',
+      dateJoined: new Date().toLocaleDateString()
    }
    var [values, setValues] = useState(initialFieldValues)
    var [contactObjects, setContactObjects] = useState({})
@@ -110,17 +111,19 @@ const CustomerForm = (props) => {
                                     required
                                  />
                               </div>
-                              <div className="form-group col-md-12">
-                                 <label>Address</label>
-                                 <input type="text" 
-                                 className="form-control" 
-                                 name='address'
-                                 value = {values.address}
-                                 onChange={handleInputChange}
-                                 required
-                                 />
                               </div>
-                           </div>
+                              <div className="form-row">
+                                 <div className="form-group col-md-12">
+                                    <label>Address</label>
+                                    <input type="text" 
+                                    className="form-control" 
+                                    name='address'
+                                    value = {values.address}
+                                    onChange={handleInputChange}
+                                    required
+                                    />
+                                 </div>
+                              </div>
                            <div className="form-row">
                               <div className="form-group col-md-6">
                                  <label>Landmark</label>
@@ -146,7 +149,7 @@ const CustomerForm = (props) => {
                                  </div>
                               </div>
                            </div>
-                           <div className="row">
+                           <div className="form-row">
                                  <label className="col-form-label col-sm-3 pt-0">
                                     Is Active?
                                  </label>
@@ -176,10 +179,15 @@ const CustomerForm = (props) => {
                                     </div>
                                  </div>
                               </div>
-                           <input type="submit" 
-                           value = {props.currentId == '' ? 'Save' : 'Update'}
-                           className="btn btn-primary"
-                           disabled={!enabled} />
+
+                           <div className="form-row">
+                              <div className="form-group col-md-12">
+                                 <input type="submit" 
+                                 value = {props.currentId == '' ? 'Save' : 'Update'}
+                                 className="btn btn-primary btn-block"
+                                 disabled={!enabled} />
+                              </div>
+                           </div>
                         </form>
                      </div>
                   </div>
