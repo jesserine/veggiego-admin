@@ -4,7 +4,7 @@ import firebaseDb from '../../../firebase'
 import { storage } from '../../../firebase'
 import { v4 as uuid } from 'uuid'
 
-import PageTItle from "../../layouts/PageTitle";
+import PageTitle from "../../layouts/PageTitle";
 import { SplitButton, ButtonGroup, Dropdown } from "react-bootstrap";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 

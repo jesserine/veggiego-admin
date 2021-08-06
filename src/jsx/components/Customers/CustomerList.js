@@ -132,8 +132,10 @@ const CustomerList = () => {
                                        {svg1}
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
-                                       <Dropdown.Item>Edit</Dropdown.Item>
-                                       <Dropdown.Item>Delete</Dropdown.Item>
+                                       <Dropdown.Item onClick={() => { setCurrentId(id) }}>
+                                          Edit</Dropdown.Item>
+                                       <Dropdown.Item onClick={() => { onDelete(id) }}>
+                                          Delete</Dropdown.Item>
                                     </Dropdown.Menu>
                                  </Dropdown>
                               </td>
