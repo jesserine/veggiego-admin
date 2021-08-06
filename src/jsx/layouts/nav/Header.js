@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 /// Scroll
@@ -23,14 +23,33 @@ const Header = ({
    path = path[path.length - 1];
    path = path === "";
 
+   const [dateState, setDateState] = useState(new Date());
+
+   useEffect(() => {
+      setInterval(() => setDateState(new Date()), 30000);
+   }, []);
+
    return (
       <div className="header">
          <div className="header-content">
             <nav className="navbar navbar-expand">
                <div className="collapse navbar-collapse justify-content-between">
                   <div className="header-left">
+                  <div className="d-none d-lg-flex align-items-center">
+                     <Link
+                        className="mr-4 text-black p-3 rounded border text-center width60"
+                        to="/"
+                     >
+                        <i className="las la-cog scale5" />
+                     </Link> 
+                     <div className="text-left">
+                        <h3 className="fs-20 text-black mb-0">{' '}{dateState.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric' })}</h3>
+                        <span className="fs-14">{' '}{dateState.toLocaleDateString('en-GB', { weekday: 'long' })}, {' '}{dateState.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                     </div>
+                     
+                  </div>
                   <div className="search_bar dropdown show">
-                        <div className="dropdown-menu p-0 m-0 show">
+                        {/* <div className="dropdown-menu p-0 m-0 show">
                            <form onSubmit={(e) => e.preventDefault()}>
                               <input
                                  className="form-control"
@@ -56,7 +75,7 @@ const Header = ({
                                  fill="#A4A4A4"
                               />
                            </svg>
-                        </span>
+                        </span> */}
                      </div>
                   </div>
                   <ul className="navbar-nav header-right">

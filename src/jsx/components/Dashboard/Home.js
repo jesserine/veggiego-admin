@@ -22,18 +22,7 @@ function Home() {
                <h2 className="text-black font-w600 mb-1">Dashboard</h2>
                <p className="mb-0">Welcome to Veggie Go Admin Dashboard</p>
             </div>
-            <div className="d-none d-lg-flex align-items-center">
-               <div className="text-right">
-                  <h3 className="fs-20 text-black mb-0">04:00 PM</h3>
-                  <span className="fs-14">Wednesday, 4 August 2021</span>
-               </div>
-               <Link
-                  className="ml-4 text-black p-3 rounded border text-center width60"
-                  to="/"
-               >
-                  <i className="las la-cog scale5" />
-               </Link> 
-            </div>
+            
          </div>
          <div className="row">
             <div className="col-lg-8 col-xxl-12">
