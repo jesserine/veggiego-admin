@@ -87,7 +87,7 @@ const CustomerForm = (props) => {
                      <div className="basic-form">
                         <form onSubmit={handleFormSubmit}>
                            <div className="form-row">
-                              <div className="form-group col-md-6">
+                              <div className="form-group col-md-12">
                                  <label>Name</label>
                                  <input
                                     type="text"
@@ -99,7 +99,7 @@ const CustomerForm = (props) => {
                                     required
                                  />
                               </div>
-                              <div className="form-group col-md-6">
+                              <div className="form-group col-md-12">
                                  <label>Contact Number</label>
                                  <input
                                     type="text"
@@ -125,7 +125,7 @@ const CustomerForm = (props) => {
                                  </div>
                               </div>
                            <div className="form-row">
-                              <div className="form-group col-md-6">
+                              <div className="form-group col-md-12">
                                  <label>Landmark</label>
                                  <input type="text" 
                                  className="form-control" 
@@ -134,7 +134,7 @@ const CustomerForm = (props) => {
                                  onChange={handleInputChange}
                                  />
                               </div>
-                              <div className="form-group col-md-6">
+                              <div className="form-group col-md-12">
                                  <label>House Picture</label>
                                  <div className="input-group">
                                     <div className="custom-file">
@@ -181,7 +181,7 @@ const CustomerForm = (props) => {
                               </div>
 
                            <div className="form-row">
-                              <div className="form-group col-md-12">
+                              <div className="form-group mt-4 col-md-6">
                                  <input type="submit" 
                                  value = {props.currentId === '' ? 'Save' : 'Update'}
                                  className="btn btn-primary btn-block"
