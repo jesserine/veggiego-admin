@@ -21,7 +21,7 @@ const CustomerForm = (props) => {
    var [contactObjects, setContactObjects] = useState({})
 
    useEffect(() => {
-      firebaseDb.ref('customer/profile').on('value', (snapshot) => {
+      firebaseDb.ref('customer/').on('value', (snapshot) => {
         if (snapshot.val() != null)
           setContactObjects({
             ...snapshot.val(),

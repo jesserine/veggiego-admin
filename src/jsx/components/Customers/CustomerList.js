@@ -36,7 +36,7 @@ const CustomerList = () => {
    );
 
    useEffect(() => {
-     firebaseDb.ref('customer/profile').on('value', (snapshot) => {
+     firebaseDb.ref('customer/').on('value', (snapshot) => {
        if (snapshot.val() != null)
          setContactObjects({
            ...snapshot.val(),
@@ -48,12 +48,12 @@ const CustomerList = () => {
    const addOrEdit = (obj) => {
       console.log("inside addOrEdit")
      if (currentId == '')
-       firebaseDb.ref('customer/profile').push(obj, (err) => {
+       firebaseDb.ref('customer/').push(obj, (err) => {
          if (err) console.log(err)
          else setCurrentId('')
        })
      else
-       firebaseDb.ref(`customer/profile/${currentId}`).set(obj, (err) => {
+       firebaseDb.ref(`customer/${currentId}`).set(obj, (err) => {
          if (err) console.log(err)
          else setCurrentId('')
        })
@@ -61,7 +61,7 @@ const CustomerList = () => {
  
    const onDelete = (key) => {
      if (window.confirm('Are you sure to delete this record?')) {
-       firebaseDb.ref(`customer/profile/${key}`).remove((err) => {
+       firebaseDb.ref(`customer/${key}`).remove((err) => {
          if (err) console.log(err)
          else setCurrentId('')
        })
