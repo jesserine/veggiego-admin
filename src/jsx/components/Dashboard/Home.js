@@ -55,7 +55,7 @@ function Home() {
                                     Next Day Orders
                                  </p>
                                  <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
-                                    412,531
+                                    4
                                  </h1>
                               </div>
                               <span className="ml-3 bg-warning text-white">
@@ -226,103 +226,29 @@ function Home() {
                         <div className="card-body">
                            <div>
                               <div className="d-flex align-items-center pb-3 mb-3 border-bottom">
-                                 <i className="lab la-instagram gs-icon bgl-secondary text-secondary mr-3" />
-                                 <span className="text-black fs-16 font-w600">
-                                    Instagram
+                                 <i className="las la-carrot gs-icon bgl-primary text-primary mr-3" />
+                                 <span className="text-black fs-15 font-w400">
+                                    Prepare the following products tomorrow
                                  </span>
                               </div>
                               <div className="fs-14 mb-4">
                                  <ul className="d-flex justify-content-between pb-2">
                                     <li className="font-w500 text-dark">
-                                       Ad Campaign
+                                       Carrots
                                     </li>
-                                    <li>6,788/8,000</li>
+                                    <li>3 kg</li>
                                  </ul>
                                  <ul className="d-flex justify-content-between pb-2">
                                     <li className="font-w500 text-dark">
-                                       Comments
+                                       Brocolli
                                     </li>
-                                    <li>452/800</li>
+                                    <li>5 kg</li>
                                  </ul>
                                  <ul className="d-flex justify-content-between pb-2">
                                     <li className="font-w500 text-dark">
-                                       Likes
+                                       Garlic
                                     </li>
-                                    <li>8,325/10,000</li>
-                                 </ul>
-                                 <ul className="d-flex justify-content-between pb-2">
-                                    <li className="font-w500 text-dark">
-                                       Bookmarked
-                                    </li>
-                                    <li>5,622/5,000</li>
-                                 </ul>
-                              </div>
-                           </div>
-                           <div>
-                              <div className="d-flex align-items-center pb-3 mb-3 border-bottom">
-                                 <i className="lab la-facebook-f gs-icon bgl-info text-info mr-3" />
-                                 <span className="text-black fs-16 font-w600">
-                                    Facebook
-                                 </span>
-                              </div>
-                              <div className="fs-14 mb-4">
-                                 <ul className="d-flex justify-content-between pb-2">
-                                    <li className="font-w500 text-dark">
-                                       Ad Campaign
-                                    </li>
-                                    <li>6,788/8,000</li>
-                                 </ul>
-                                 <ul className="d-flex justify-content-between pb-2">
-                                    <li className="font-w500 text-dark">
-                                       Comments
-                                    </li>
-                                    <li>452/800</li>
-                                 </ul>
-                                 <ul className="d-flex justify-content-between pb-2">
-                                    <li className="font-w500 text-dark">
-                                       Likes
-                                    </li>
-                                    <li>8,325/10,000</li>
-                                 </ul>
-                                 <ul className="d-flex justify-content-between pb-2">
-                                    <li className="font-w500 text-dark">
-                                       Bookmarked
-                                    </li>
-                                    <li>5,622/5,000</li>
-                                 </ul>
-                              </div>
-                           </div>
-                           <div>
-                              <div className="d-flex align-items-center pb-3 mb-3 border-bottom">
-                                 <i className="lab la-twitter gs-icon bgl-success text-success mr-3" />
-                                 <span className="text-black fs-16 font-w600">
-                                    Twitter
-                                 </span>
-                              </div>
-                              <div className="fs-14">
-                                 <ul className="d-flex justify-content-between pb-2">
-                                    <li className="font-w500 text-dark">
-                                       Ad Campaign
-                                    </li>
-                                    <li>6,788/8,000</li>
-                                 </ul>
-                                 <ul className="d-flex justify-content-between pb-2">
-                                    <li className="font-w500 text-dark">
-                                       Comments
-                                    </li>
-                                    <li>452/800</li>
-                                 </ul>
-                                 <ul className="d-flex justify-content-between pb-2">
-                                    <li className="font-w500 text-dark">
-                                       Likes
-                                    </li>
-                                    <li>8,325/10,000</li>
-                                 </ul>
-                                 <ul className="d-flex justify-content-between pb-2">
-                                    <li className="font-w500 text-dark">
-                                       Bookmarked
-                                    </li>
-                                    <li>5,622/5,000</li>
+                                    <li>2 kg</li>
                                  </ul>
                               </div>
                            </div>
@@ -332,7 +258,7 @@ function Home() {
                               to="/social-network-campaign"
                               className="text-primary"
                            >
-                              See More Reviews
+                              See all Next Day Orders
                            </Link>
                         </div>
                      </div>
@@ -340,9 +266,6 @@ function Home() {
                </div>
             </div>
          </div>
-         {/* </div>
-        </div>
-      </div> */}
       </>
    );
 }

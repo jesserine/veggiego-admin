@@ -181,7 +181,7 @@ const CustomerForm = (props) => {
                               </div>
 
                            <div className="form-row">
-                              <div className="form-group mt-4 col-md-6">
+                              <div className="form-group mt-4 col-md-12">
                                  <input type="submit" 
                                  value = {props.currentId === '' ? 'Save' : 'Update'}
                                  className="btn btn-primary btn-block"
