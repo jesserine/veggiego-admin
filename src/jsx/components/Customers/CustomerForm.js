@@ -81,7 +81,7 @@ const CustomerForm = (props) => {
             <div className="col-xl-12 col-lg-12">
                <div className="card">
                   <div className="card-header">
-                     <h4 className="card-title">Customer Form</h4>
+                     <h4 className="card-title">{props.currentId === '' ? 'Add' : 'Update'} Customer</h4>
                   </div>
                   <div className="card-body">
                      <div className="basic-form">
@@ -183,7 +183,7 @@ const CustomerForm = (props) => {
                            <div className="form-row">
                               <div className="form-group col-md-12">
                                  <input type="submit" 
-                                 value = {props.currentId == '' ? 'Save' : 'Update'}
+                                 value = {props.currentId === '' ? 'Save' : 'Update'}
                                  className="btn btn-primary btn-block"
                                  disabled={!enabled} />
                               </div>
