@@ -3,6 +3,8 @@ import PageTitle from "../../layouts/PageTitle";
 import firebaseDb from '../../../firebase'
 import { storage } from '../../../firebase'
 import { v4 as uuid } from 'uuid'
+import swal from "sweetalert";
+import swalMessage from "@sweetalert/with-react";
 import {
    Row,
    Col,
@@ -44,28 +46,62 @@ const CustomerList = () => {
        else setContactObjects({})
      })
    }, [])
- 
+
    const addOrEdit = (obj) => {
-      console.log("inside addOrEdit")
-     if (currentId == '')
-       firebaseDb.ref('customer/').push(obj, (err) => {
-         if (err) console.log(err)
-         else setCurrentId('')
-       })
-     else
-       firebaseDb.ref(`customer/${currentId}`).set(obj, (err) => {
-         if (err) console.log(err)
-         else setCurrentId('')
-       })
+      if (currentId === ''){
+         swal(
+            "Nice!",
+            "A new customer profile is added!",
+            "success"
+         )
+         firebaseDb.ref('customer/').push(obj, (err) => {
+            if (err) console.log(err)
+            else setCurrentId('')
+         })
+      }
+      else{
+         swal(
+            "Nice!",
+            "This customer profile is updated!",
+            "success"
+         )
+         firebaseDb.ref(`customer/${currentId}`).set(obj, (err) => {
+            if (err) console.log(err)
+            else setCurrentId('')
+         })
+      }
    }
- 
+
    const onDelete = (key) => {
-     if (window.confirm('Are you sure to delete this record?')) {
-       firebaseDb.ref(`customer/${key}`).remove((err) => {
-         if (err) console.log(err)
-         else setCurrentId('')
-       })
-     }
+      swal({
+         title: "Are you sure?",
+         text:
+            "Once deleted, you will not be able to recover this customer!",
+         icon: "warning",
+         buttons: true,
+         dangerMode: true,
+      }).then((willDelete) => {
+         if (willDelete) {
+            firebaseDb.ref(`customer/${key}`).remove((err) => {
+               if (err) console.log(err)
+               else setCurrentId('')
+            })
+            swal(
+               "Poof! This customer profile has been deleted!",
+               {
+                  icon: "success",
+               }
+            );
+         } else {
+            swal("Your customer profile is safe!");
+         }
+      })
+   //   if (window.confirm('Are you sure to delete this record?')) {
+   //     firebaseDb.ref(`customer/${key}`).remove((err) => {
+   //       if (err) console.log(err)
+   //       else setCurrentId('')
+   //     })
+   //   }
    }
 
    return (
