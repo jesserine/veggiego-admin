@@ -15,18 +15,20 @@ const ProductsForm = (props) => {
       productImage: '',
       price: '',
       unit: '',
-      dateUpdated: new Date().toLocaleString()
+      dateUpdated: new Date().toLocaleString(),
+      isActive: 'true'
    }
+
    var [values, setValues] = useState(initialFieldValues)
-   var [contactObjects, setContactObjects] = useState({})
+   var [productObjects, setProductObjects] = useState({})
 
    useEffect(() => {
       firebaseDb.ref('products/').on('value', (snapshot) => {
         if (snapshot.val() != null)
-          setContactObjects({
+        setProductObjects({
             ...snapshot.val(),
           })
-        else setContactObjects({})
+        else setProductObjects({})
       })
     }, [])
 
@@ -38,9 +40,9 @@ const ProductsForm = (props) => {
      })
    else
      setValues({
-       ...props.contactObjects[props.currentId],
+       ...props.productObjects[props.currentId],
      })
- }, [props.currentId, props.contactObjects])
+ }, [props.currentId, props.productObjects])
 
  const handleInputChange = (e) => {
    var { name, value } = e.target
@@ -109,6 +111,7 @@ const ProductsForm = (props) => {
                                     onChange={handleInputChange}
                                     required
                                  >
+                                    <option value='Category'>Choose Category..</option>
                                     <option value='Assorted'>Assorted</option>
                                     <option value='Best Sellers'>Best Sellers</option>
                                     <option value='Overload'>Overload</option>
@@ -130,6 +133,7 @@ const ProductsForm = (props) => {
                                     onChange={handleInputChange}
                                     required
                                  >
+                                    <option value='Unit'>Choose Unit..</option>
                                     <option value='kg'>kg (kilogram)</option>
                                     <option value='gm'>gm (gram)</option>
                                     <option value='pc'>pc (piece)</option>
@@ -168,6 +172,38 @@ const ProductsForm = (props) => {
                                  </div>
                               </div>
                            </div>
+                           <div className="form-row">
+                                 <label className="col-form-label col-sm-3 pt-0">
+                                    Is Active?
+                                 </label>
+                                 <div className="col-sm-9">
+                                    <div className="form-check">
+                                       <input
+                                          className="form-check-input"
+                                          type="radio"
+                                          name="isActive"
+                                          value="true"
+                                          onChange={handleInputChange}
+                                          defaultChecked
+                                       />
+                                       <label className="form-check-label">
+                                          Yes
+                                       </label>
+                                    </div>
+                                    <div className="form-check">
+                                       <input
+                                          className="form-check-input"
+                                          type="radio"
+                                          name="isActive"
+                                          value="false"
+                                          onChange={handleInputChange}
+                                       />
+                                       <label className="form-check-label">
+                                          No
+                                       </label>
+                                    </div>
+                                 </div>
+                              </div>
                            <div className="form-row">
                               <div className="form-group col-md-12">
                                  <input type="submit" 
