@@ -73,6 +73,7 @@ import OrdersList from '../components/Orders/OrdersList';
 
 /// Products
 import ProductsList from '../components/Products/ProductsList';
+import CategoryList from "../components/Products/CategoryList";
 
 /// Widget
 import Widget from "../pages/Widget";
@@ -155,12 +156,13 @@ const Routes = () => {
 
       /// Riders
       { url: "riders", component: RidersList },
-
+  
       /// Orders
       { url: "orders", component: OrdersList },
 
-      /// Products
+      /// Products 
       { url: "products", component: ProductsList },
+      { url: "products-category", component: CategoryList },
 
       /// Widget
       { url: "widget-basic", component: Widget },
