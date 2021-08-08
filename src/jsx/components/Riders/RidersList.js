@@ -83,9 +83,9 @@ const RidersList = () => {
                         <Table responsive>
                            <thead>
                               <tr>
-                                 <th>
+                                 {/* <th>
                                     <strong></strong>
-                                 </th>
+                                 </th> */}
                                  <th>
                                     <strong>NAME</strong>
                                  </th>
@@ -110,19 +110,19 @@ const RidersList = () => {
                                  <th>
                                     <strong>IMAGE</strong>
                                  </th>
-                                 <th>
+                                 {/* <th>
                                     <strong>DATE ADDED</strong>
                                  </th>
                                  <th>
                                     <strong>STATUS</strong>
-                                 </th>
+                                 </th> */}
                               </tr>
                            </thead>
                            <tbody>
                               {Object.keys(riderObjects).map((id) => {
                                        return (
-                                          <tr key={id}>
-                                             <td>
+                                          <tr key={id} onClick={() => { setCurrentId(id) }}>
+                                             {/* <td>
                                                 <div className="d-flex">
                                                    <Link
                                                       to="/riders"
@@ -139,7 +139,7 @@ const RidersList = () => {
                                                       <i className="fa fa-trash"></i>
                                                    </Link>
                                                 </div>
-                                             </td>
+                                             </td> */}
                                              <td>{riderObjects[id].riderName}</td>
                                              <td>{riderObjects[id].username}</td>
                                              <td>{riderObjects[id].password}</td>
@@ -148,11 +148,11 @@ const RidersList = () => {
                                              <td>{riderObjects[id].vehicleType}</td>
                                              <td>{riderObjects[id].vehiclePlateNum}</td>
                                              <td>{riderObjects[id].riderImage}</td>
-                                             <td>{riderObjects[id].dateAdded}</td>
+                                             {/* <td>{riderObjects[id].dateAdded}</td>
                                              <td>{riderObjects[id].isActive=== 'false'
                                                 ? <Badge variant="danger light"> Inactive </Badge>
                                                 : <Badge variant="success light"> Active </Badge>}
-                                             </td>
+                                             </td> */}
                                           </tr>
                                        )
                                     })}
