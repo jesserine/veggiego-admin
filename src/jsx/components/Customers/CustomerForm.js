@@ -65,7 +65,7 @@ const CustomerForm = (props) => {
 
  if (typeof imageUrl !== 'undefined' && imageUrl != null) {
    values.housePicture = imageUrl
- } 
+ }
 
  const handleFormSubmit = (e) => {
     console.log("inside handleFormSubmit")
@@ -137,7 +137,15 @@ const CustomerForm = (props) => {
                               <div className="form-group col-md-12">
                                  <label>House Picture</label>
                                  <div className="input-group">
-                                    <div className="custom-file">
+                                 <input type='file' accept='image/*' onChange={readImages} />
+                                    <input
+                                       className='form-control'
+                                       name='housePicture'
+                                       value={values.housePicture}
+                                       onChange={handleInputChange}
+                                       disabled
+                                    />
+                                    {/* <div className="custom-file">
                                        <input
                                           type="file"
                                           className="custom-file-input"
@@ -145,7 +153,7 @@ const CustomerForm = (props) => {
                                        <label className="custom-file-label">
                                           Choose file
                                        </label>
-                                    </div>
+                                    </div> */}
                                  </div>
                               </div>
                            </div>
@@ -158,8 +166,9 @@ const CustomerForm = (props) => {
                                        <input
                                           className="form-check-input"
                                           type="radio"
-                                          name="gridRadios"
+                                          name="isActive"
                                           value="true"
+                                          onChange={handleInputChange}
                                           defaultChecked
                                        />
                                        <label className="form-check-label">
@@ -170,8 +179,9 @@ const CustomerForm = (props) => {
                                        <input
                                           className="form-check-input"
                                           type="radio"
-                                          name="gridRadios"
+                                          name="isActive"
                                           value="false"
+                                          onChange={handleInputChange}
                                        />
                                        <label className="form-check-label">
                                           No

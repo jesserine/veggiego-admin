@@ -204,7 +204,7 @@ const CustomerList = () => {
                                           <td>{contactObjects[id].address}</td>
                                           <td>{contactObjects[id].landmark}</td>
                                           <td>{contactObjects[id].dateJoined}</td>
-                                          <td>{contactObjects[id].isActive=== '0'
+                                          <td>{contactObjects[id].isActive=== 'false'
                                              ? <Badge variant="danger light"> Inactive </Badge>
                                              : <Badge variant="success light"> Active </Badge>}
                                           </td>
