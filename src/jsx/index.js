@@ -45,6 +45,7 @@ import OrdersList from './components/Orders/OrdersList';
 /// Products 
 import ProductsList from './components/Products/ProductsList';
 import CategoryList from "./components/Products/CategoryList";
+import UnitList from "./components/Products/UnitList";
 
 /// Bo
 import UiAlert from "./components/bootstrap/Alert";
@@ -137,6 +138,7 @@ const Markup = ({ showProfileSideBar }) => {
       // Products
       { url: "products", component: ProductsList },
       { url: "products-category", component: CategoryList},
+      { url: "products-unit", component: UnitList },
 
       /// Bootstrap
       { url: "ui-alert", component: UiAlert },
