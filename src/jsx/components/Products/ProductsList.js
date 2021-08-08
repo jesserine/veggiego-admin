@@ -1,6 +1,8 @@
 import React, { Fragment, useState, useEffect } from "react";
 import firebaseDb from '../../../firebase'
 import PageTitle from "../../layouts/PageTitle";
+import swal from "sweetalert";
+import swalMessage from "@sweetalert/with-react";
 import {
    Row,
    Col,
@@ -45,26 +47,55 @@ const ProductsList = () => {
   
     const addOrEdit = (obj) => {
        console.log("inside addOrEdit")
-      if (currentId == '')
-        firebaseDb.ref('products/').push(obj, (err) => {
-          if (err) console.log(err)
-          else setCurrentId('')
-        })
-      else
+      if (currentId == ''){
+         swal(
+            "Nice!",
+            "A product is added!",
+            "success"
+         )
+         firebaseDb.ref('products/').push(obj, (err) => {
+           if (err) console.log(err)
+           else setCurrentId('')
+         })
+      }
+      else{
+         swal(
+            "Nice!",
+            "This product is updated!",
+            "success"
+         )
         firebaseDb.ref(`products/${currentId}`).set(obj, (err) => {
-          if (err) console.log(err)
-          else setCurrentId('')
-        })
-    }
-  
-    const onDelete = (key) => {
-      if (window.confirm('Are you sure to delete this record?')) {
-        firebaseDb.ref(`products/${key}`).remove((err) => {
           if (err) console.log(err)
           else setCurrentId('')
         })
       }
     }
+  
+    const onDelete = (key) => {
+      swal({
+         title: "Are you sure?",
+         text:
+            "Once deleted, you will not be able to recover this product!",
+         icon: "warning",
+         buttons: true,
+         dangerMode: true,
+      }).then((willDelete) => {
+         if (willDelete) {
+        firebaseDb.ref(`products/${key}`).remove((err) => {
+          if (err) console.log(err)
+          else setCurrentId('')
+        })
+        swal(
+           "Poof! This product has been deleted!",
+           {
+              icon: "success",
+           }
+        );
+         } else {
+            swal("Your product is safe!");
+         }
+      })
+   }
 
    return (
       <Fragment>
@@ -83,9 +114,9 @@ const ProductsList = () => {
                            <Table responsive>
                               <thead>
                                  <tr>
-                                    <th>
+                                    {/* <th>
                                        <strong></strong>
-                                    </th>
+                                    </th> */}
                                     <th>
                                        <strong>NAME</strong>
                                     </th>
@@ -101,19 +132,19 @@ const ProductsList = () => {
                                     <th>
                                        <strong>IMAGE</strong>
                                     </th>
-                                    <th>
+                                    {/* <th>
                                        <strong>DATE UPDATED</strong>
                                     </th>
                                     <th>
                                        <strong>STATUS</strong>
-                                    </th>
+                                    </th> */}
                                  </tr>
                               </thead>
                               <tbody>
                               {Object.keys(productObjects).map((id) => {
                                     return (
-                                       <tr key={id}>
-                                          <td>
+                                       <tr key={id} onClick={() => { setCurrentId(id) }}>
+                                          {/* <td>
                                              <div className="d-flex">
                                                 <Link
                                                    to="/products"
@@ -130,17 +161,17 @@ const ProductsList = () => {
                                                    <i className="fa fa-trash"></i>
                                                 </Link>
                                              </div>
-                                          </td>
+                                          </td> */}
                                           <td>{productObjects[id].productName}</td>
                                           <td>{productObjects[id].category}</td>
                                           <td>{productObjects[id].unit}</td>
                                           <td>{productObjects[id].price}</td>
                                           <td>{productObjects[id].productImage}</td>
-                                          <td>{productObjects[id].dateUpdated}</td>
+                                          {/* <td>{productObjects[id].dateUpdated}</td>
                                           <td>{productObjects[id].isActive=== 'false'
                                              ? <Badge variant="danger light"> Inactive </Badge>
                                              : <Badge variant="success light"> Active </Badge>}
-                                          </td>
+                                          </td> */}
                                        </tr>
                                     )
                                  })}

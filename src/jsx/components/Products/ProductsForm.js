@@ -82,7 +82,7 @@ const ProductsForm = (props) => {
             <div className="col-xl-12 col-lg-12">
                <div className="card">
                   <div className="card-header">
-                     <h4 className="card-title">Add Product</h4>
+                     <h4 className="card-title">{props.currentId === '' ? 'Add' : 'Update'} Product</h4>
                   </div>
                   <div className="card-body">
                      <div className="basic-form">
