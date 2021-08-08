@@ -106,7 +106,7 @@ const UnitForm = (props) => {
                                     className="form-control"
                                     placeholder="Abbreviation"
                                     name='abbreviation'
-                                    value={values.Abbreviation}
+                                    value={values.abbreviation}
                                     onChange={handleInputChange}
                                     required
                                  />

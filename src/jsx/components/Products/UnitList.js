@@ -124,14 +124,14 @@ const UnitList = () => {
                                           <td>
                                              <div className="d-flex">
                                                 <Link
-                                                   to="/products-category"
+                                                   to="/products-unit"
                                                    onClick={() => { setCurrentId(id); window.scrollTo(0, 0); }}
                                                    className="btn btn-primary shadow btn-xs sharp mr-1"
                                                 >
                                                    <i className="fa fa-pencil"></i>
                                                 </Link>
                                                 <Link
-                                                   to="/products-category"
+                                                   to="/products-unit"
                                                    onClick={() => { onDelete(id) }}
                                                    className="btn btn-danger shadow btn-xs sharp"
                                                 >
