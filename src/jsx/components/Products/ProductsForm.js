@@ -21,6 +21,28 @@ const ProductsForm = (props) => {
 
    var [values, setValues] = useState(initialFieldValues)
    var [productObjects, setProductObjects] = useState({})
+   var [categoryObjects, setCategoryObjects] = useState({})
+   var [unitObjects, setUnitObjects] = useState({})
+
+   useEffect(() => {
+      firebaseDb.ref('category/').on('value', (snapshot) => {
+        if (snapshot.val() != null)
+        setCategoryObjects({
+            ...snapshot.val(),
+          })
+        else setCategoryObjects({})
+      })
+    }, [])
+
+   useEffect(() => {
+      firebaseDb.ref('unit/').on('value', (snapshot) => {
+        if (snapshot.val() != null)
+        setUnitObjects({
+            ...snapshot.val(),
+          })
+        else setUnitObjects({})
+      })
+    }, [])
 
    useEffect(() => {
       firebaseDb.ref('products/').on('value', (snapshot) => {
@@ -111,14 +133,21 @@ const ProductsForm = (props) => {
                                     onChange={handleInputChange}
                                     required
                                  >
-                                    <option value='Category'>Choose Category..</option>
-                                    <option value='Assorted'>Assorted</option>
-                                    <option value='Best Sellers'>Best Sellers</option>
-                                    <option value='Overload'>Overload</option>
-                                    <option value='Fruits'>Fruits</option>
-                                    <option value='Sweeteners'>Sweeteners</option>
-                                    <option value='Condiments'>Condiments</option>
-                                    <option value='Others'>Others</option>
+                                    <option value=''>Choose Category..</option>
+                                    {Object.keys(categoryObjects).map((id) => {
+                                       return (
+                                       <React.Fragment key={id}>
+                                          {categoryObjects[id].isActive == 'true' ? (
+                                             <option value={categoryObjects[id].categoryName}>
+                                             {categoryObjects[id].categoryName
+                                             }
+                                             </option>
+                                          ) : (
+                                             ''
+                                          )}
+                                       </React.Fragment>
+                                       )
+                                    })}
                                  </select>
                               </div>
                             </div>
@@ -134,15 +163,20 @@ const ProductsForm = (props) => {
                                     required
                                  >
                                     <option value='Unit'>Choose Unit..</option>
-                                    <option value='kg'>kg (kilogram)</option>
-                                    <option value='gm'>gm (gram)</option>
-                                    <option value='pc'>pc (piece)</option>
-                                    <option value='l'>L (liter)</option>
-                                    <option value='ml'>ml (milliliter)</option>
-                                    <option value='gal'>gal (gallon)</option>
-                                    <option value='container'>container</option>
-                                    <option value='bundle'>bundle</option>
-                                    <option value='lapad'>lapad</option>
+                                    {Object.keys(unitObjects).map((id) => {
+                                       return (
+                                       <React.Fragment key={id}>
+                                          {unitObjects[id].isActive == 'true' ? (
+                                             <option value={unitObjects[id].unitName}>
+                                             {unitObjects[id].unitName
+                                             }
+                                             </option>
+                                          ) : (
+                                             ''
+                                          )}
+                                       </React.Fragment>
+                                       )
+                                    })}
                                  </select>
                               </div>
                               <div className="form-group col-md-12">
