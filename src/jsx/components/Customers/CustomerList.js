@@ -96,17 +96,10 @@ const CustomerList = () => {
             swal("Your customer profile is safe!");
          }
       })
-   //   if (window.confirm('Are you sure to delete this record?')) {
-   //     firebaseDb.ref(`customer/${key}`).remove((err) => {
-   //       if (err) console.log(err)
-   //       else setCurrentId('')
-   //     })
-   //   }
    }
 
    return (
       <Fragment>
-         {/* <PageTitle activeMenu="Table" motherMenu="Bootstrap" /> */}
          <div className="row">
             <div className="col-xl-4 col-lg-4">
                <CustomerForm {...{ addOrEdit, currentId, contactObjects }}/>
@@ -150,12 +143,9 @@ const CustomerList = () => {
                            </div>
                         </Card.Header>
                         <Card.Body>
-                           <Table responsive>
+                           <Table responsive hover>
                               <thead>
                                  <tr>
-                                    <th>
-                                       <strong></strong>
-                                    </th> 
                                     <th>
                                        <strong>NAME</strong>
                                     </th>
@@ -168,20 +158,13 @@ const CustomerList = () => {
                                     <th>
                                        <strong>LANDMARK</strong>
                                     </th>
-                                    <th>
-                                       <strong>CUSTOMER SINCE</strong>
-                                    </th>
-                                    <th>
-                                       <strong>STATUS</strong>
-                                    </th>
-                                    <th></th>
                                  </tr>
                               </thead>
                               <tbody>
                                  {Object.keys(contactObjects).map((id) => {
                                     return (
-                                       <tr key={id}>
-                                          <td>
+                                       <tr key={id} onClick={() => { setCurrentId(id) }}>
+                                          {/* <td>
                                              <div className="d-flex">
                                                 <Link
                                                    to="/customers"
@@ -198,16 +181,11 @@ const CustomerList = () => {
                                                    <i className="fa fa-trash"></i>
                                                 </Link>
                                              </div>
-                                          </td>
+                                          </td> */}
                                           <td>{contactObjects[id].name}</td>
                                           <td>{contactObjects[id].contactNumber}</td>
                                           <td>{contactObjects[id].address}</td>
                                           <td>{contactObjects[id].landmark}</td>
-                                          <td>{contactObjects[id].dateJoined}</td>
-                                          <td>{contactObjects[id].isActive=== 'false'
-                                             ? <Badge variant="danger light"> Inactive </Badge>
-                                             : <Badge variant="success light"> Active </Badge>}
-                                          </td>
                                        </tr>
                                     )
                                  })}

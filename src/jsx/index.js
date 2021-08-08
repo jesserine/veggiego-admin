@@ -116,6 +116,7 @@ const Markup = ({ showProfileSideBar }) => {
    const routes = [
       // Dashboard
       { url: "", component: Home },
+      { url: "dashboard", component: Home },
       { url: "campaign", component: Campaign },
       { url: "social-network-campaign", component: SocialNetworkCampaign },
       { url: "spendings", component: Spendings },

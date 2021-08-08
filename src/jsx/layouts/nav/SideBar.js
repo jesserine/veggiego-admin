@@ -86,13 +86,12 @@ class SideBar extends Component {
                   <li className={`${dashboard.includes(path) ? "mm-active" : "" }`}>
                      <Link
                         className="has-arrow ai-icon"
-                        to="/"
+                        to="/dashboard"
                      >
                         <i className="flaticon-381-networking"></i>
                         <span className="nav-text">Dashboard</span>
                      </Link>
                   </li>
-                  {console.log('path=', path)}
                   <li className={`${customers.includes(path) ? "mm-active" : ""}`}>
                      <Link
                         className="has-arrow ai-icon"

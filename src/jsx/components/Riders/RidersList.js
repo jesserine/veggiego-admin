@@ -68,102 +68,102 @@ const RidersList = () => {
 
    return (
       <Fragment>
-         <Row>
          <div className="row">
             <div className="col-xl-4 col-lg-4">
                <RidersForm {...{ addOrEdit, currentId, riderObjects }}/>
             </div>
             <div className="col-xl-8 col-lg-8">
-            <Col lg={12}>
-               <Card>
-                  <Card.Header>
-                     <Card.Title>My Riders</Card.Title>
-                  </Card.Header>
-                  <Card.Body>
-                     <Table responsive>
-                        <thead>
-                           <tr>
-                              <th>
-                                 <strong></strong>
-                              </th>
-                              <th>
-                                 <strong>NAME</strong>
-                              </th>
-                              <th>
-                                 <strong>USERNAME</strong>
-                              </th>
-                              <th>
-                                 <strong>PASSWORD</strong>
-                              </th>
-                              <th>
-                                 <strong>CONTACT #</strong>
-                              </th>
-                              <th>
-                                 <strong>ADDRESS</strong>
-                              </th>
-                              <th>
-                                 <strong>VEHICLE TYPE</strong>
-                              </th>
-                              <th>
-                                 <strong>VEHICLE PLATE #</strong>
-                              </th>
-                              <th>
-                                 <strong>IMAGE</strong>
-                              </th>
-                              <th>
-                                 <strong>DATE ADDED</strong>
-                              </th>
-                              <th>
-                                 <strong>STATUS</strong>
-                              </th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           {Object.keys(riderObjects).map((id) => {
-                                    return (
-                                       <tr key={id}>
-                                          <td>
-                                             <div className="d-flex">
-                                                <Link
-                                                   to="/riders"
-                                                   onClick={() => { setCurrentId(id); window.scrollTo(0, 0); }}
-                                                   className="btn btn-primary shadow btn-xs sharp mr-1"
-                                                >
-                                                   <i className="fa fa-pencil"></i>
-                                                </Link>
-                                                <Link
-                                                   to="/riders"
-                                                   onClick={() => { onDelete(id) }}
-                                                   className="btn btn-danger shadow btn-xs sharp"
-                                                >
-                                                   <i className="fa fa-trash"></i>
-                                                </Link>
-                                             </div>
-                                          </td>
-                                          <td>{riderObjects[id].riderName}</td>
-                                          <td>{riderObjects[id].username}</td>
-                                          <td>{riderObjects[id].password}</td>
-                                          <td>{riderObjects[id].riderContactNum}</td>
-                                          <td>{riderObjects[id].riderAddress}</td>
-                                          <td>{riderObjects[id].vehicleType}</td>
-                                          <td>{riderObjects[id].vehiclePlateNum}</td>
-                                          <td>{riderObjects[id].riderImage}</td>
-                                          <td>{riderObjects[id].dateAdded}</td>
-                                          <td>{riderObjects[id].isActive=== 'false'
-                                             ? <Badge variant="danger light"> Inactive </Badge>
-                                             : <Badge variant="success light"> Active </Badge>}
-                                          </td>
-                                       </tr>
-                                    )
-                                 })}
-                        </tbody>
-                     </Table>
-                  </Card.Body>
-               </Card>
-            </Col>
+            <Row>
+               <Col lg={12}>
+                  <Card>
+                     <Card.Header>
+                        <Card.Title>My Riders</Card.Title>
+                     </Card.Header>
+                     <Card.Body>
+                        <Table responsive>
+                           <thead>
+                              <tr>
+                                 <th>
+                                    <strong></strong>
+                                 </th>
+                                 <th>
+                                    <strong>NAME</strong>
+                                 </th>
+                                 <th>
+                                    <strong>USERNAME</strong>
+                                 </th>
+                                 <th>
+                                    <strong>PASSWORD</strong>
+                                 </th>
+                                 <th>
+                                    <strong>CONTACT #</strong>
+                                 </th>
+                                 <th>
+                                    <strong>ADDRESS</strong>
+                                 </th>
+                                 <th>
+                                    <strong>VEHICLE TYPE</strong>
+                                 </th>
+                                 <th>
+                                    <strong>VEHICLE PLATE #</strong>
+                                 </th>
+                                 <th>
+                                    <strong>IMAGE</strong>
+                                 </th>
+                                 <th>
+                                    <strong>DATE ADDED</strong>
+                                 </th>
+                                 <th>
+                                    <strong>STATUS</strong>
+                                 </th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {Object.keys(riderObjects).map((id) => {
+                                       return (
+                                          <tr key={id}>
+                                             <td>
+                                                <div className="d-flex">
+                                                   <Link
+                                                      to="/riders"
+                                                      onClick={() => { setCurrentId(id); window.scrollTo(0, 0); }}
+                                                      className="btn btn-primary shadow btn-xs sharp mr-1"
+                                                   >
+                                                      <i className="fa fa-pencil"></i>
+                                                   </Link>
+                                                   <Link
+                                                      to="/riders"
+                                                      onClick={() => { onDelete(id) }}
+                                                      className="btn btn-danger shadow btn-xs sharp"
+                                                   >
+                                                      <i className="fa fa-trash"></i>
+                                                   </Link>
+                                                </div>
+                                             </td>
+                                             <td>{riderObjects[id].riderName}</td>
+                                             <td>{riderObjects[id].username}</td>
+                                             <td>{riderObjects[id].password}</td>
+                                             <td>{riderObjects[id].riderContactNum}</td>
+                                             <td>{riderObjects[id].riderAddress}</td>
+                                             <td>{riderObjects[id].vehicleType}</td>
+                                             <td>{riderObjects[id].vehiclePlateNum}</td>
+                                             <td>{riderObjects[id].riderImage}</td>
+                                             <td>{riderObjects[id].dateAdded}</td>
+                                             <td>{riderObjects[id].isActive=== 'false'
+                                                ? <Badge variant="danger light"> Inactive </Badge>
+                                                : <Badge variant="success light"> Active </Badge>}
+                                             </td>
+                                          </tr>
+                                       )
+                                    })}
+                           </tbody>
+                        </Table>
+                     </Card.Body>
+                  </Card>
+               </Col>
+            </Row>
             </div>
-            </div>
-         </Row>
+         </div>
       </Fragment>
    );
 };

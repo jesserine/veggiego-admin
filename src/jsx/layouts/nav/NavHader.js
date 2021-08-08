@@ -11,7 +11,7 @@ const NavHader = () => {
    const [toggle, setToggle] = useState(false);
    return (
       <div className="nav-header">
-         <Link to="/" className="brand-logo">
+         <Link to="/dashboard" className="brand-logo">
             <img className="logo-compact" src={logoText} alt="veggie go logo" />
             <img className="brand-title" src={logoText} alt="veggie go logo" />
          </Link>
