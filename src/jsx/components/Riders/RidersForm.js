@@ -35,18 +35,22 @@ const RidersForm = (props) => {
       })
     }, [])
 
-
-  useEffect(() => {
-   if (props.currentId == '')
-     setValues({
-       ...initialFieldValues,
-     })
-   else
-     setValues({
-       ...props.riderObjects[props.currentId],
-     })
- }, [props.currentId, props.riderObjects])
-
+    useEffect(() => {
+      if (props.currentId === ""){
+        setViewMode(false);
+        setValues({
+          ...initialFieldValues,
+        });
+      }
+      else{
+        setViewMode(true);
+        setValues({
+          ...props.riderObjects[props.currentId],
+        });
+      }
+       
+    }, [props.currentId, props.riderObjects]);
+  
  const handleInputChange = (e) => {
    var { name, value } = e.target
    setValues({
@@ -130,6 +134,7 @@ const RidersForm = (props) => {
                                  value = {values.riderContactNum}
                                  onChange={handleInputChange}
                                  required
+                                 disabled={viewMode}
                                  />
                               </div>
                            </div>
