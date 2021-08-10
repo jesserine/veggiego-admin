@@ -5,7 +5,7 @@ import { storage } from '../../../firebase'
 import { v4 as uuid } from 'uuid'
 
 import PageTitle from "../../layouts/PageTitle";
-import { SplitButton, ButtonGroup, Dropdown } from "react-bootstrap";
+import { SplitButton, ButtonGroup, Dropdown, Button } from "react-bootstrap";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
 const RidersForm = (props) => {
@@ -55,6 +55,8 @@ const RidersForm = (props) => {
    })
  }
 
+ const [viewMode, setViewMode] = useState(false);
+
  const [imageUrl, setImageUrl] = useState()
  const readImages = async (e) => {
    const file = e.target.files[0]
@@ -85,7 +87,22 @@ const RidersForm = (props) => {
             <div className="col-xl-12 col-lg-12">
                <div className="card">
                   <div className="card-header">
-                     <h4 className="card-title">{props.currentId === '' ? 'Add' : 'Update'} Rider</h4>
+                     <h4 className="card-title">
+                     {props.currentId === "" ? "Add " : viewMode ? "View " : "Edit " }
+                     Rider
+                  </h4>
+                     {
+                        props.currentId !== "" ? 
+                           <Button variant='primary btn-rounded' onClick={()=>{ setViewMode(!viewMode) }}>
+                              <span className='btn-icon-left text-primary'>
+                                 
+                                 { viewMode ? <i className='fa fa-pencil' /> : <i className='fa fa-eye' /> }
+                              </span>
+                              { viewMode ? "Edit " : "View " }
+                           </Button>
+                        :
+                        null
+                     }
                   </div>
                   <div className="card-body">
                      <div className="basic-form">
@@ -101,6 +118,7 @@ const RidersForm = (props) => {
                                     value={values.riderName}
                                     onChange={handleInputChange}
                                     required
+                                    disabled={viewMode}
                                  />
                               </div>
                               <div className="form-group col-md-12">
@@ -126,6 +144,7 @@ const RidersForm = (props) => {
                                     value={values.vehicleType}
                                     onChange={handleInputChange}
                                     required
+                                    disabled={viewMode}
                                  >
                                     <option value='Vehicle'>Choose Vehicle..</option>
                                     <option value='Motorcycle'>Motorcycle</option>
@@ -144,6 +163,7 @@ const RidersForm = (props) => {
                                     value={values.vehiclePlateNum}
                                     onChange={handleInputChange}
                                     required
+                                    disabled={viewMode}
                                  />
                               </div>
                               <div className="form-group col-md-12">
@@ -154,6 +174,7 @@ const RidersForm = (props) => {
                                  value = {values.riderAddress}
                                  onChange={handleInputChange}
                                  required
+                                 disabled={viewMode}
                                  />
                               </div>
                             </div>
@@ -161,7 +182,20 @@ const RidersForm = (props) => {
                               <div className="form-group col-md-12">
                                  <label>Rider Image</label>
                                  <div className="input-group">
-                                    <div className="custom-file">
+                                    <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={readImages}
+                                    disabled={viewMode}
+                                    />
+                                    <input
+                                    className="form-control"
+                                    name="housePicture"
+                                    value={values.housePicture}
+                                    onChange={handleInputChange}
+                                    disabled={viewMode}
+                                    />
+                                    {/* <div className="custom-file">
                                        <input
                                           type="file"
                                           className="custom-file-input"
@@ -169,7 +203,7 @@ const RidersForm = (props) => {
                                        <label className="custom-file-label">
                                           Choose file
                                        </label>
-                                    </div>
+                                    </div> */}
                                  </div>
                               </div>
                            </div>
@@ -184,6 +218,7 @@ const RidersForm = (props) => {
                                     value={values.username}
                                     onChange={handleInputChange}
                                     required
+                                    disabled={viewMode}
                                  />
                               </div>
                               <div className="form-group col-md-12">
@@ -195,6 +230,7 @@ const RidersForm = (props) => {
                                  value = {values.password}
                                  onChange={handleInputChange}
                                  required
+                                 disabled={viewMode}
                                  />
                               </div>
                            </div>
@@ -208,9 +244,10 @@ const RidersForm = (props) => {
                                           className="form-check-input"
                                           type="radio"
                                           name="isActive"
-                                          value="true"
+                                          value={values.isActive}
                                           onChange={handleInputChange}
                                           defaultChecked
+                                          disabled={viewMode}
                                        />
                                        <label className="form-check-label">
                                           Yes
@@ -221,8 +258,9 @@ const RidersForm = (props) => {
                                           className="form-check-input"
                                           type="radio"
                                           name="isActive"
-                                          value="false"
+                                          value={values.isActive}
                                           onChange={handleInputChange}
+                                          disabled={viewMode}
                                        />
                                        <label className="form-check-label">
                                           No
