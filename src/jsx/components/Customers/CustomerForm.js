@@ -32,7 +32,6 @@ const CustomerForm = (props) => {
   }, []);
 
   useEffect(() => {
-
     if (props.currentId === ""){
       setViewMode(false);
       setValues({
@@ -45,7 +44,6 @@ const CustomerForm = (props) => {
         ...props.contactObjects[props.currentId],
       });
     }
-     
   }, [props.currentId, props.contactObjects]);
 
   const handleInputChange = (e) => {
@@ -55,8 +53,10 @@ const CustomerForm = (props) => {
       [name]: value,
     });
   };
+
   const [viewMode, setViewMode] = useState(false);
   const [imageUrl, setImageUrl] = useState();
+  
   const readImages = async (e) => {
     const file = e.target.files[0];
     const id = uuid();
