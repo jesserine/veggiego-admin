@@ -95,7 +95,7 @@ const RidersList = () => {
                   <Col lg={12}>
                      <Card>
                         <Card.Header>
-                           <Card.Title>My Customers</Card.Title>
+                           <Card.Title>My Riders</Card.Title>
                            <Button variant='primary btn-rounded' onClick={() => { setCurrentId('') }}>
                               <span className='btn-icon-left text-primary'>
 
@@ -111,7 +111,7 @@ const RidersList = () => {
                                     <input
                                        className="form-control"
                                        type="search"
-                                       placeholder="Search Customer"
+                                       placeholder="Search Rider name"
                                        aria-label="Search"
                                     />
                                  </form>
@@ -144,9 +144,6 @@ const RidersList = () => {
                                     <th>
                                        <strong>VEHICLE PLATE #</strong>
                                     </th>
-                                    <th>
-                                       <strong>IMAGE</strong>
-                                    </th>
                                     {/* <th>
                                     <strong>DATE ADDED</strong>
                                  </th>
@@ -177,7 +174,15 @@ const RidersList = () => {
                                                    </Link>
                                                 </div>
                                              </td> */}
-                                          <td>{riderObjects[id].riderName}</td>
+                                          <td>
+                                             <img
+                                                src={avatar1}
+                                                className="rounded-lg mr-2"
+                                                width="24"
+                                                alt=""
+                                             /><span>{riderObjects[id].riderName}</span>
+                                          
+                                          </td>
                                           <td>{riderObjects[id].username}</td>
                                           <td>{riderObjects[id].password}</td>
                                           <td>{riderObjects[id].riderContactNum}</td>
