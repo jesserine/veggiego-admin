@@ -32,15 +32,20 @@ const CustomerForm = (props) => {
   }, []);
 
   useEffect(() => {
-     setViewMode(true);
-    if (props.currentId === "")
+     
+    if (props.currentId === ""){
+      setViewMode(false);
       setValues({
         ...initialFieldValues,
       });
-    else
+    }
+    else{
+      setViewMode(true);
       setValues({
         ...props.contactObjects[props.currentId],
       });
+    }
+     
   }, [props.currentId, props.contactObjects]);
 
   const handleInputChange = (e) => {
@@ -50,7 +55,7 @@ const CustomerForm = (props) => {
       [name]: value,
     });
   };
-  const [viewMode, setViewMode] = useState(true);
+  const [viewMode, setViewMode] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const readImages = async (e) => {
     const file = e.target.files[0];
@@ -68,7 +73,6 @@ const CustomerForm = (props) => {
   }
 
   const handleFormSubmit = (e) => {
-    console.log("inside handleFormSubmit");
     e.preventDefault();
     props.addOrEdit(values);
     window.location.reload(false);
@@ -86,7 +90,7 @@ const CustomerForm = (props) => {
                 Customer
               </h4>
               {
-                  props.currentId != "" ? 
+                  props.currentId !== "" ? 
                      <Button variant='primary btn-rounded' onClick={()=>{ setViewMode(!viewMode) }}>
                         <span className='btn-icon-left text-primary'>
                            

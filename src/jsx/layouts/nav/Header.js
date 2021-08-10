@@ -50,13 +50,43 @@ const Header = ({
                   </div>
                   <ul className="navbar-nav header-right">
                      <li className="nav-item dropdown notification_dropdown">
-                     {pathName=== 'dashboard' && (
+                     {/* {pathName === 'dashboard' ? 
                         <li className="nav-item dropdown d-none d-xl-flex">
-                           <Link className="btn btn-primary" to="/new-compaign">
+                           <Link className="btn btn-primary" to="/dashboard">
                               + New Order
                            </Link>
                         </li>
-                     )}
+                        :
+                        pathName === 'customers' ?
+                        <li className="nav-item dropdown d-none d-xl-flex">
+                           <Link className="btn btn-primary" to="/customers">
+                              + New Customer
+                           </Link>
+                        </li>
+                        :
+                        pathName === 'riders' ?
+                        <li className="nav-item dropdown d-none d-xl-flex">
+                           <Link className="btn btn-primary" to="/riders">
+                              + New Rider
+                           </Link>
+                        </li>
+                        :
+                        pathName === 'products' ?
+                        <li className="nav-item dropdown d-none d-xl-flex">
+                           <Link className="btn btn-primary" to="/products">
+                              + New Product
+                           </Link>
+                        </li>
+                        :
+                        pathName === 'orders' ?
+                        <li className="nav-item dropdown d-none d-xl-flex">
+                           <Link className="btn btn-primary" to="/orders">
+                              + New Order
+                           </Link>
+                        </li>
+                        :
+                        null
+                     } */}
                         <Link
                            className="nav-link  ai-icon"
                            to="#"
@@ -85,7 +115,7 @@ const Header = ({
                               toggle === "notification" ? "show" : ""
                            }`}
                         >
-                           <PerfectScrollbar
+                           {/* <PerfectScrollbar
                               id="DZ_W_Notification1"
                               className={` widget-media dz-scroll p-3 height380 ${
                                  toggle === "notification"
@@ -185,11 +215,11 @@ const Header = ({
                                     </div>
                                  </li>
                               </ul>
-                           </PerfectScrollbar>
-                           <Link className="all-notification" to="#">
+                           </PerfectScrollbar> */}
+                           {/* <Link className="all-notification" to="#">
                               See all notifications{" "}
                               <i className="ti-arrow-right" />
-                           </Link>
+                           </Link> */}
                         </div>
                      </li>
                      
@@ -212,7 +242,7 @@ const Header = ({
                               }`}
                            >
                               <Link
-                                 to="/app-profile"
+                                 to="/"
                                  className="dropdown-item ai-icon"
                               >
                                  <svg
@@ -234,7 +264,7 @@ const Header = ({
                                  <span className="ml-2">Profile </span>
                               </Link>
                               <Link
-                                 to="/email-inbox"
+                                 to="/"
                                  className="dropdown-item ai-icon"
                               >
                                  <svg
@@ -256,7 +286,7 @@ const Header = ({
                                  <span className="ml-2">Inbox </span>
                               </Link>
                               <Link
-                                 to="/page-login"
+                                 to="/"
                                  className="dropdown-item ai-icon"
                               >
                                  <svg

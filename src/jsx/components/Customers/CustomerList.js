@@ -10,7 +10,7 @@ import {
   Col,
   Card,
   Table,
-  Badge,
+  Button,
   Dropdown,
   ProgressBar,
 } from "react-bootstrap";
@@ -97,19 +97,27 @@ const CustomerList = () => {
               <Card>
                 <Card.Header>
                   <Card.Title>My Customers</Card.Title>
-                  <div className="row">
-                    <div className="search_bar dropdown show">
-                      <div className="dropdown-menushow">
-                        <form onSubmit={(e) => e.preventDefault()}>
-                          <input
-                            className="form-control"
-                            type="search"
-                            placeholder="Search Here"
-                            aria-label="Search"
-                          />
-                        </form>
-                      </div>
-                      {/* <span
+                  <Button variant='primary btn-rounded' onClick={()=>{ setCurrentId('') }}>
+                        <span className='btn-icon-left text-primary'>
+                           
+                          <i className='fa fa-plus' />
+                        </span>
+                        Add
+                     </Button>
+                </Card.Header>
+                <Card.Body>
+                  <div className="search_bar dropdown show mb-3">
+                    <div className="dropdown-menushow">
+                      <form onSubmit={(e) => e.preventDefault()}>
+                        <input
+                          className="form-control"
+                          type="search"
+                          placeholder="Search Customer"
+                          aria-label="Search"
+                        />
+                      </form>
+                    </div>
+                    {/* <span
                         className="search_icon p-3 c-pointer"
                         data-toggle="dropdown"
                      >
@@ -126,10 +134,7 @@ const CustomerList = () => {
                            />
                         </svg>
                      </span> */}
-                    </div>
                   </div>
-                </Card.Header>
-                <Card.Body>
                   <Table responsive hover>
                     <thead>
                       <tr>
