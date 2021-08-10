@@ -15,7 +15,7 @@ const CustomerForm = (props) => {
     address: "",
     landmark: "",
     housePicture: "",
-    isActive: "0",
+    isActive: "true",
     dateJoined: new Date().toLocaleDateString(),
   };
   var [values, setValues] = useState(initialFieldValues);
@@ -32,7 +32,7 @@ const CustomerForm = (props) => {
   }, []);
 
   useEffect(() => {
-     
+
     if (props.currentId === ""){
       setViewMode(false);
       setValues({
