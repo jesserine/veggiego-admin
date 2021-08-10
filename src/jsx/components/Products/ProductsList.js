@@ -8,6 +8,7 @@ import {
    Col,
    Card,
    Table,
+   Button,
    Badge,
    Dropdown,
    ProgressBar,
@@ -37,41 +38,41 @@ const ProductsList = () => {
 
    useEffect(() => {
       firebaseDb.ref('products/').on('value', (snapshot) => {
-        if (snapshot.val() != null)
-        setProductObjects({
-            ...snapshot.val(),
-          })
-        else setProductObjects({})
+         if (snapshot.val() != null)
+            setProductObjects({
+               ...snapshot.val(),
+            })
+         else setProductObjects({})
       })
-    }, [])
-  
-    const addOrEdit = (obj) => {
-       console.log("inside addOrEdit")
-      if (currentId == ''){
+   }, [])
+
+   const addOrEdit = (obj) => {
+      console.log("inside addOrEdit")
+      if (currentId == '') {
          swal(
             "Nice!",
             "A product is added!",
             "success"
          )
          firebaseDb.ref('products/').push(obj, (err) => {
-           if (err) console.log(err)
-           else setCurrentId('')
+            if (err) console.log(err)
+            else setCurrentId('')
          })
       }
-      else{
+      else {
          swal(
             "Nice!",
             "This product is updated!",
             "success"
          )
-        firebaseDb.ref(`products/${currentId}`).set(obj, (err) => {
-          if (err) console.log(err)
-          else setCurrentId('')
-        })
+         firebaseDb.ref(`products/${currentId}`).set(obj, (err) => {
+            if (err) console.log(err)
+            else setCurrentId('')
+         })
       }
-    }
-  
-    const onDelete = (key) => {
+   }
+
+   const onDelete = (key) => {
       swal({
          title: "Are you sure?",
          text:
@@ -81,16 +82,16 @@ const ProductsList = () => {
          dangerMode: true,
       }).then((willDelete) => {
          if (willDelete) {
-        firebaseDb.ref(`products/${key}`).remove((err) => {
-          if (err) console.log(err)
-          else setCurrentId('')
-        })
-        swal(
-           "Poof! This product has been deleted!",
-           {
-              icon: "success",
-           }
-        );
+            firebaseDb.ref(`products/${key}`).remove((err) => {
+               if (err) console.log(err)
+               else setCurrentId('')
+            })
+            swal(
+               "Poof! This product has been deleted!",
+               {
+                  icon: "success",
+               }
+            );
          } else {
             swal("Your product is safe!");
          }
@@ -101,7 +102,7 @@ const ProductsList = () => {
       <Fragment>
          <div className="row">
             <div className="col-xl-4 col-lg-4">
-               <ProductsForm {...{ addOrEdit, currentId, productObjects }}/>
+               <ProductsForm {...{ addOrEdit, currentId, productObjects }} />
             </div>
             <div className="col-xl-8 col-lg-8">
                <Row>
@@ -109,9 +110,28 @@ const ProductsList = () => {
                      <Card>
                         <Card.Header>
                            <Card.Title>My Products</Card.Title>
+                           <Button variant='primary btn-rounded' onClick={() => { setCurrentId('') }}>
+                              <span className='btn-icon-left text-primary'>
+
+                                 <i className='fa fa-plus' />
+                              </span>
+                              Add
+                           </Button>
                         </Card.Header>
                         <Card.Body>
-                           <Table responsive>
+                           <div className="search_bar dropdown show mb-3">
+                              <div className="dropdown-menushow">
+                                 <form onSubmit={(e) => e.preventDefault()}>
+                                    <input
+                                       className="form-control"
+                                       type="search"
+                                       placeholder="Search Customer"
+                                       aria-label="Search"
+                                    />
+                                 </form>
+                              </div>
+                           </div>
+                           <Table responsive hover>
                               <thead>
                                  <tr>
                                     {/* <th>
@@ -141,9 +161,10 @@ const ProductsList = () => {
                                  </tr>
                               </thead>
                               <tbody>
-                              {Object.keys(productObjects).map((id) => {
+                                 {Object.keys(productObjects).map((id) => {
                                     return (
-                                       <tr key={id} onClick={() => { setCurrentId(id) }}>
+                                       <tr key={id} 
+                                          onClick={() => { setCurrentId(id) }}>
                                           {/* <td>
                                              <div className="d-flex">
                                                 <Link

@@ -5,7 +5,7 @@ import { storage } from '../../../firebase'
 import { v4 as uuid } from 'uuid'
 
 import PageTitle from "../../layouts/PageTitle";
-import { SplitButton, ButtonGroup, Dropdown } from "react-bootstrap";
+import { SplitButton, ButtonGroup, Dropdown, Button } from "react-bootstrap";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
 const ProductsForm = (props) => {
@@ -26,85 +26,108 @@ const ProductsForm = (props) => {
 
    useEffect(() => {
       firebaseDb.ref('category/').on('value', (snapshot) => {
-        if (snapshot.val() != null)
-        setCategoryObjects({
-            ...snapshot.val(),
-          })
-        else setCategoryObjects({})
+         if (snapshot.val() != null)
+            setCategoryObjects({
+               ...snapshot.val(),
+            })
+         else setCategoryObjects({})
       })
-    }, [])
+   }, [])
 
    useEffect(() => {
       firebaseDb.ref('unit/').on('value', (snapshot) => {
-        if (snapshot.val() != null)
-        setUnitObjects({
-            ...snapshot.val(),
-          })
-        else setUnitObjects({})
+         if (snapshot.val() != null)
+            setUnitObjects({
+               ...snapshot.val(),
+            })
+         else setUnitObjects({})
       })
-    }, [])
+   }, [])
 
    useEffect(() => {
       firebaseDb.ref('products/').on('value', (snapshot) => {
-        if (snapshot.val() != null)
-        setProductObjects({
-            ...snapshot.val(),
-          })
-        else setProductObjects({})
+         if (snapshot.val() != null)
+            setProductObjects({
+               ...snapshot.val(),
+            })
+         else setProductObjects({})
       })
-    }, [])
+   }, [])
 
+   useEffect(() => {
+      if (props.currentId === ""){
+        setViewMode(false);
+        setValues({
+          ...initialFieldValues,
+        });
+      }
+      else{
+        setViewMode(true);
+        setValues({
+          ...props.productObjects[props.currentId],
+        });
+      }
+       
+    }, [props.currentId, props.productObjects]);
+  
 
-  useEffect(() => {
-   if (props.currentId == '')
-     setValues({
-       ...initialFieldValues,
-     })
-   else
-     setValues({
-       ...props.productObjects[props.currentId],
-     })
- }, [props.currentId, props.productObjects])
+   const handleInputChange = (e) => {
+      var { name, value } = e.target
+      setValues({
+         ...values,
+         [name]: value,
+      })
+   }
 
- const handleInputChange = (e) => {
-   var { name, value } = e.target
-   setValues({
-     ...values,
-     [name]: value,
-   })
- }
+   const [viewMode, setViewMode] = useState(false);
 
- const [imageUrl, setImageUrl] = useState()
- const readImages = async (e) => {
-   const file = e.target.files[0]
-   const id = uuid()
-   const imagesRef = storage.ref('images').child(id)
+   const [imageUrl, setImageUrl] = useState()
+   const readImages = async (e) => {
+      const file = e.target.files[0]
+      const id = uuid()
+      const imagesRef = storage.ref('images').child(id)
 
-   await imagesRef.put(file)
-   imagesRef.getDownloadURL().then((url) => {
-     setImageUrl(url)
-   })
- }
+      await imagesRef.put(file)
+      imagesRef.getDownloadURL().then((url) => {
+         setImageUrl(url)
+      })
+   }
 
- if (typeof imageUrl !== 'undefined' && imageUrl != null) {
-   values.productImage = imageUrl
- } 
+   if (typeof imageUrl !== 'undefined' && imageUrl != null) {
+      values.productImage = imageUrl
+   }
 
- const handleFormSubmit = (e) => {
-    console.log("inside handleFormSubmit")
-   e.preventDefault()
-   props.addOrEdit(values)
-   window.location.reload(false)
- }
+   const handleFormSubmit = (e) => {
+      console.log("inside handleFormSubmit")
+      e.preventDefault()
+      props.addOrEdit(values)
+      window.location.reload(false)
+   }
 
- const enabled = values.productName!=null
+   const enabled = values.productName != null
    return (
       <Fragment>
          <div className="row">
             <div className="col-xl-12 col-lg-12">
                <div className="card">
                   <div className="card-header">
-                     <h4 className="card-title">{props.currentId === '' ? 'Add' : 'Update'} Product</h4>
+                     <h4 className="card-title">
+                        {props.currentId === "" ? "Add " : viewMode ? "View " : "Edit "}
+                        Customer
+                     </h4>
+                     {
+                        props.currentId !== "" ?
+                           <Button variant='primary btn-rounded' onClick={() => { setViewMode(!viewMode) }}>
+                              <span className='btn-icon-left text-primary'>
+
+                                 {viewMode ? <i className='fa fa-pencil' /> : <i className='fa fa-eye' />}
+                              </span>
+                              {viewMode ? "Edit " : "View "}
+                           </Button>
+                           :
+                           null
+                     }
+
                   </div>
                   <div className="card-body">
                      <div className="basic-form">
@@ -120,6 +143,7 @@ const ProductsForm = (props) => {
                                     value={values.productName}
                                     onChange={handleInputChange}
                                     required
+                                    disabled={viewMode}
                                  />
                               </div>
                               <div className="form-group col-md-12">
@@ -136,65 +160,80 @@ const ProductsForm = (props) => {
                                     <option value=''>Choose Category..</option>
                                     {Object.keys(categoryObjects).map((id) => {
                                        return (
-                                       <React.Fragment key={id}>
-                                          {categoryObjects[id].isActive == 'true' ? (
-                                             <option value={categoryObjects[id].categoryName}>
-                                             {categoryObjects[id].categoryName
-                                             }
-                                             </option>
-                                          ) : (
-                                             ''
-                                          )}
-                                       </React.Fragment>
+                                          <React.Fragment key={id}>
+                                             {categoryObjects[id].isActive == 'true' ? (
+                                                <option value={categoryObjects[id].categoryName}>
+                                                   {categoryObjects[id].categoryName
+                                                   }
+                                                </option>
+                                             ) : (
+                                                ''
+                                             )}
+                                          </React.Fragment>
                                        )
                                     })}
                                  </select>
                               </div>
-                            </div>
-                            <div className="form-row"><div className="form-group col-md-12">
-                                 <label>Unit</label>
-                                 <select
-                                    defaultValue='Select Unit'
-                                    id="inputState"
-                                    className="form-control"
-                                    name='unit'
-                                    value={values.unit}
-                                    onChange={handleInputChange}
-                                    required
-                                 >
-                                    <option value='Unit'>Choose Unit..</option>
-                                    {Object.keys(unitObjects).map((id) => {
-                                       return (
+                           </div>
+                           <div className="form-row"><div className="form-group col-md-12">
+                              <label>Unit</label>
+                              <select
+                                 defaultValue='Select Unit'
+                                 id="inputState"
+                                 className="form-control"
+                                 name='unit'
+                                 value={values.unit}
+                                 onChange={handleInputChange}
+                                 required
+                                 disabled={viewMode}
+                              >
+                                 <option value='Unit'>Choose Unit..</option>
+                                 {Object.keys(unitObjects).map((id) => {
+                                    return (
                                        <React.Fragment key={id}>
                                           {unitObjects[id].isActive == 'true' ? (
                                              <option value={unitObjects[id].unitName}>
-                                             {unitObjects[id].unitName
-                                             }
+                                                {unitObjects[id].unitName
+                                                }
                                              </option>
                                           ) : (
                                              ''
                                           )}
                                        </React.Fragment>
-                                       )
-                                    })}
-                                 </select>
-                              </div>
+                                    )
+                                 })}
+                              </select>
+                           </div>
                               <div className="form-group col-md-12">
                                  <label>Price</label>
-                                 <input type="text" 
-                                 className="form-control" 
-                                 name='price'
-                                 value = {values.price}
-                                 onChange={handleInputChange}
-                                 required
+                                 <input type="text"
+                                    className="form-control"
+                                    name='price'
+                                    value={values.price}
+                                    onChange={handleInputChange}
+                                    required
+                                    disabled={viewMode}
                                  />
                               </div>
-                            </div>
+                           </div>
                            <div className="form-row">
                               <div className="form-group col-md-12">
                                  <label>Product Image</label>
                                  <div className="input-group">
-                                    <div className="custom-file">
+                                    <input
+                                       type="file"
+                                       accept="image/*"
+                                       onChange={readImages}
+                                       disabled={viewMode}
+                                    />
+                                    <input
+                                       className="form-control"
+                                       name="productImage"
+                                       value={values.productImage}
+                                       onChange={handleInputChange}
+                                       disabled={viewMode}
+                                    />
+                                    {/* <div className="custom-file">
                                        <input
                                           type="file"
                                           className="custom-file-input"
@@ -202,48 +241,50 @@ const ProductsForm = (props) => {
                                        <label className="custom-file-label">
                                           Choose file
                                        </label>
-                                    </div>
+                                    </div> */}
                                  </div>
                               </div>
                            </div>
                            <div className="form-row">
-                                 <label className="col-form-label col-sm-3 pt-0">
-                                    Is Active?
-                                 </label>
-                                 <div className="col-sm-9">
-                                    <div className="form-check">
-                                       <input
-                                          className="form-check-input"
-                                          type="radio"
-                                          name="isActive"
-                                          value="true"
-                                          onChange={handleInputChange}
-                                          defaultChecked
-                                       />
-                                       <label className="form-check-label">
-                                          Yes
-                                       </label>
-                                    </div>
-                                    <div className="form-check">
-                                       <input
-                                          className="form-check-input"
-                                          type="radio"
-                                          name="isActive"
-                                          value="false"
-                                          onChange={handleInputChange}
-                                       />
-                                       <label className="form-check-label">
-                                          No
-                                       </label>
-                                    </div>
+                              <label className="col-form-label col-sm-3 pt-0">
+                                 Is Active?
+                              </label>
+                              <div className="col-sm-9">
+                                 <div className="form-check">
+                                    <input
+                                       className="form-check-input"
+                                       type="radio"
+                                       name="isActive"
+                                       value="true"
+                                       onChange={handleInputChange}
+                                       defaultChecked
+                                       disabled={viewMode}
+                                    />
+                                    <label className="form-check-label">
+                                       Yes
+                                    </label>
+                                 </div>
+                                 <div className="form-check">
+                                    <input
+                                       className="form-check-input"
+                                       type="radio"
+                                       name="isActive"
+                                       value="false"
+                                       onChange={handleInputChange}
+                                       disabled={viewMode}
+                                    />
+                                    <label className="form-check-label">
+                                       No
+                                    </label>
                                  </div>
                               </div>
+                           </div>
                            <div className="form-row">
                               <div className="form-group col-md-12">
-                                 <input type="submit" 
-                                 value = {props.currentId == '' ? 'Save' : 'Update'}
-                                 className="btn btn-primary btn-block"
-                                 disabled={!enabled} />
+                                 <input type="submit"
+                                    value={props.currentId == '' ? 'Save' : 'Update'}
+                                    className="btn btn-primary btn-block"
+                                    disabled={!enabled} />
                               </div>
                            </div>
                         </form>
