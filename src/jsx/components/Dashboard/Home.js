@@ -36,7 +36,7 @@ function Home() {
       <div className="row">
         <div className="col-lg-12 col-xxl-12">
           <div className="row">
-            <div className="col-lg-4 col-sm-4">
+            <div className="col-lg-3 col-sm-3">
               <div className="card widget-stat ">
                 <div className="card-body p-4">
                   <div className="media align-items-center">
@@ -51,7 +51,24 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="col-lg-4 col-sm-4">
+            <div className="col-lg-3 col-sm-3">
+              <div className="card widget-stat">
+                <div className="card-body p-4">
+                  <div className="media align-items-center">
+                    <div className="media-body">
+                      <p className="fs-18 mb-2 wspace-no">Processing</p>
+                      <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
+                        4
+                      </h1>
+                    </div>
+                    <span className="ml-3 bg-warning text-white">
+                      <i className="las la-sync scale4" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <div className="col-lg-3 col-sm-3">
               <div className="card widget-stat">
                 <div className="card-body p-4">
                   <div className="media align-items-center">
@@ -68,7 +85,7 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="col-lg-4 col-sm-4">
+            <div className="col-lg-3 col-sm-3">
               <div className="card widget-stat">
                 <div className="card-body p-4">
                   <div className="media align-items-center">

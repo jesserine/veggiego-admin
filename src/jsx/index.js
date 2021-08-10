@@ -227,8 +227,7 @@ const Markup = ({ showProfileSideBar }) => {
       <Router basename="/">
          <div
             id={`${!pagePath ? "main-wrapper" : ""}`}
-            className={`${!pagePath ? "show" : "mh100vh"} ${
-               !path ? "right-profile" : ""
+            className={`${!pagePath ? "show" : "mh100vh"}
             }`}
          >
             {!pagePath && (
@@ -237,12 +236,12 @@ const Markup = ({ showProfileSideBar }) => {
                   showProfile={() => setShowProfile(true)}
                />
             )}
-            {!path && !pagePath && (
+            {/* {!path && !pagePath && (
                <ProfileSidebar
                   addClass={showProfile ? "active" : ""}
                   hideProfile={() => setShowProfile(false)}
                />
-            )}
+            )} */}
             <div
                className={`  ${!pagePath ? "content-body" : ""}`}
             >
