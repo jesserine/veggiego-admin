@@ -70,6 +70,7 @@ import RidersList from '../components/Riders/RidersList';
 
 /// Orders
 import OrdersList from '../components/Orders/OrdersList';
+import DeliveryFeeList from "../components/Orders/DeliveryFeeList";
 
 /// Products
 import ProductsList from '../components/Products/ProductsList';
@@ -160,6 +161,7 @@ const Routes = () => {
   
       /// Orders
       { url: "orders", component: OrdersList },
+      { url: "orders-deliveryfee", component: DeliveryFeeList},
 
       /// Products 
       { url: "products", component: ProductsList },
