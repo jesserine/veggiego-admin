@@ -3,6 +3,9 @@ import React, { useState } from "react";
 /// React router dom
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
+/// Authentication 
+import { AuthProvider } from '../contexts/AuthContext'
+
 /// Css
 import "./index.css";
 import "./chart.css";
@@ -12,10 +15,10 @@ import Nav from "./layouts/nav";
 import Footer from "./layouts/Footer";
 
 /// Pages
-import Registration from "./pages/Registration";
-import Login from "./pages/Login";
-import ForgotPassword from "./pages/ForgotPassword";
-import LockScreen from "./pages/LockScreen";
+import Registration from "./components/Auth/Registration"
+import Login from "./components/Auth/Login";
+import ForgotPassword from "./components/Auth/ForgotPassword";
+import LockScreen from "./components/Auth/LockScreen";
 import Error400 from "./pages/Error400";
 import Error403 from "./pages/Error403";
 import Error404 from "./pages/Error404";
@@ -248,16 +251,18 @@ const Markup = ({ showProfileSideBar }) => {
                className={`  ${!pagePath ? "content-body" : ""}`}
             >
                <div className={`${!pagePath ? "container-fluid" : ""}`}>
-                  <Switch>
-                     {routes.map((data, i) => (
-                        <Route
-                           key={i}
-                           exact
-                           path={`/${data.url}`}
-                           component={data.component}
-                        />
-                     ))}
-                  </Switch>
+                  <AuthProvider>
+                     <Switch>
+                        {routes.map((data, i) => (
+                           <Route
+                              key={i}
+                              exact
+                              path={`/${data.url}`}
+                              component={data.component}
+                           />
+                        ))}
+                     </Switch>
+                  </AuthProvider>
                </div>
             </div>
             {!pagePath && <Footer />}
