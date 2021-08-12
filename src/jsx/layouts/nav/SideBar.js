@@ -64,6 +64,7 @@ class SideBar extends Component {
       /// Active menu
       let dashboard = [
             "",
+            "dashboard"
          ];
       let customers = [
             "customers",

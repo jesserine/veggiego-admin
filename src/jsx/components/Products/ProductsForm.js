@@ -113,7 +113,7 @@ const ProductsForm = (props) => {
                   <div className="card-header">
                      <h4 className="card-title">
                         {props.currentId === "" ? "Add " : viewMode ? "View " : "Edit "}
-                        Customer
+                        Product
                      </h4>
                      {
                         props.currentId !== "" ?

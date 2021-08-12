@@ -144,36 +144,12 @@ const RidersList = () => {
                                     <th>
                                        <strong>VEHICLE PLATE #</strong>
                                     </th>
-                                    {/* <th>
-                                    <strong>DATE ADDED</strong>
-                                 </th>
-                                 <th>
-                                    <strong>STATUS</strong>
-                                 </th> */}
                                  </tr>
                               </thead>
                               <tbody>
                                  {Object.keys(riderObjects).map((id) => {
                                     return (
                                        <tr key={id} onClick={() => { setCurrentId(id) }}>
-                                          {/* <td>
-                                                <div className="d-flex">
-                                                   <Link
-                                                      to="/riders"
-                                                      onClick={() => { setCurrentId(id); window.scrollTo(0, 0); }}
-                                                      className="btn btn-primary shadow btn-xs sharp mr-1"
-                                                   >
-                                                      <i className="fa fa-pencil"></i>
-                                                   </Link>
-                                                   <Link
-                                                      to="/riders"
-                                                      onClick={() => { onDelete(id) }}
-                                                      className="btn btn-danger shadow btn-xs sharp"
-                                                   >
-                                                      <i className="fa fa-trash"></i>
-                                                   </Link>
-                                                </div>
-                                             </td> */}
                                           <td>
                                              <img
                                                 src={avatar1}

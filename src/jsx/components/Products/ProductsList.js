@@ -125,7 +125,7 @@ const ProductsList = () => {
                                     <input
                                        className="form-control"
                                        type="search"
-                                       placeholder="Search Customer"
+                                       placeholder="Search Product name"
                                        aria-label="Search"
                                     />
                                  </form>
@@ -134,11 +134,8 @@ const ProductsList = () => {
                            <Table responsive hover>
                               <thead>
                                  <tr>
-                                    {/* <th>
-                                       <strong></strong>
-                                    </th> */}
                                     <th>
-                                       <strong>NAME</strong>
+                                       <strong>PRODUCT NAME</strong>
                                     </th>
                                     <th>
                                        <strong>CATEGORY</strong>
@@ -149,15 +146,6 @@ const ProductsList = () => {
                                     <th>
                                        <strong>PRICE</strong>
                                     </th>
-                                    <th>
-                                       <strong>IMAGE</strong>
-                                    </th>
-                                    {/* <th>
-                                       <strong>DATE UPDATED</strong>
-                                    </th>
-                                    <th>
-                                       <strong>STATUS</strong>
-                                    </th> */}
                                  </tr>
                               </thead>
                               <tbody>
@@ -165,25 +153,18 @@ const ProductsList = () => {
                                     return (
                                        <tr key={id} 
                                           onClick={() => { setCurrentId(id) }}>
-                                          {/* <td>
-                                             <div className="d-flex">
-                                                <Link
-                                                   to="/products"
-                                                   onClick={() => { setCurrentId(id); window.scrollTo(0, 0); }}
-                                                   className="btn btn-primary shadow btn-xs sharp mr-1"
-                                                >
-                                                   <i className="fa fa-pencil"></i>
-                                                </Link>
-                                                <Link
-                                                   to="/products"
-                                                   onClick={() => { onDelete(id) }}
-                                                   className="btn btn-danger shadow btn-xs sharp"
-                                                >
-                                                   <i className="fa fa-trash"></i>
-                                                </Link>
-                                             </div>
-                                          </td> */}
-                                          <td>{productObjects[id].productName}</td>
+                                         
+                                          <td>
+                                             <img
+                                                src={avatar1}
+                                                className="rounded-lg mr-2"
+                                                width="24"
+                                                alt=""
+                                             />
+                                             <span>
+                                                {productObjects[id].productName}
+                                             </span>
+                                          </td>
                                           <td>{productObjects[id].category}</td>
                                           <td>{productObjects[id].unit}</td>
                                           <td>{productObjects[id].price}</td>
