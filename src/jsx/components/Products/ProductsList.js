@@ -24,6 +24,7 @@ import ProductsForm from "./ProductsForm";
 const ProductsList = () => {
    var [productObjects, setProductObjects] = useState({})
    var [currentId, setCurrentId] = useState('')
+   var [searchTerm, setSearchTerm] = useState('')
 
    const svg1 = (
       <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
@@ -33,8 +34,38 @@ const ProductsList = () => {
             <circle fill="#000000" cx="12" cy="12" r="2"></circle>
             <circle fill="#000000" cx="19" cy="12" r="2"></circle>
          </g>
-      </svg>
+      </svg> 
    );
+
+   useEffect(() => {
+      if (searchTerm.length > 0) {
+          firebaseDb.ref('products/').on('value', (snapshot) => {
+              if (snapshot.val() != null) {
+                  const productsDb = snapshot.val()
+                  setProductObjects([])
+                  let searchQuery = searchTerm.toLowerCase();
+                  for (let id in productsDb) {
+                      let product = productsDb[id].productName.toLowerCase();
+                      if (product.slice(0, searchQuery.length).indexOf(searchQuery) !== -1) {
+                        setProductObjects(prevResult => {
+                              return [...prevResult, productsDb[id]]
+                          });
+                      }
+                  }
+              } else {
+               setProductObjects([])
+              }
+          })
+      } else {
+         firebaseDb.ref('products/').on('value', (snapshot) => {
+            if (snapshot.val() != null)
+               setProductObjects({
+                  ...snapshot.val(),
+               })
+            else setProductObjects({})
+         })
+      }
+  }, [searchTerm])
 
    useEffect(() => {
       firebaseDb.ref('products/').on('value', (snapshot) => {
@@ -127,6 +158,7 @@ const ProductsList = () => {
                                        type="search"
                                        placeholder="Search Product name"
                                        aria-label="Search"
+                                       onChange ={(event) => setSearchTerm(event.target.value)}
                                     />
                                  </form>
                               </div>
