@@ -24,6 +24,7 @@ import RidersForm from "./RidersForm";
 const RidersList = () => {
    var [riderObjects, setRiderObjects] = useState({})
    var [currentId, setCurrentId] = useState('')
+   var [searchTerm, setSearchTerm] = useState('')
 
    const svg1 = (
       <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
@@ -35,6 +36,36 @@ const RidersList = () => {
          </g>
       </svg>
    );
+
+   useEffect(() => {
+      if (searchTerm.length > 0) {
+          firebaseDb.ref('riders/').on('value', (snapshot) => {
+              if (snapshot.val() != null) {
+                  const ridersDb = snapshot.val()
+                  setRiderObjects([])
+                  let searchQuery = searchTerm.toLowerCase();
+                  for (let id in ridersDb) {
+                      let rider = ridersDb[id].riderName.toLowerCase();
+                      if (rider.slice(0, searchQuery.length).indexOf(searchQuery) !== -1) {
+                        setRiderObjects(prevResult => {
+                              return [...prevResult, ridersDb[id]]
+                          });
+                      }
+                  }
+              } else {
+               setRiderObjects([])
+              }
+          })
+      } else {
+         firebaseDb.ref('riders/').on('value', (snapshot) => {
+            if (snapshot.val() != null)
+               setRiderObjects({
+                  ...snapshot.val(),
+               })
+            else setRiderObjects({})
+         })
+      }
+  }, [searchTerm])
 
    useEffect(() => {
       firebaseDb.ref('riders/').on('value', (snapshot) => {
@@ -113,6 +144,7 @@ const RidersList = () => {
                                        type="search"
                                        placeholder="Search Rider name"
                                        aria-label="Search"
+                                       onChange ={(event) => setSearchTerm(event.target.value)}
                                     />
                                  </form>
                               </div>
