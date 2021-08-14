@@ -25,6 +25,7 @@ import CustomerForm from "./CustomerForm";
 const CustomerList = () => {
   var [contactObjects, setContactObjects] = useState({});
   var [currentId, setCurrentId] = useState("");
+  var [searchTerm, setSearchTerm] = useState('')
 
   const svg1 = (
     <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
@@ -36,6 +37,38 @@ const CustomerList = () => {
       </g>
     </svg>
   );
+
+
+  useEffect(() => {
+    if (searchTerm.length > 0) {
+        firebaseDb.ref('customer/').on('value', (snapshot) => {
+            if (snapshot.val() != null) {
+                const customerDb = snapshot.val()
+                setContactObjects([])
+                let searchQuery = searchTerm.toLocaleLowerCase()
+                for (let id in customerDb) {
+                    let customer = customerDb[id].name.toLocaleLowerCase()
+                    if (customer.slice(0, searchQuery.length).indexOf(searchQuery) !== -1) {
+                      setContactObjects(prevResult => {
+                            return [...prevResult, customerDb[id]]
+                        });
+                    }
+                }
+            } else {
+              setContactObjects([])
+            }
+        })
+    } else {
+       firebaseDb.ref('customer/').on('value', (snapshot) => {
+          if (snapshot.val() != null)
+            setContactObjects({
+                ...snapshot.val(),
+             })
+          else setContactObjects({})
+       })
+    }
+}, [searchTerm])
+
 
   useEffect(() => {
     firebaseDb.ref("customer/").on("value", (snapshot) => {
@@ -114,6 +147,7 @@ const CustomerList = () => {
                           type="search"
                           placeholder="Search Customer"
                           aria-label="Search"
+                          // onChange ={(event) => setSearchTerm(event.target.value)}
                         />
                       </form>
                     </div>
