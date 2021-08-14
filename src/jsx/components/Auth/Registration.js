@@ -1,15 +1,17 @@
 import React, { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useAuth } from '../../../contexts/AuthContext'
+import { Alert } from 'react-bootstrap'
 
 const Register = ({ history }) => {
    const [registrationData, setRegistrationData] = useState({});
+   const hist = useHistory();
 
    /// Authentication
    const emailRef = useRef()
    const passwordRef = useRef()
    const passwordConfirmRef = useRef()
-   const { signUp } = useAuth()
+   const { signUp, currentUser } = useAuth()
    const [error, setError] = useState('')
    const [loading, setLoading] = useState(false)
 
@@ -29,13 +31,14 @@ const Register = ({ history }) => {
          setError('')
          setLoading(true)
          await signUp(emailRef.current.value, passwordRef.current.value)
-      } catch {
+         hist.push('/')
+      } catch (err){
          setError('Failed to create an account')
+         setError(err.message)
       }
-
       setLoading(false)
-      
    };
+
    return (
       <div className="authincation h-100 p-meddle">
          <div className="container h-100">
@@ -48,6 +51,7 @@ const Register = ({ history }) => {
                               <h4 className="text-center mb-4">
                                  Sign up your account
                               </h4>
+                              { currentUser && currentUser.email }
                               <form
                                  action=""
                                  onSubmit={(e) => submitHandler(e)}
@@ -100,12 +104,21 @@ const Register = ({ history }) => {
                                     />
                                  </div>
                               </form>
+                              
+                              { error && 
+                                 <Alert
+                                    className="alert-dismissible fade show mt-3"
+                                    variant="warning"
+                                 >
+                                    <strong>{error}</strong>
+                                 </Alert>
+                              }
                               <div className="new-account mt-3">
                                  <p>
                                     Already have an account?{" "}
                                     <Link
                                        className="text-primary"
-                                       to="/page-login"
+                                       to="/login"
                                     >
                                        Sign in
                                     </Link>

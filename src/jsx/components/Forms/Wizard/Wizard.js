@@ -52,7 +52,7 @@ const Wizard = () => {
                         className="step-form-horizontal"
                      >
                         <Multistep
-                           showNavigation={true}
+                           showNavigation={false}
                            steps={steps}
                            prevStyle={prevStyle}
                            nextStyle={nextStyle}

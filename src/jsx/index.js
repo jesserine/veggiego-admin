@@ -3,8 +3,8 @@ import React, { useState } from "react";
 /// React router dom
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-/// Authentication 
-import { AuthProvider } from '../contexts/AuthContext'
+/// Authentication
+import { AuthProvider } from "../contexts/AuthContext";
 
 /// Css
 import "./index.css";
@@ -15,7 +15,7 @@ import Nav from "./layouts/nav";
 import Footer from "./layouts/Footer";
 
 /// Pages
-import Registration from "./components/Auth/Registration"
+import Registration from "./components/Auth/Registration";
 import Login from "./components/Auth/Login";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import LockScreen from "./components/Auth/LockScreen";
@@ -36,18 +36,18 @@ import Analytics from "./components/Dashboard/Analytics";
 import NewCompaign from "./components/Dashboard/NewCompaign";
 
 /// Customer
-import CustomerList from './components/Customers/CustomerList';
+import CustomerList from "./components/Customers/CustomerList";
 import CustomerForm from "./components/Customers/CustomerForm";
 
 /// Riders
-import RidersList from './components/Riders/RidersList';
+import RidersList from "./components/Riders/RidersList";
 
-/// Orders 
-import OrdersList from './components/Orders/OrdersList';
+/// Orders
+import OrdersList from "./components/Orders/OrdersList";
 import DeliveryFeeList from "./components/Orders/DeliveryFeeList";
 
-/// Products 
-import ProductsList from './components/Products/ProductsList';
+/// Products
+import ProductsList from "./components/Products/ProductsList";
 import CategoryList from "./components/Products/CategoryList";
 import UnitList from "./components/Products/UnitList";
 
@@ -116,159 +116,148 @@ import JqvMap from "./components/PluginsMenu/Jqv Map/JqvMap";
 import RechartJs from "./components/charts/rechart";
 import ProfileSidebar from "./layouts/ProfileSidebar";
 import Lightgallery from "./components/PluginsMenu/Lightgallery/Lightgallery";
+import PrivateRoute from "./layouts/PrivateRoute";
+import AuthRoute from "./layouts/AuthRoute";
 
 const Markup = ({ showProfileSideBar }) => {
-   const [showProfile, setShowProfile] = useState(false);
-   const routes = [
-      // Dashboard
-      { url: "", component: Home },
-      { url: "dashboard", component: Home },
-      { url: "campaign", component: Campaign },
-      { url: "social-network-campaign", component: SocialNetworkCampaign },
-      { url: "spendings", component: Spendings },
-      { url: "analytics", component: Analytics },
-      { url: "new-compaign", component: NewCompaign },
 
-      // Customers
-      { url: "customers", component: CustomerList },
-      { url: "customer-form", component: CustomerForm },
+  const [showProfile, setShowProfile] = useState(false);
 
-      // Riders
-      { url: "riders", component: RidersList },
+  const routes = [
+    // Dashboard
+    { url: "", component: Home },
+    { url: "dashboard", component: Home },
+    { url: "campaign", component: Campaign },
+    { url: "social-network-campaign", component: SocialNetworkCampaign },
+    { url: "spendings", component: Spendings },
+    { url: "analytics", component: Analytics },
+    { url: "new-compaign", component: NewCompaign },
 
-      // Orders
-      { url: "orders", component: OrdersList },
-      { url: "orders-deliveryfee", component: DeliveryFeeList},
+    // Customers
+    { url: "customers", component: CustomerList },
+    { url: "customer-form", component: CustomerForm },
 
-      // Products
-      { url: "products", component: ProductsList },
-      { url: "products-category", component: CategoryList},
-      { url: "products-unit", component: UnitList },
+    // Riders
+    { url: "riders", component: RidersList },
 
-      /// Bootstrap
-      { url: "ui-alert", component: UiAlert },
-      { url: "ui-badge", component: UiBadge },
-      { url: "ui-button", component: UiButton },
-      { url: "ui-modal", component: UiModal },
-      { url: "ui-button-group", component: UiButtonGroup },
-      { url: "ui-accordion", component: UiAccordion },
-      { url: "ui-list-group", component: UiListGroup },
-      { url: "ui-media-object", component: UiMediaObject },
-      { url: "ui-card", component: UiCards },
-      { url: "ui-carousel", component: UiCarousel },
-      { url: "ui-dropdown", component: UiDropDown },
-      { url: "ui-popover", component: UiPopOver },
-      { url: "ui-progressbar", component: UiProgressBar },
-      { url: "ui-tab", component: UiTab },
-      { url: "ui-pagination", component: UiPagination },
-      { url: "ui-typography", component: UiTypography },
-      { url: "ui-grid", component: UiGrid },
-      /// Apps
-      { url: "app-profile", component: AppProfile },
-      { url: "email-compose", component: Compose },
-      { url: "email-inbox", component: Inbox },
-      { url: "email-read", component: Read },
-      { url: "app-calender", component: Calendar },
-      { url: "post-details", component: PostDetails },
+    // Orders
+    { url: "orders", component: OrdersList },
+    { url: "orders-deliveryfee", component: DeliveryFeeList },
 
-      /// Shop
-      { url: "ecom-product-grid", component: ProductGrid },
-      { url: "ecom-product-list", component: ProductList },
-      { url: "ecom-product-detail", component: ProductDetail },
-      { url: "ecom-product-order", component: ProductOrder },
-      { url: "ecom-checkout", component: Checkout },
-      { url: "ecom-invoice", component: Invoice },
-      { url: "ecom-product-detail", component: ProductDetail },
-      { url: "ecom-customers", component: Customers },
+    // Products
+    { url: "products", component: ProductsList },
+    { url: "products-category", component: CategoryList },
+    { url: "products-unit", component: UnitList },
 
-      /// Chart
-      { url: "chart-sparkline", component: SparklineChart },
-      { url: "chart-chartjs", component: ChartJs },
-      { url: "chart-chartist", component: Chartist },
-      { url: "chart-btc", component: BtcChart },
-      { url: "chart-apexchart", component: ApexChart },
-      { url: "chart-rechart", component: RechartJs },
+    /// Bootstrap
+    { url: "ui-alert", component: UiAlert },
+    { url: "ui-badge", component: UiBadge },
+    { url: "ui-button", component: UiButton },
+    { url: "ui-modal", component: UiModal },
+    { url: "ui-button-group", component: UiButtonGroup },
+    { url: "ui-accordion", component: UiAccordion },
+    { url: "ui-list-group", component: UiListGroup },
+    { url: "ui-media-object", component: UiMediaObject },
+    { url: "ui-card", component: UiCards },
+    { url: "ui-carousel", component: UiCarousel },
+    { url: "ui-dropdown", component: UiDropDown },
+    { url: "ui-popover", component: UiPopOver },
+    { url: "ui-progressbar", component: UiProgressBar },
+    { url: "ui-tab", component: UiTab },
+    { url: "ui-pagination", component: UiPagination },
+    { url: "ui-typography", component: UiTypography },
+    { url: "ui-grid", component: UiGrid },
+    /// Apps
+    { url: "app-profile", component: AppProfile },
+    { url: "email-compose", component: Compose },
+    { url: "email-inbox", component: Inbox },
+    { url: "email-read", component: Read },
+    { url: "app-calender", component: Calendar },
+    { url: "post-details", component: PostDetails },
 
-      /// table
-      { url: "table-datatable-basic", component: DataTable },
-      { url: "table-bootstrap-basic", component: BootstrapTable },
+    /// Shop
+    { url: "ecom-product-grid", component: ProductGrid },
+    { url: "ecom-product-list", component: ProductList },
+    { url: "ecom-product-detail", component: ProductDetail },
+    { url: "ecom-product-order", component: ProductOrder },
+    { url: "ecom-checkout", component: Checkout },
+    { url: "ecom-invoice", component: Invoice },
+    { url: "ecom-product-detail", component: ProductDetail },
+    { url: "ecom-customers", component: Customers },
 
-      /// Form
-      { url: "form-element", component: Element },
-      { url: "form-wizard", component: Wizard },
-      { url: "form-wizard", component: Wizard },
-      { url: "form-editor-summernote", component: SummerNote },
-      { url: "form-pickers", component: Pickers },
-      { url: "form-validation-jquery", component: jQueryValidation },
+    /// Chart
+    { url: "chart-sparkline", component: SparklineChart },
+    { url: "chart-chartjs", component: ChartJs },
+    { url: "chart-chartist", component: Chartist },
+    { url: "chart-btc", component: BtcChart },
+    { url: "chart-apexchart", component: ApexChart },
+    { url: "chart-rechart", component: RechartJs },
 
-      /// Plugin
+    /// table
+    { url: "table-datatable-basic", component: DataTable },
+    { url: "table-bootstrap-basic", component: BootstrapTable },
 
-      { url: "uc-select2", component: Select2 },
-      { url: "uc-nestable", component: Nestable },
-      { url: "uc-noui-slider", component: MainNouiSlider },
-      { url: "uc-sweetalert", component: MainSweetAlert },
-      { url: "uc-toastr", component: Toastr },
-      { url: "map-jqvmap", component: JqvMap },
-	   { url: "uc-lightgallery", component: Lightgallery },
+    /// Form
+    { url: "form-element", component: Element },
+    { url: "form-wizard", component: Wizard },
+    { url: "form-wizard", component: Wizard },
+    { url: "form-editor-summernote", component: SummerNote },
+    { url: "form-pickers", component: Pickers },
+    { url: "form-validation-jquery", component: jQueryValidation },
 
-      /// pages
-      { url: "widget-basic", component: Widget },
+    /// Plugin
 
-      { url: "page-register", component: Registration },
-      { url: "page-lock-screen", component: LockScreen },
-      { url: "page-login", component: Login },
-      { url: "page-forgot-password", component: ForgotPassword },
-      { url: "page-error-400", component: Error400 },
-      { url: "page-error-403", component: Error403 },
-      { url: "page-error-404", component: Error404 },
-      { url: "page-error-500", component: Error500 },
-      { url: "page-error-503", component: Error503 },
-   ];
-   let path = window.location.pathname;
-   path = path.split("/");
-   path = path[path.length - 1];
-   let pagePath = path.split("-").includes("page");
-   return (
-      <Router basename="/">
-         <div
-            id={`${!pagePath ? "main-wrapper" : ""}`}
-            className={`${!pagePath ? "show" : "mh100vh"}
-            }`}
-         >
-            {!pagePath && (
-               <Nav
-                  showProfileSideBar={showProfileSideBar}
-                  showProfile={() => setShowProfile(true)}
-               />
-            )}
-            {/* {!path && !pagePath && (
-               <ProfileSidebar
-                  addClass={showProfile ? "active" : ""}
-                  hideProfile={() => setShowProfile(false)}
-               />
-            )} */}
-            <div
-               className={`  ${!pagePath ? "content-body" : ""}`}
-            >
-               <div className={`${!pagePath ? "container-fluid" : ""}`}>
-                  <AuthProvider>
-                     <Switch>
-                        {routes.map((data, i) => (
-                           <Route
-                              key={i}
-                              exact
-                              path={`/${data.url}`}
-                              component={data.component}
-                           />
-                        ))}
-                     </Switch>
-                  </AuthProvider>
-               </div>
-            </div>
-            {!pagePath && <Footer />}
-         </div>
-      </Router>
-   );
+    { url: "uc-select2", component: Select2 },
+    { url: "uc-nestable", component: Nestable },
+    { url: "uc-noui-slider", component: MainNouiSlider },
+    { url: "uc-sweetalert", component: MainSweetAlert },
+    { url: "uc-toastr", component: Toastr },
+    { url: "map-jqvmap", component: JqvMap },
+    { url: "uc-lightgallery", component: Lightgallery },
+
+    /// pages
+    { url: "widget-basic", component: Widget },
+
+    { url: "login", component: Login },
+    { url: "register", component: Registration },
+    { url: "page-lock-screen", component: LockScreen },
+    { url: "page-forgot-password", component: ForgotPassword },
+    { url: "page-error-400", component: Error400 },
+    { url: "page-error-403", component: Error403 },
+    { url: "page-error-404", component: Error404 },
+    { url: "page-error-500", component: Error500 },
+    { url: "page-error-503", component: Error503 },
+  ];
+  let path = window.location.pathname;
+  path = path.split("/");
+  path = path[path.length - 1];
+  let authPath = path.split("-").includes("register") || path.split("-").includes("login");
+
+  
+  return (
+    <Router basename="/">
+      <AuthProvider>
+        <Switch>
+            {routes.map((data, i) => (
+                data.url === "register" || data.url === "login" ?
+                  <AuthRoute
+                      key={i}
+                      exact
+                      path={`/${data.url}`}
+                      component={data.component}
+                  />
+                :
+                  <PrivateRoute
+                      key={i}
+                      exact
+                      path={`/${data.url}`}
+                      component={data.component}
+                  />
+          ))}
+        </Switch>
+      </AuthProvider>
+    </Router>
+  );
 };
 
 export default Markup;

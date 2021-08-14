@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContext";
+
+
 /// Scroll
 import PerfectScrollbar from "react-perfect-scrollbar";
 
@@ -28,6 +31,19 @@ const Header = ({
    useEffect(() => {
       setInterval(() => setDateState(new Date()), 30000);
    }, []);
+
+   const [error, setError] = useState("")
+   const { logout } = useAuth()
+   const history = useHistory()
+
+   const handleLogout = async() => {
+      try{
+         await logout();
+         history.push('/login')
+      } catch {
+         setError('Failed to log out')
+      }
+   }
 
    return (
       <div className="header">
@@ -223,7 +239,7 @@ const Header = ({
                         </div>
                      </li>
                      
-                     {!path && (
+                     
                         <li className="nav-item dropdown header-profile">
                            <Link
                               className="nav-link"
@@ -286,7 +302,8 @@ const Header = ({
                                  <span className="ml-2">Inbox </span>
                               </Link>
                               <Link
-                                 to="/"
+                                 to="#"
+                                 onClick={handleLogout}
                                  className="dropdown-item ai-icon"
                               >
                                  <svg
@@ -310,7 +327,7 @@ const Header = ({
                               </Link>
                            </div>
                         </li>
-                     )}
+                     
                      {path && !showProfileSideBar && (
                         <li className="nav-item dropdown header-profile">
                            <Link

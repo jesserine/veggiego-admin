@@ -1,16 +1,39 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useRef } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { useAuth } from '../../../contexts/AuthContext'
+import { Alert } from 'react-bootstrap'
 
 const Login = ({ history }) => {
    const [loginData, setLoginData] = useState({});
+   const hist = useHistory()
+
+    /// Authentication
+    const emailRef = useRef()
+    const passwordRef = useRef()
+    const { login } = useAuth()
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
+
+
    const handleBlur = (e) => {
       const newLoginData = { ...loginData };
       newLoginData[e.target.name] = e.target.value;
       setLoginData(newLoginData);
    };
-   const submitHandler = (e) => {
+
+   const submitHandler = async(e) => {
       e.preventDefault();
-      history.push("/");
+
+      try{
+         setError('')
+         setLoading(true)
+         await login(emailRef.current.value, passwordRef.current.value)
+         hist.push('/')
+      } catch (e){
+         setError(e.message)
+         console.log(e);
+      }
+      setLoading(false)
    };
 
    return (
@@ -23,7 +46,7 @@ const Login = ({ history }) => {
                         <div className="col-xl-12">
                            <div className="auth-form">
                               <h4 className="text-center mb-4">
-                                 Sign in your account
+                                 Log in your account
                               </h4>
                               <form
                                  action=""
@@ -36,9 +59,9 @@ const Login = ({ history }) => {
                                     <input
                                        type="email"
                                        className="form-control"
-                                       defaultValue="hello@example.com"
                                        name="Email"
                                        onChange={handleBlur}
+                                       ref={emailRef}
                                     />
                                  </div>
                                  <div className="form-group">
@@ -48,9 +71,9 @@ const Login = ({ history }) => {
                                     <input
                                        type="password"
                                        className="form-control"
-                                       defaultValue="Password"
                                        name="password"
                                        onChange={handleBlur}
+                                       ref={passwordRef}
                                     />
                                  </div>
                                  <div className="form-row d-flex justify-content-between mt-4 mb-2">
@@ -83,14 +106,22 @@ const Login = ({ history }) => {
                                     />
                                  </div>
                               </form>
+                              { error && 
+                                 <Alert
+                                    className="alert-dismissible fade show mt-3"
+                                    variant="warning"
+                                 >
+                                    <strong>{error}</strong>
+                                 </Alert>
+                              }
                               <div className="new-account mt-3">
                                  <p>
                                     Don't have an account?{" "}
                                     <Link
                                        className="text-primary"
-                                       to="/page-register"
+                                       to="register"
                                     >
-                                       Sign up
+                                       Register
                                     </Link>
                                  </p>
                               </div>
