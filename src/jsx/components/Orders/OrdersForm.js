@@ -162,13 +162,14 @@ const OrdersForm = (props) => {
                                                 onChange={(event) => setValue(event.target.value)}
                                                 required
                                             />
-                                            <div className="searchBack">
+                                            <div className="searchBack"
+                                            value={result}>
                                                 {result.map((result, index) => (
-                                                    <a href="orders" id={index}>
+                                                    // <a href="orders" id={index}>
                                                     <div className="searchEntry">   
                                                         {result}
                                                     </div>
-                                                    </a>
+                                                    // </a>
                                                 ))}
                                             </div>
                                         </div>
