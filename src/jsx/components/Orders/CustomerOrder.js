@@ -36,9 +36,7 @@ const CustomerOrder = () => {
       padding: "0.55em 2em",
    };
    return (
-      <Fragment>
-         <PageTitle activeMenu="Components" motherMenu="Home" />
-
+      <Fragment> 
          <div className="row">
             <div className="col-xl-12 col-xxl-12">
                <div className="card">
