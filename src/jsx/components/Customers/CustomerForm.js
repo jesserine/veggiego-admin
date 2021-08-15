@@ -169,24 +169,17 @@ const CustomerForm = (props) => {
                           onChange={readImages}
                           disabled={viewMode}
                         />
-                        <input
-                          className="form-control"
-                          name="housePicture"
-                          value={values.housePicture}
-                          onChange={handleInputChange}
-                          disabled={viewMode}
-                        />
-                        {/* <div className="custom-file">
-                                       <input
-                                          type="file"
-                                          className="custom-file-input"
-                                       />
-                                       <label className="custom-file-label">
-                                          Choose file
-                                       </label>
-                                    </div> */}
                       </div>
                     </div>
+                  </div>
+                  <div className="form-group col-md-12">
+                    <input
+                        className="form-control"
+                        name="housePicture"
+                        value={values.housePicture}
+                        onChange={handleInputChange}
+                        disabled={true}
+                      />
                   </div>
                   <div className="form-row">
                     <label className="col-form-label col-sm-3 pt-0">
@@ -218,20 +211,17 @@ const CustomerForm = (props) => {
                       </div>
                     </div>
                   </div>
-                  { !viewMode ? 
-                     <div className="form-row">
-                        <div className="form-group mt-4 col-md-12">
-                           <input
-                              type="submit"
-                              value={props.currentId === "" ? "Save" : "Update"}
-                              className="btn btn-primary btn-block"
-                              disabled={!enabled}
-                           />
-                        </div>
-                     </div>
-                     :
-                     null
-                  }
+
+                  <div className="form-row">
+                    <div className="form-group mt-4 col-md-12 mt-5">
+                        <input
+                          type="submit"
+                          value={props.currentId === "" ? "Save" : "Update"}
+                          className="btn btn-primary btn-block"
+                          disabled={viewMode}
+                        />
+                    </div>
+                  </div>
                   
                 </form>
               </div>

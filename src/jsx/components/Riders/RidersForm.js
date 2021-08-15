@@ -65,7 +65,7 @@ const RidersForm = (props) => {
  const readImages = async (e) => {
    const file = e.target.files[0]
    const id = uuid()
-   const imagesRef = storage.ref('images').child(id)
+   const imagesRef = storage.ref('rider/').child(id)
 
    await imagesRef.put(file)
    imagesRef.getDownloadURL().then((url) => {
@@ -112,6 +112,16 @@ const RidersForm = (props) => {
                      <div className="basic-form">
                         <form onSubmit={handleFormSubmit}>
                            <div className="form-row">
+                              { values.riderImage && 
+                                 <div className="form-group col-md-12">
+                                    <img
+                                       src={ values.riderImage}
+                                       className="rounded-lg mr-2 mb-2"
+                                       width="180"
+                                       alt=""
+                                    />
+                                 </div>
+                              }
                               <div className="form-group col-md-12">
                                  <label>Name</label>
                                  <input
@@ -193,23 +203,18 @@ const RidersForm = (props) => {
                                     onChange={readImages}
                                     disabled={viewMode}
                                     />
-                                    <input
-                                    className="form-control"
-                                    name="housePicture"
-                                    value={values.housePicture}
-                                    onChange={handleInputChange}
-                                    disabled={viewMode}
-                                    />
-                                    {/* <div className="custom-file">
-                                       <input
-                                          type="file"
-                                          className="custom-file-input"
-                                       />
-                                       <label className="custom-file-label">
-                                          Choose file
-                                       </label>
-                                    </div> */}
                                  </div>
+                              </div>
+                           </div>
+                           <div className="form-row">
+                              <div className="form-group col-md-12">
+                                 <input
+                                    className="form-control"
+                                    name="riderImage"
+                                    value={values.riderImage}
+                                    onChange={handleInputChange}
+                                    disabled={true}
+                                 />
                               </div>
                            </div>
                            <div className="form-row">
@@ -275,11 +280,11 @@ const RidersForm = (props) => {
                               </div>
 
                            <div className="form-row">
-                              <div className="form-group col-md-12">
+                              <div className="form-group col-md-12 mt-5">
                                  <input type="submit" 
-                                 value = {props.currentId == '' ? 'Save' : 'Update'}
+                                 value = {props.currentId === '' ? 'Save' : 'Update'}
                                  className="btn btn-primary btn-block"
-                                 disabled={!enabled} />
+                                 disabled={viewMode} />
                               </div>
                            </div>
                         </form>

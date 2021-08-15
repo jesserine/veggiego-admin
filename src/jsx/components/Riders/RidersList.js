@@ -152,17 +152,8 @@ const RidersList = () => {
                            <Table responsive hover>
                               <thead>
                                  <tr>
-                                    {/* <th>
-                                    <strong></strong>
-                                 </th> */}
                                     <th>
                                        <strong>NAME</strong>
-                                    </th>
-                                    <th>
-                                       <strong>USERNAME</strong>
-                                    </th>
-                                    <th>
-                                       <strong>PASSWORD</strong>
                                     </th>
                                     <th>
                                        <strong>CONTACT #</strong>
@@ -184,25 +175,17 @@ const RidersList = () => {
                                        <tr key={id} onClick={() => { setCurrentId(id) }}>
                                           <td>
                                              <img
-                                                src={avatar1}
+                                                src={riderObjects[id].riderImage}
                                                 className="rounded-lg mr-2"
                                                 width="24"
                                                 alt=""
                                              /><span>{riderObjects[id].riderName}</span>
                                           
                                           </td>
-                                          <td>{riderObjects[id].username}</td>
-                                          <td>{riderObjects[id].password}</td>
                                           <td>{riderObjects[id].riderContactNum}</td>
                                           <td>{riderObjects[id].riderAddress}</td>
                                           <td>{riderObjects[id].vehicleType}</td>
                                           <td>{riderObjects[id].vehiclePlateNum}</td>
-                                          <td>{riderObjects[id].riderImage}</td>
-                                          {/* <td>{riderObjects[id].dateAdded}</td>
-                                             <td>{riderObjects[id].isActive=== 'false'
-                                                ? <Badge variant="danger light"> Inactive </Badge>
-                                                : <Badge variant="success light"> Active </Badge>}
-                                             </td> */}
                                        </tr>
                                     )
                                  })}

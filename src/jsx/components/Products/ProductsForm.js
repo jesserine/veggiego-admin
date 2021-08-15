@@ -236,23 +236,18 @@ const ProductsForm = (props) => {
                                        onChange={readImages}
                                        disabled={viewMode}
                                     />
-                                    <input
-                                       className="form-control"
-                                       name="productImage"
-                                       value={values.productImage}
-                                       onChange={handleInputChange}
-                                       disabled={viewMode}
-                                    />
-                                    {/* <div className="custom-file">
-                                       <input
-                                          type="file"
-                                          className="custom-file-input"
-                                       />
-                                       <label className="custom-file-label">
-                                          Choose file
-                                       </label>
-                                    </div> */}
                                  </div>
+                              </div>
+                           </div>
+                           <div className="form-row">
+                              <div className="form-group col-md-12">
+                                 <input
+                                    className="form-control"
+                                    name="productImage"
+                                    value={values.productImage}
+                                    onChange={handleInputChange}
+                                    disabled={true}
+                                 />
                               </div>
                            </div>
                            <div className="form-row">
@@ -292,9 +287,9 @@ const ProductsForm = (props) => {
                            <div className="form-row">
                               <div className="form-group col-md-12">
                                  <input type="submit"
-                                    value={props.currentId == '' ? 'Save' : 'Update'}
+                                    value={props.currentId === '' ? 'Save' : 'Update'}
                                     className="btn btn-primary btn-block"
-                                    disabled={!enabled} />
+                                    disabled={viewMode} />
                               </div>
                            </div>
                         </form>
