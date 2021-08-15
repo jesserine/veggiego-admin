@@ -45,6 +45,7 @@ import RidersList from "./components/Riders/RidersList";
 /// Orders
 import OrdersList from "./components/Orders/OrdersList";
 import DeliveryFeeList from "./components/Orders/DeliveryFeeList";
+import CustomerOrder from "./components/Orders/CustomerOrder";
 
 /// Products
 import ProductsList from "./components/Products/ProductsList";
@@ -143,6 +144,7 @@ const Markup = ({ showProfileSideBar }) => {
     // Orders
     { url: "orders", component: OrdersList },
     { url: "orders-deliveryfee", component: DeliveryFeeList },
+    { url: "customer-order", component: CustomerOrder},
 
     // Products
     { url: "products", component: ProductsList },
