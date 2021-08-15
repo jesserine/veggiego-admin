@@ -133,6 +133,16 @@ const ProductsForm = (props) => {
                      <div className="basic-form">
                         <form onSubmit={handleFormSubmit}>
                            <div className="form-row">
+                           { values.productImage && 
+                              <div className="form-group col-md-12">
+                                 <img
+                                    src={ values.productImage}
+                                    className="rounded-lg mr-2 mb-2"
+                                    width="180"
+                                    alt=""
+                                 />
+                              </div>
+                           }
                               <div className="form-group col-md-12">
                                  <label>Name</label>
                                  <input
