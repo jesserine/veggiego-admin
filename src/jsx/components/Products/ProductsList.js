@@ -188,7 +188,7 @@ const ProductsList = () => {
                                          
                                           <td>
                                              <img
-                                                src={avatar1}
+                                                src={ productObjects[id].productImage}
                                                 className="rounded-lg mr-2"
                                                 width="24"
                                                 alt=""
@@ -200,12 +200,6 @@ const ProductsList = () => {
                                           <td>{productObjects[id].category}</td>
                                           <td>{productObjects[id].unit}</td>
                                           <td>{productObjects[id].price}</td>
-                                          <td>{productObjects[id].productImage}</td>
-                                          {/* <td>{productObjects[id].dateUpdated}</td>
-                                          <td>{productObjects[id].isActive=== 'false'
-                                             ? <Badge variant="danger light"> Inactive </Badge>
-                                             : <Badge variant="success light"> Active </Badge>}
-                                          </td> */}
                                        </tr>
                                     )
                                  })}

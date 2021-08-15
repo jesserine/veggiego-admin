@@ -60,7 +60,7 @@ const CustomerForm = (props) => {
   const readImages = async (e) => {
     const file = e.target.files[0];
     const id = uuid();
-    const imagesRef = storage.ref("images").child(id);
+    const imagesRef = storage.ref("customer/house").child(id);
 
     await imagesRef.put(file);
     imagesRef.getDownloadURL().then((url) => {
