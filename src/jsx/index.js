@@ -52,6 +52,9 @@ import ProductsList from "./components/Products/ProductsList";
 import CategoryList from "./components/Products/CategoryList";
 import UnitList from "./components/Products/UnitList";
 
+/// Profile
+import Profile from './components/Profile/Profile';
+
 /// Bo
 import UiAlert from "./components/bootstrap/Alert";
 import UiAccordion from "./components/bootstrap/Accordion";
@@ -170,7 +173,7 @@ const Markup = ({ showProfileSideBar }) => {
     { url: "ui-typography", component: UiTypography },
     { url: "ui-grid", component: UiGrid },
     /// Apps
-    { url: "app-profile", component: AppProfile },
+    { url: "profile", component: Profile },
     { url: "email-compose", component: Compose },
     { url: "email-inbox", component: Inbox },
     { url: "email-read", component: Read },

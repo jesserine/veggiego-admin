@@ -258,7 +258,7 @@ const Header = ({
                               }`}
                            >
                               <Link
-                                 to="/"
+                                 to="/profile"
                                  className="dropdown-item ai-icon"
                               >
                                  <svg
@@ -279,7 +279,7 @@ const Header = ({
                                  </svg>
                                  <span className="ml-2">Profile </span>
                               </Link>
-                              <Link
+                              {/* <Link
                                  to="/"
                                  className="dropdown-item ai-icon"
                               >
@@ -300,7 +300,7 @@ const Header = ({
                                     <polyline points="22,6 12,13 2,6" />
                                  </svg>
                                  <span className="ml-2">Inbox </span>
-                              </Link>
+                              </Link> */}
                               <Link
                                  to="#"
                                  onClick={handleLogout}

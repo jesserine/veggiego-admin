@@ -9,7 +9,7 @@ import Footer from "./Footer";
 /// Deshboard
 import Home from "../components/Dashboard/Home/Home";
 import Application from "../components/Dashboard/Application/Application";
-import Profile from "../components/Dashboard/Profile/Profile";
+// import Profile from "../components/Dashboard/Profile/Profile";
 import Companies from "../components/Dashboard/Companies/Companies";
 import Statistics from "../components/Dashboard/Statistics/Statistics";
 import SearchJobs from "../components/Dashboard/SearchJobs/SearchJobs";
@@ -67,6 +67,9 @@ import CustomerForm from "../components/Customers/CustomerForm";
 
 /// Riders
 import RidersList from '../components/Riders/RidersList';
+
+/// Profile
+import Profile from '../components/Profile/Profile';
 
 /// Orders
 import OrdersList from '../components/Orders/OrdersList';
