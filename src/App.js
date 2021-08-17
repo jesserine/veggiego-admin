@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 
 /// Components
 import Markup from "./jsx";
@@ -10,6 +10,15 @@ import "./css/style.css";
 import { withResizeDetector } from "react-resize-detector";
 
 const App = ({ width }) => {
+   useEffect(() => {
+      const initialValue = document.body.style.zoom;
+      document.body.style.zoom = "80%";
+  
+      return () => {
+        document.body.style.zoom = initialValue;
+      };
+    }, []);
+
    const body = document.querySelector("body");
 
    body.setAttribute("data-typography", "poppins");

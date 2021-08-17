@@ -32,13 +32,12 @@ const CustomerForm = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props.currentId === ""){
+    if (props.currentId === "") {
       setViewMode(false);
       setValues({
         ...initialFieldValues,
       });
-    }
-    else{
+    } else {
       setViewMode(true);
       setValues({
         ...props.contactObjects[props.currentId],
@@ -56,7 +55,7 @@ const CustomerForm = (props) => {
 
   const [viewMode, setViewMode] = useState(false);
   const [imageUrl, setImageUrl] = useState();
-  
+
   const readImages = async (e) => {
     const file = e.target.files[0];
     const id = uuid();
@@ -86,29 +85,33 @@ const CustomerForm = (props) => {
           <div className="card">
             <div className="card-header">
               <h4 className="card-title">
-                {props.currentId === "" ? "Add " : viewMode ? "View " : "Edit " }
+                {props.currentId === "" ? "Add " : viewMode ? "View " : "Edit "}
                 Customer
               </h4>
-              {
-                  props.currentId !== "" ? 
-                     <Button variant='primary btn-rounded' onClick={()=>{ setViewMode(!viewMode) }}>
-                        <span className='btn-icon-left text-primary'>
-                           
-                           { viewMode ? <i className='fa fa-pencil' /> : <i className='fa fa-eye' /> }
-                        </span>
-                        { viewMode ? "Edit " : "View " }
-                     </Button>
-                  :
-                  null
-              }
-              
+              {props.currentId !== "" ? (
+                <Button
+                  variant="primary btn-rounded"
+                  onClick={() => {
+                    setViewMode(!viewMode);
+                  }}
+                >
+                  <span className="btn-icon-left text-primary">
+                    {viewMode ? (
+                      <i className="fa fa-pencil" />
+                    ) : (
+                      <i className="fa fa-eye" />
+                    )}
+                  </span>
+                  {viewMode ? "Edit " : "View "}
+                </Button>
+              ) : null}
             </div>
             <div className="card-body">
               <div className="basic-form">
                 <form onSubmit={handleFormSubmit}>
-                  <div className="form-row">
-                    <div className="form-group col-md-12">
-                      <label>Name</label>
+                  <div className="form-group row">
+                    <label className="col-sm-3 col-form-label">Name</label>
+                    <div className="col-sm-9">
                       <input
                         type="text"
                         className="form-control"
@@ -120,8 +123,11 @@ const CustomerForm = (props) => {
                         disabled={viewMode}
                       />
                     </div>
-                    <div className="form-group col-md-12">
-                      <label>Contact Number</label>
+                  </div>
+
+                  <div className="form-group row">
+                    <label className="col-sm-3 col-form-label">Contact</label>
+                    <div className="col-sm-9">
                       <input
                         type="text"
                         className="form-control"
@@ -134,9 +140,10 @@ const CustomerForm = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="form-row">
-                    <div className="form-group col-md-12">
-                      <label>Address</label>
+
+                  <div className="form-group row">
+                    <label className="col-sm-3 col-form-label">Address</label>
+                    <div className="col-sm-9">
                       <input
                         type="text"
                         className="form-control"
@@ -148,9 +155,10 @@ const CustomerForm = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="form-row">
-                    <div className="form-group col-md-12">
-                      <label>Landmark</label>
+
+                  <div className="form-group row">
+                    <label className="col-sm-3 col-form-label">Landmark</label>
+                    <div className="col-sm-9">
                       <input
                         type="text"
                         className="form-control"
@@ -160,69 +168,52 @@ const CustomerForm = (props) => {
                         disabled={viewMode}
                       />
                     </div>
-                    <div className="form-group col-md-12">
-                      <label>House Picture</label>
-                      <div className="input-group">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={readImages}
-                          disabled={viewMode}
-                        />
-                      </div>
-                    </div>
                   </div>
-                  <div className="form-group col-md-12">
-                    <input
+
+                  <div className="form-group row">
+                    <label className="col-sm-3 col-form-label">House Picture</label>
+                    <div className="col-sm-9">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={readImages}
+                        disabled={viewMode}
+                      />
+                      <input
                         className="form-control"
                         name="housePicture"
                         value={values.housePicture}
                         onChange={handleInputChange}
                         disabled={true}
                       />
+                    </div>
                   </div>
-                  <div className="form-row">
-                    <label className="col-form-label col-sm-3 pt-0">
-                      Is Active?
-                    </label>
+
+                  <div className="form-group row">
+                    <div className="col-sm-3">Is Active?</div>
                     <div className="col-sm-9">
                       <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value="true"
+                        <input 
+                          className="form-check-input" 
+                          type="checkbox"
                           onChange={handleInputChange}
                           defaultChecked
                           disabled={viewMode}
                         />
-                        <label className="form-check-label">Yes</label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value="false"
-                          onChange={handleInputChange}
-                          disabled={viewMode}
-                        />
-                        <label className="form-check-label">No</label>
                       </div>
                     </div>
                   </div>
-
+                 
                   <div className="form-row">
                     <div className="form-group mt-4 col-md-12 mt-5">
-                        <input
-                          type="submit"
-                          value={props.currentId === "" ? "Save" : "Update"}
-                          className="btn btn-primary btn-block"
-                          disabled={viewMode}
-                        />
+                      <input
+                        type="submit"
+                        value={props.currentId === "" ? "Save" : "Update"}
+                        className="btn btn-primary btn-block"
+                        disabled={viewMode}
+                      />
                     </div>
                   </div>
-                  
                 </form>
               </div>
             </div>
