@@ -25,7 +25,7 @@ import CustomerForm from "./CustomerForm";
 const CustomerList = () => {
   var [contactObjects, setContactObjects] = useState({});
   var [currentId, setCurrentId] = useState("");
-  var [searchTerm, setSearchTerm] = useState('')
+  var [searchTerm, setSearchTerm] = useState("");
 
   const svg1 = (
     <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
@@ -38,37 +38,37 @@ const CustomerList = () => {
     </svg>
   );
 
-
   useEffect(() => {
     if (searchTerm.length > 0) {
-        firebaseDb.ref('customer/').on('value', (snapshot) => {
-            if (snapshot.val() != null) {
-                const customerDb = snapshot.val()
-                setContactObjects([])
-                let searchQuery = searchTerm.toLocaleLowerCase()
-                for (let id in customerDb) {
-                    let customer = customerDb[id].name.toLocaleLowerCase()
-                    if (customer.slice(0, searchQuery.length).indexOf(searchQuery) !== -1) {
-                      setContactObjects(prevResult => {
-                            return [...prevResult, customerDb[id]]
-                        });
-                    }
-                }
-            } else {
-              setContactObjects([])
+      firebaseDb.ref("customer/").on("value", (snapshot) => {
+        if (snapshot.val() != null) {
+          const customerDb = snapshot.val();
+          setContactObjects([]);
+          let searchQuery = searchTerm.toLocaleLowerCase();
+          for (let id in customerDb) {
+            let customer = customerDb[id].name.toLocaleLowerCase();
+            if (
+              customer.slice(0, searchQuery.length).indexOf(searchQuery) !== -1
+            ) {
+              setContactObjects((prevResult) => {
+                return [...prevResult, customerDb[id]];
+              });
             }
-        })
+          }
+        } else {
+          setContactObjects([]);
+        }
+      });
     } else {
-       firebaseDb.ref('customer/').on('value', (snapshot) => {
-          if (snapshot.val() != null)
-            setContactObjects({
-                ...snapshot.val(),
-             })
-          else setContactObjects({})
-       })
+      firebaseDb.ref("customer/").on("value", (snapshot) => {
+        if (snapshot.val() != null)
+          setContactObjects({
+            ...snapshot.val(),
+          });
+        else setContactObjects({});
+      });
     }
-}, [searchTerm])
-
+  }, [searchTerm]);
 
   useEffect(() => {
     firebaseDb.ref("customer/").on("value", (snapshot) => {
@@ -121,22 +121,27 @@ const CustomerList = () => {
   return (
     <Fragment>
       <div className="row">
-        <div className="col-xl-4 col-lg-4">
+        <div className="col-xl-4 col-lg-6">
           <CustomerForm {...{ addOrEdit, currentId, contactObjects }} />
         </div>
-        <div className="col-xl-8 col-lg-8">
+        <div className="col-xl-8 col-lg-6">
+         
           <Row>
             <Col lg={12}>
               <Card>
                 <Card.Header>
                   <Card.Title>My Customers</Card.Title>
-                  <Button variant='primary btn-rounded' onClick={()=>{ setCurrentId('') }}>
-                        <span className='btn-icon-left text-primary'>
-                           
-                          <i className='fa fa-plus' />
-                        </span>
-                        Add
-                     </Button>
+                  <Button
+                    variant="primary btn-rounded"
+                    onClick={() => {
+                      setCurrentId("");
+                    }}
+                  >
+                    <span className="btn-icon-left text-primary">
+                      <i className="fa fa-plus" />
+                    </span>
+                    Add
+                  </Button>
                 </Card.Header>
                 <Card.Body>
                   <div className="search_bar dropdown show mb-3">

@@ -12,12 +12,14 @@ const NavHader = () => {
    return (
       <div className="nav-header">
          <Link to="/dashboard" className="brand-logo">
-            <img className="logo-compact" src={logoText} alt="veggie go logo" />
-            <img className="brand-title" src={logoText} alt="veggie go logo" />
+            <img className="logo-abbr" src={logo} alt="" />
+            <img className="logo-compact" src={logoText} alt="" />
+            <img className="brand-title" src={logoText} alt="" />
          </Link>
 
          <div className="nav-control" onClick={() => setToggle(!toggle)}>
-            <div className={`hamburger ${toggle ? "is-active" : ""}`}>
+            {/* <div className={`hamburger ${toggle ? "is-active" : ""}`}> */}
+            <div className={`hamburger is-active`}>
                <span className="line"></span>
                <span className="line"></span>
                <span className="line"></span>

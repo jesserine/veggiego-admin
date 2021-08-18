@@ -111,7 +111,7 @@ const CustomerForm = (props) => {
                 <form onSubmit={handleFormSubmit}>
                   <div className="form-group row">
                     <label className="col-sm-3 col-form-label">Name</label>
-                    <div className="col-sm-9">
+                    <div className="col-sm-9 ">
                       <input
                         type="text"
                         className="form-control"
@@ -203,17 +203,33 @@ const CustomerForm = (props) => {
                       </div>
                     </div>
                   </div>
-                 
+                 { !viewMode ? 
                   <div className="form-row">
                     <div className="form-group mt-4 col-md-12 mt-5">
                       <input
                         type="submit"
-                        value={props.currentId === "" ? "Save" : "Update"}
+                        value={props.currentId === "" ? "Save Customer" : "Update Customer"}
                         className="btn btn-primary btn-block"
                         disabled={viewMode}
                       />
                     </div>
                   </div>
+                  : 
+                  <div className="form-row">
+                    <div className="form-group mt-4 col-md-12 mt-5">
+                      <Link
+                        to={{
+                          pathname: '/orders',
+                          state: {
+                            user: values
+                          }
+                        }}
+                        className="btn btn-warning btn-block"
+                      >Create Order</Link>
+                    </div>
+                    </div>
+                 }
+                  
                 </form>
               </div>
             </div>

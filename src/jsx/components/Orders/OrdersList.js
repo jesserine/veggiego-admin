@@ -16,12 +16,15 @@ import {
 import avatar1 from "../../../images/avatar/1.jpg";
 import avatar2 from "../../../images/avatar/2.jpg";
 import avatar3 from "../../../images/avatar/3.jpg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import OrdersForm from "./OrdersForm";
 
 const OrdersList = () => {
    var [orderObjects, setOrderObjects] = useState({});
    var [currentId, setCurrentId] = useState("");
+   const location = useLocation();
+   const { user } = location.state;
+
    const svg1 = (
       <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
          <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -61,6 +64,7 @@ const OrdersList = () => {
 
    return (
       <Fragment>
+         <p>{JSON.stringify(user)}</p>
          <div className="row">
             <div className="col-xl-4 col-lg-4">
                <OrdersForm {...{ addOrEdit, currentId, orderObjects }} />
