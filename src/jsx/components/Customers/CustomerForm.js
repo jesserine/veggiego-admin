@@ -10,6 +10,7 @@ import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
 const CustomerForm = (props) => {
   const initialFieldValues = {
+    id: "",
     name: "",
     contactNumber: "",
     address: "",
@@ -18,8 +19,19 @@ const CustomerForm = (props) => {
     isActive: "true",
     dateJoined: new Date().toLocaleDateString(),
   };
+
+  const initialOrderValues = {
+    products: [],
+    notes: '',
+    total: '',
+    rider: '',
+    dateAdded: new Date().toLocaleDateString(),
+  }
   var [values, setValues] = useState(initialFieldValues);
+  var [orderValues, setOrderValues] = useState(initialOrderValues);
+
   var [contactObjects, setContactObjects] = useState({});
+  var [currentId, setCurrentId] = useState("");
 
   useEffect(() => {
     firebaseDb.ref("customer/").on("value", (snapshot) => {
@@ -31,6 +43,8 @@ const CustomerForm = (props) => {
     });
   }, []);
 
+const selectedId = props.currentId;
+
   useEffect(() => {
     if (props.currentId === "") {
       setViewMode(false);
@@ -40,7 +54,7 @@ const CustomerForm = (props) => {
     } else {
       setViewMode(true);
       setValues({
-        ...props.contactObjects[props.currentId],
+        ...props.contactObjects[props.currentId], 
       });
     }
   }, [props.currentId, props.contactObjects]);
@@ -72,7 +86,7 @@ const CustomerForm = (props) => {
   }
 
   const handleFormSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
     props.addOrEdit(values);
     window.location.reload(false);
   };
@@ -188,7 +202,19 @@ const CustomerForm = (props) => {
                       />
                     </div>
                   </div>
-
+                  <div className="form-group row" hidden>
+                    <label className="col-sm-3 col-form-label">Notes</label>
+                    <div className="col-sm-9">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="id"
+                        value={currentId}
+                        onChange={handleInputChange}
+                        disabled={viewMode}
+                      />
+                    </div>
+                  </div>
                   <div className="form-group row">
                     <div className="col-sm-3">Is Active?</div>
                     <div className="col-sm-9">
@@ -219,10 +245,11 @@ const CustomerForm = (props) => {
                     <div className="form-group mt-4 col-md-12 mt-5">
                       <Link
                         to={{
-                          pathname: '/orders',
+                          pathname: '/customer-order',
                           state: {
-                            user: values
-                          }
+                            user: values, 
+                            userId: props.currentId
+                          },
                         }}
                         className="btn btn-warning btn-block"
                       >Create Order</Link>

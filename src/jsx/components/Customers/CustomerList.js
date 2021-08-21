@@ -96,6 +96,7 @@ const CustomerList = () => {
     }
   };
 
+
   const onDelete = (key) => {
     swal({
       title: "Are you sure?",
@@ -189,6 +190,9 @@ const CustomerList = () => {
                         <th>
                           <strong>LANDMARK</strong>
                         </th>
+                        <th>
+                          <strong>ID</strong>
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -204,6 +208,7 @@ const CustomerList = () => {
                             <td>{contactObjects[id].contactNumber}</td>
                             <td>{contactObjects[id].address}</td>
                             <td>{contactObjects[id].landmark}</td>
+                            <td>{id}</td>
                           </tr>
                         );
                       })}
