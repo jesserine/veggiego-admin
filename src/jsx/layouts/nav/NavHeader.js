@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 /// images
-import logo from "../../../images/logo-compact.png";
-import logoText from "../../../images/logo-compact.png";
+import logo from "../../../images/logo.png";
+import logoText from "../../../images/logo-text.png";
 
-const NavHader = () => {
+const NavHeader = () => {
    const [toggle, setToggle] = useState(false);
    return (
       <div className="nav-header">
@@ -15,11 +15,12 @@ const NavHader = () => {
             <img className="logo-abbr" src={logo} alt="" />
             <img className="logo-compact" src={logoText} alt="" />
             <img className="brand-title" src={logoText} alt="" />
+            
          </Link>
 
-         <div className="nav-control" onClick={() => setToggle(!toggle)}>
-            {/* <div className={`hamburger ${toggle ? "is-active" : ""}`}> */}
-            <div className={`hamburger is-active`}>
+         <div className="nav-control">
+         <img className="logo-abbr" src={logo} alt="" />
+            <div className={`hamburger ${toggle ? "is-active" : ""}`}>
                <span className="line"></span>
                <span className="line"></span>
                <span className="line"></span>
@@ -29,4 +30,4 @@ const NavHader = () => {
    );
 };
 
-export default NavHader;
+export default NavHeader;

@@ -53,7 +53,7 @@ import CategoryList from "./components/Products/CategoryList";
 import UnitList from "./components/Products/UnitList";
 
 /// Profile
-import Profile from './components/Profile/Profile';
+import Profile from "./components/Profile/Profile";
 
 /// Bo
 import UiAlert from "./components/bootstrap/Alert";
@@ -124,7 +124,6 @@ import PrivateRoute from "./layouts/PrivateRoute";
 import AuthRoute from "./layouts/AuthRoute";
 
 const Markup = ({ showProfileSideBar }) => {
-
   const [showProfile, setShowProfile] = useState(false);
 
   const routes = [
@@ -147,7 +146,7 @@ const Markup = ({ showProfileSideBar }) => {
     // Orders
     { url: "orders", component: OrdersList },
     { url: "orders-deliveryfee", component: DeliveryFeeList },
-    { url: "customer-order", component: CustomerOrder},
+    { url: "customer-order", component: CustomerOrder },
 
     // Products
     { url: "products", component: ProductsList },
@@ -233,32 +232,31 @@ const Markup = ({ showProfileSideBar }) => {
     { url: "page-error-500", component: Error500 },
     { url: "page-error-503", component: Error503 },
   ];
-  let path = window.location.pathname;
-  path = path.split("/");
-  path = path[path.length - 1];
-  let authPath = path.split("-").includes("register") || path.split("-").includes("login");
+  // let path = window.location.pathname;
+  // path = path.split("/");
+  // path = path[path.length - 1];
 
-  
   return (
     <Router basename="/">
       <AuthProvider>
         <Switch>
-            {routes.map((data, i) => (
-                data.url === "register" || data.url === "login" ?
-                  <AuthRoute
-                      key={i}
-                      exact
-                      path={`/${data.url}`}
-                      component={data.component}
-                  />
-                :
-                  <PrivateRoute
-                      key={i}
-                      exact
-                      path={`/${data.url}`}
-                      component={data.component}
-                  />
-          ))}
+          {routes.map((data, i) =>
+            data.url === "register" || data.url === "login" ? (
+              <AuthRoute
+                key={i}
+                exact
+                path={`/${data.url}`}
+                component={data.component}
+              />
+            ) : (
+              <PrivateRoute
+                key={i}
+                exact
+                path={`/${data.url}`}
+                component={data.component}
+              />
+            )
+          )}
         </Switch>
       </AuthProvider>
     </Router>
