@@ -35,6 +35,30 @@ const OrderDetails = () => {
       }])
    }
 
+   //    useEffect(() => {
+   //     if(product.length > 0)
+   //     {
+   //         fetch('products/').then(
+   //             response => response.json()
+   //         ).then( responseData => {
+   //             setResult([]);
+   //             let searchQuery = product.toLowerCase();
+   //             for(const key in responseData){
+   //                 let fruit = responseData[key].productName.toLowerCase();
+   //                 if(fruit.slice(0, searchQuery.length).indexOf(searchQuery) !== -1){
+   //                     setResult( prevResult => {
+   //                         return[...prevResult, responseData[key].productName]
+   //                     });
+   //                 }
+   //             }
+   //         }).catch( error =>{
+   //             console.log(error);
+   //         })
+   //     } else {
+   //         setResult([]);
+   //     }
+   //    }, [product])
+
    const handleRemoveField = (index) => {
       const values = [...orderList];
       values.splice(index, 1);

@@ -23,7 +23,7 @@ const OrdersList = () => {
    var [orderObjects, setOrderObjects] = useState({});
    var [currentId, setCurrentId] = useState("");
    const location = useLocation();
-   const { user } = location.state;
+   // const { user } = location.state;
 
    const svg1 = (
       <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
@@ -64,7 +64,20 @@ const OrdersList = () => {
 
    return (
       <Fragment>
-         <p>{JSON.stringify(user)}</p>
+         {/* <p>{JSON.stringify(user)}</p>
+         <Card className="text-white bg-primary">
+                  <Card.Header>
+                     <Card.Title className="text-white">
+                        Primary card title
+                     </Card.Title>
+                  </Card.Header>
+                  <Card.Body className=" mb-0">
+                     <Card.Text>
+                        Some quick example text to build on the card title and
+                        make up the bulk of the card's content.
+                     </Card.Text>
+                  </Card.Body>
+               </Card>
          <div className="row">
             <div className="col-xl-4 col-lg-4">
                <OrdersForm {...{ addOrEdit, currentId, orderObjects }} />
@@ -75,7 +88,7 @@ const OrdersList = () => {
 
                </Row>
             </div>
-         </div>
+         </div> */}
       </Fragment>
    );
 };
