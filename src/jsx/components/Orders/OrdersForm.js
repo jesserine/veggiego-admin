@@ -170,6 +170,13 @@ const OrdersForm = (props) => {
       },
     ]);
   };
+  
+  const calc = 
+  (Number(productValues.productQty) *
+  Number(productValues.productPrice))
+  const discountVal = calc * (Number (productValues.discount) / 100)
+  productValues.subtotal =
+      calc - discountVal
 
   const enabled = values.notes != null;
   return (
