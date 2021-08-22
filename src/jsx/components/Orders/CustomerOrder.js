@@ -65,8 +65,8 @@ const CustomerOrder = () => {
 
    return (
       <Fragment>
-         <p>{JSON.stringify(user)}</p>
-         <p>{JSON.stringify(userId)}</p>
+         {/* <p>{JSON.stringify(user)}</p>
+         <p>{JSON.stringify(userId)}</p> */}
          <div className="row">
             <div className="col-xl-12 col-lg-12">
                <div className="card">
@@ -160,7 +160,7 @@ const CustomerOrder = () => {
          </div>
          <div className="row">
             <div className="col-xl-12 col-lg-12 col-md-12">
-               <OrdersForm {...{ addOrEdit, currentId, orderObjects, userId }} />
+               <OrdersForm {...{ addOrEdit, currentId, orderObjects, user, userId }} />
             </div>
             {/* <div className="col-xl-8 col-lg-8">
                <Row>

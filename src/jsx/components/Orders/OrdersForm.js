@@ -5,13 +5,18 @@ import { storage } from '../../../firebase'
 import { v4 as uuid } from 'uuid'
 
 import PageTitle from "../../layouts/PageTitle";
-import { SplitButton, ButtonGroup, Button, Dropdown } from "react-bootstrap";
+import { SplitButton, ButtonGroup, Button, Dropdown, Table } from "react-bootstrap";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { set } from "date-fns";
 
 const OrdersForm = (props) => {
     const initialFieldValues = {
+        products: '',
         notes: '',
+        total: '',
+        rider: '',
+        customer: props.user,
+        customerId: props.userId,
         dateAdded: new Date().toLocaleString(),
     }
 
@@ -28,9 +33,13 @@ const OrdersForm = (props) => {
 
     var [values, setValues] = useState(initialFieldValues)
     var [unitObjects, setUnitObjects] = useState({})
+    var [productNameObjects, setProductNameObjects] = useState({})
     var [productValues, setProductValues] = useState(initialProductValues);
+    var [productList, setProductList] = useState([]);
     var [result, setResult] = useState([]);
     var [value, setValue] = useState('');
+    var [currentProductId, setCurrentProductId] = useState("");
+    var [currentId, setCurrentId] = useState("");
 
 
     //get the list of product
@@ -58,9 +67,19 @@ const OrdersForm = (props) => {
         }
     }, [value])
 
-    
+
     useEffect(() => {
-        firebaseDb.ref('orders/').on('value', (snapshot) => {
+        firebaseDb.ref('products/').on('value', (snapshot) => {
+            if (snapshot.val() != null)
+                setProductNameObjects({
+                    ...snapshot.val(),
+                })
+            else setProductNameObjects({})
+        })
+    }, [])
+
+    useEffect(() => {
+        firebaseDb.ref('unit/').on('value', (snapshot) => {
             if (snapshot.val() != null)
                 setUnitObjects({
                     ...snapshot.val(),
@@ -81,6 +100,16 @@ const OrdersForm = (props) => {
     }, [props.currentId, props.unitObjects])
 
     const handleInputChange = (e) => {
+        console.log("inside handleInputChange")
+        var { name, value } = e.target
+        setProductValues({
+            ...productValues,
+            [name]: value,
+        })
+    }
+
+    const handleOrderInputChange = (e) => {
+        console.log("inside handleOrderInputChange")
         var { name, value } = e.target
         setValues({
             ...values,
@@ -107,9 +136,31 @@ const OrdersForm = (props) => {
     const handleFormSubmit = (e) => {
         console.log("inside handleFormSubmit")
         e.preventDefault()
-        props.addOrEdit(values)
+        addOrder(values)
         window.location.reload(false)
     }
+    const addOrder = (obj) => {
+        obj.products = productList;
+        firebaseDb.ref("orders/").push(obj, (err) => {
+            if (err) console.log(err);
+            else setCurrentId("");
+        });
+    }
+
+    const handleProductAddUpdate = (e) => {
+        console.log("inside handleProductAddUpdate")
+        // e.preventDefault()
+        addOrEditProduct(productValues)
+        // window.location.reload(false)
+    }
+
+    const addOrEditProduct = (obj) => {
+        console.log("inside addOrEditProduct")
+        setProductList([...productList, {
+            // id: productList.length,
+            value: obj
+        }])
+    };
 
     const enabled = values.notes != null
     return (
@@ -117,22 +168,38 @@ const OrdersForm = (props) => {
             <div className="row">
                 <div className="col-xl-12 col-lg-12">
                     <div className="card">
-                        <div className="card-header">
+                        <form onSubmit={handleFormSubmit}>
+                            <div className="card-header">
 
-                            <div className="basic-form">
-                                <form onSubmit={handleFormSubmit}>
+                                <div className="basic-form">
                                     <div className="form-row col-md-12">
                                         <div className="form-group col-md-3">
                                             <label>Product</label>
-                                            <input
-                                                type="text"
+                                            <select
+                                                defaultValue='Select Unit'
+                                                id="inputState"
                                                 className="form-control"
-                                                placeholder="Product"
-                                                name='product'
-                                                value={value}
-                                                onChange={(event) => setValue(event.target.value)}
+                                                name='productName'
+                                                value={productValues.productName}
+                                                onChange={handleInputChange}
                                                 required
-                                            />
+                                            >
+                                                <option value='Product'>Product</option>
+                                                {Object.keys(productNameObjects).map((id) => {
+                                                    return (
+                                                        <React.Fragment key={id}>
+                                                            {productNameObjects[id].isActive == 'true' ? (
+                                                                <option value={productNameObjects[id].productName}>
+                                                                    {productNameObjects[id].productName
+                                                                    }
+                                                                </option>
+                                                            ) : (
+                                                                ''
+                                                            )}
+                                                        </React.Fragment>
+                                                    )
+                                                })}
+                                            </select>
                                             <div className="searchBack"
                                                 value={result}>
                                                 {result.map((result, index) => (
@@ -144,39 +211,55 @@ const OrdersForm = (props) => {
                                                 ))}
                                             </div>
                                         </div>
-                                        <div className="form-group col-md-1">
+                                        <div className="form-group col-md-2">
                                             <label>Quantity</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                placeholder="Qty"
-                                                name='product'
-                                                value={value}
-                                                onChange={(event) => setValue(event.target.value)}
+                                                placeholder="0"
+                                                name='productQty'
+                                                value={productValues.productQty}
+                                                onChange={handleInputChange}
                                                 required
                                             />
                                         </div>
-                                        <div className="form-group col-md-2">
+                                        <div className="form-group col-md-1">
                                             <label>Unit</label>
-                                            <input
-                                                type="text"
+                                            <select
+                                                defaultValue='Select Unit'
+                                                id="inputState"
                                                 className="form-control"
-                                                placeholder="Qty"
-                                                name='product'
-                                                value={value}
-                                                onChange={(event) => setValue(event.target.value)}
+                                                name='productUnit'
+                                                value={productValues.productUnit}
+                                                onChange={handleInputChange}
                                                 required
-                                            />
+                                            >
+                                                <option value='Unit'>Unit</option>
+                                                {Object.keys(unitObjects).map((id) => {
+                                                    return (
+                                                        <React.Fragment key={id}>
+                                                            {unitObjects[id].isActive == 'true' ? (
+                                                                <option value={unitObjects[id].unitName}>
+                                                                    {unitObjects[id].unitName
+                                                                    }
+                                                                </option>
+                                                            ) : (
+                                                                ''
+                                                            )}
+                                                        </React.Fragment>
+                                                    )
+                                                })}
+                                            </select>
                                         </div>
                                         <div className="form-group col-md-2">
                                             <label>Price</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                placeholder="Qty"
-                                                name='product'
-                                                value={value}
-                                                onChange={(event) => setValue(event.target.value)}
+                                                placeholder="0"
+                                                name='productPrice'
+                                                value={productValues.productPrice}
+                                                onChange={handleInputChange}
                                                 required
                                             />
                                         </div>
@@ -185,30 +268,31 @@ const OrdersForm = (props) => {
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                placeholder="Qty"
-                                                name='product'
-                                                value={value}
-                                                onChange={(event) => setValue(event.target.value)}
+                                                placeholder="0"
+                                                name='discount'
+                                                value={productValues.discount}
+                                                onChange={handleInputChange}
                                                 required
                                             />
                                         </div>
                                         <div className="form-group col-md-2">
-                                            <label>Total</label>
+                                            <label>SubTotal</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                placeholder="Qty"
-                                                name='product'
-                                                value={value}
-                                                onChange={(event) => setValue(event.target.value)}
-                                                required
+                                                placeholder="Subtotal"
+                                                name='subtotal'
+                                                value={productValues.subtotal}
+                                                onChange={handleInputChange}
+                                                disabled
                                             />
                                         </div>
                                         <div className="form-group col-md-1 ">
                                             <Button
                                                 className="mt-4"
                                                 variant='primary'
-                                                type="submit"
+                                                //  type="submit"
+                                                onClick={handleProductAddUpdate}
                                             >
                                                 +
                                             </Button>
@@ -222,12 +306,97 @@ const OrdersForm = (props) => {
                                                 disabled={!enabled} />
                                         </div> */}
                                     </div>
-                                </form>
-                            </div>
+                                </div>
 
-                        </div>
-                        <div className="card-body">
-                        </div>
+                            </div>
+                            <div className="card-body">
+
+                                <Table responsive hover>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <strong></strong>
+                                            </th>
+                                            <th>
+                                                <strong>PRODUCT</strong>
+                                            </th>
+                                            <th>
+                                                <strong>QUANTITY</strong>
+                                            </th>
+                                            <th>
+                                                <strong>UNIT</strong>
+                                            </th>
+                                            <th>
+                                                <strong>PRICE</strong>
+                                            </th>
+                                            <th>
+                                                <strong>DISCOUNT</strong>
+                                            </th>
+                                            <th>
+                                                <strong>SUBTOTAL</strong>
+                                            </th>
+                                            <th>
+                                                <strong></strong>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {productList.map((product, index) => {
+                                            return (
+                                                <tr
+                                                    key={index}
+                                                // onClick={() => {
+                                                //     setCurrentProductId(index);
+                                                // }}
+                                                >
+                                                    <td></td>
+                                                    <td>{product.value.productName}</td>
+                                                    <td>{product.value.productQty}</td>
+                                                    <td>{product.value.productUnit}</td>
+                                                    <td>{product.value.productPrice}</td>
+                                                    <td>{product.value.discount}</td>
+                                                    <td>{product.value.subtotal}</td>
+                                                    <td></td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </Table>
+                            </div>
+                            <div className="card-footer">
+                                <div className="form-group col-md-12">
+                                    <label>Notes</label>
+                                    <textarea
+                                        className="form-control"
+                                        rows="4"
+                                        id="notes"
+                                        name="notes"
+                                        onChange={handleOrderInputChange}
+                                    ></textarea>
+                                </div>
+                                <div className="form-group col-md-12">
+                                    <label>Total</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="0"
+                                        name='total'
+                                        value={values.total}
+                                        onChange={handleOrderInputChange}
+                                        disabled
+                                    />
+                                </div>
+                                <div className="form-group col-md-4">
+                                    <Button
+                                        className="mt-4"
+                                        variant='primary'
+                                        type="submit"
+                                    >
+                                        Save Order
+                                    </Button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
