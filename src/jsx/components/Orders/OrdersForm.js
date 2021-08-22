@@ -206,6 +206,10 @@ const OrdersForm = (props) => {
     },
   };
 
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   const [selectedOption, setSelectedOption] = useState(null);
   console.log(selectedOption);
   return (
@@ -322,7 +326,7 @@ const OrdersForm = (props) => {
                         className="form-control"
                         placeholder="0"
                         name="discount"
-                        value={productValues.discount}
+                        value={`${productValues.discount}`}
                         onChange={handleInputChange}
                         required
                       />
@@ -334,7 +338,7 @@ const OrdersForm = (props) => {
                         className="form-control"
                         placeholder="Subtotal"
                         name="subtotal"
-                        value={productValues.subtotal}
+                        value={`₱${numberWithCommas(productValues.subtotal)}`}
                         onChange={handleInputChange}
                         disabled
                       />
@@ -401,11 +405,13 @@ const OrdersForm = (props) => {
                         >
                           <td></td>
                           <td>{product.value.productName}</td>
-                          <td>{product.value.productQty}</td>
+                          <td>{`x${product.value.productQty}`}</td>
                           <td>{product.value.productUnit}</td>
-                          <td>{product.value.productPrice}</td>
-                          <td>{product.value.discount}</td>
-                          <td>{product.value.subtotal}</td>
+                          <td>{`₱${product.value.productPrice}`}</td>
+                          <td>{`${product.value.discount}%`}</td>
+                          <td>{`₱${numberWithCommas(
+                            product.value.subtotal
+                          )}`}</td>
                           <td></td>
                         </tr>
                       );
