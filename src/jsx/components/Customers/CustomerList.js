@@ -1,29 +1,16 @@
 import React, { Fragment, useState, useEffect } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import firebaseDb from "../../../firebase";
-import { storage } from "../../../firebase";
-import { v4 as uuid } from "uuid";
 import swal from "sweetalert";
-import swalMessage from "@sweetalert/with-react";
-import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Button,
-  Dropdown,
-  ProgressBar,
-} from "react-bootstrap";
+import { Row, Col, Card, Table, Button } from "react-bootstrap";
 
-/// imge
-import avatar1 from "../../../images/avatar/1.jpg";
-import avatar2 from "../../../images/avatar/2.jpg";
-import avatar3 from "../../../images/avatar/3.jpg";
 import { Link } from "react-router-dom";
 import CustomerForm from "./CustomerForm";
+import AddressModal from "./AddressModal";
 
 const CustomerList = () => {
   var [contactObjects, setContactObjects] = useState({});
+  const [addressList, setAddressList] = useState([]);
   var [currentId, setCurrentId] = useState("");
   var [searchTerm, setSearchTerm] = useState("");
 
@@ -96,7 +83,6 @@ const CustomerList = () => {
     }
   };
 
-
   const onDelete = (key) => {
     swal({
       title: "Are you sure?",
@@ -119,14 +105,22 @@ const CustomerList = () => {
     });
   };
 
+  const [addressModal, setAddressModal] = useState(false);
+
+  const handleAddressModalState = (e) => {
+    setAddressModal(e);
+  };
+
   return (
     <Fragment>
       <div className="row">
         <div className="col-xl-4 col-lg-6">
-          <CustomerForm {...{ addOrEdit, currentId, contactObjects }} />
+          <CustomerForm
+            {...{ addOrEdit, currentId, contactObjects }}
+            toggleModal={handleAddressModalState}
+          />
         </div>
         <div className="col-xl-8 col-lg-6">
-         
           <Row>
             <Col lg={12}>
               <Card>
@@ -218,6 +212,13 @@ const CustomerList = () => {
               </Card>
             </Col>
           </Row>
+        </div>
+
+        <div className="col-xl-12">
+          <AddressModal
+            isOpen={addressModal}
+            toggleModal={handleAddressModalState}
+          />
         </div>
       </div>
     </Fragment>

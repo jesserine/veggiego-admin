@@ -5,15 +5,16 @@ import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 
 import PageTitle from "../../layouts/PageTitle";
-import { SplitButton, ButtonGroup, Dropdow, Button } from "react-bootstrap";
+import { SplitButton, Row, Modal, Button } from "react-bootstrap";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import AddressModal from "./AddressModal";
 
 const CustomerForm = (props) => {
   const initialFieldValues = {
     id: "",
     name: "",
     contactNumber: "",
-    address: "",
+    address: [],
     landmark: "",
     housePicture: "",
     isActive: "true",
@@ -22,11 +23,11 @@ const CustomerForm = (props) => {
 
   const initialOrderValues = {
     products: [],
-    notes: '',
-    total: '',
-    rider: '',
+    notes: "",
+    total: "",
+    rider: "",
     dateAdded: new Date().toLocaleDateString(),
-  }
+  };
   var [values, setValues] = useState(initialFieldValues);
   var [orderValues, setOrderValues] = useState(initialOrderValues);
 
@@ -43,7 +44,7 @@ const CustomerForm = (props) => {
     });
   }, []);
 
-const selectedId = props.currentId;
+  const selectedId = props.currentId;
 
   useEffect(() => {
     if (props.currentId === "") {
@@ -54,7 +55,7 @@ const selectedId = props.currentId;
     } else {
       setViewMode(true);
       setValues({
-        ...props.contactObjects[props.currentId], 
+        ...props.contactObjects[props.currentId],
       });
     }
   }, [props.currentId, props.contactObjects]);
@@ -86,7 +87,7 @@ const selectedId = props.currentId;
   }
 
   const handleFormSubmit = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     props.addOrEdit(values);
     window.location.reload(false);
   };
@@ -167,8 +168,26 @@ const selectedId = props.currentId;
                         required
                         disabled={viewMode}
                       />
+                      <Button
+                        className="btn btn-primary btn-sm pull-right mt-2"
+                        bsStyle="danger"
+                        bsSize="small"
+                        onClick={() => {
+                          props.toggleModal(true);
+                        }}
+                      >
+                        Add Address
+                      </Button>
                     </div>
                   </div>
+
+                  {/* <Button
+                    variant="primary"
+                    className="mb-2 mr-2 fjustify-content-end"
+                    //  onClick={() => setLargeModal(true)}
+                  >
+                    Add Address
+                  </Button> */}
 
                   <div className="form-group row">
                     <label className="col-sm-3 col-form-label">Landmark</label>
@@ -185,7 +204,9 @@ const selectedId = props.currentId;
                   </div>
 
                   <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">House Picture</label>
+                    <label className="col-sm-3 col-form-label">
+                      House Picture
+                    </label>
                     <div className="col-sm-9">
                       <input
                         type="file"
@@ -219,8 +240,8 @@ const selectedId = props.currentId;
                     <div className="col-sm-3">Is Active?</div>
                     <div className="col-sm-9">
                       <div className="form-check">
-                        <input 
-                          className="form-check-input" 
+                        <input
+                          className="form-check-input"
                           type="checkbox"
                           onChange={handleInputChange}
                           defaultChecked
@@ -229,34 +250,39 @@ const selectedId = props.currentId;
                       </div>
                     </div>
                   </div>
-                 { !viewMode ? 
-                  <div className="form-row">
-                    <div className="form-group mt-4 col-md-12 mt-5">
-                      <input
-                        type="submit"
-                        value={props.currentId === "" ? "Save Customer" : "Update Customer"}
-                        className="btn btn-primary btn-block"
-                        disabled={viewMode}
-                      />
+                  {!viewMode ? (
+                    <div className="form-row">
+                      <div className="form-group mt-4 col-md-12 mt-5">
+                        <input
+                          type="submit"
+                          value={
+                            props.currentId === ""
+                              ? "Save Customer"
+                              : "Update Customer"
+                          }
+                          className="btn btn-primary btn-block"
+                          disabled={viewMode}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  : 
-                  <div className="form-row">
-                    <div className="form-group mt-4 col-md-12 mt-5">
-                      <Link
-                        to={{
-                          pathname: '/customer-order',
-                          state: {
-                            user: values, 
-                            userId: props.currentId
-                          },
-                        }}
-                        className="btn btn-warning btn-block"
-                      >Create Order</Link>
+                  ) : (
+                    <div className="form-row">
+                      <div className="form-group mt-4 col-md-12 mt-5">
+                        <Link
+                          to={{
+                            pathname: "/customer-order",
+                            state: {
+                              user: values,
+                              userId: props.currentId,
+                            },
+                          }}
+                          className="btn btn-warning btn-block"
+                        >
+                          Create Order
+                        </Link>
+                      </div>
                     </div>
-                    </div>
-                 }
-                  
+                  )}
                 </form>
               </div>
             </div>
