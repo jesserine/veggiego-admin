@@ -122,6 +122,7 @@ import ProfileSidebar from "./layouts/ProfileSidebar";
 import Lightgallery from "./components/PluginsMenu/Lightgallery/Lightgallery";
 import PrivateRoute from "./layouts/PrivateRoute";
 import AuthRoute from "./layouts/AuthRoute";
+import Settings from "./components/Settings/Settings";
 
 const Markup = ({ showProfileSideBar }) => {
   const [showProfile, setShowProfile] = useState(false);
@@ -152,6 +153,9 @@ const Markup = ({ showProfileSideBar }) => {
     { url: "products", component: ProductsList },
     { url: "products-category", component: CategoryList },
     { url: "products-unit", component: UnitList },
+
+    /// Settings
+    { url: "settings", component: Settings },
 
     /// Bootstrap
     { url: "ui-alert", component: UiAlert },

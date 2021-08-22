@@ -66,6 +66,7 @@ class SideBar extends Component {
     let riders = ["riders"];
     let products = ["products"];
     let orders = ["orders"];
+    let settings = ["settings"];
 
     return (
       <div className="deznav">
@@ -102,6 +103,13 @@ class SideBar extends Component {
               <Link className="has-arrow ai-icon" to="/orders">
                 <i className="la la-shopping-cart scale5"></i>
                 <span className="nav-text">Orders</span>
+              </Link>
+            </li>
+
+            <li className={`${settings.includes(path) ? "mm-active" : ""}`}>
+              <Link className="has-arrow ai-icon" to="/settings">
+                <i className="las la-cog scale5"></i>
+                <span className="nav-text">Settings</span>
               </Link>
             </li>
           </MM>

@@ -11,6 +11,7 @@ import profile from "../../../images/profile/kmb.jpeg";
 import avatar from "../../../images/avatar/1.jpg";
 import { Dropdown } from "react-bootstrap";
 import ProfileSidebar from "../ProfileSidebar";
+import { ToastContainer, toast } from "react-toastify";
 
 const Header = ({
   onNote,
@@ -37,8 +38,19 @@ const Header = ({
 
   const handleLogout = async () => {
     try {
-      await logout();
-      history.push("/login");
+      toast.success("You will be logged out", {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(async () => {
+        await logout();
+        history.push("/login");
+      }, 3000);
     } catch {
       setError("Failed to log out");
     }
@@ -276,7 +288,19 @@ const Header = ({
                       <polyline points="16 17 21 12 16 7" />
                       <line x1={21} y1={12} x2={9} y2={12} />
                     </svg>
+
                     <span className="ml-2">Logout </span>
+                    <ToastContainer
+                      position="top-right"
+                      autoClose={5000}
+                      hideProgressBar={false}
+                      newestOnTop
+                      closeOnClick
+                      rtl={false}
+                      pauseOnFocusLoss
+                      draggable
+                      pauseOnHover
+                    />
                   </Link>
                 </div>
               </li>
