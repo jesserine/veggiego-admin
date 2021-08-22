@@ -110,7 +110,7 @@ const CustomerOrder = () => {
             </div>
           </div>
         </div>
-        <div className="col-xl-8 col-lg-8">
+        <div className="col-xl-8 col-xxl-12 col-lg-12 col-sm-12">
           <OrdersForm
             {...{ addOrEdit, currentId, orderObjects, user, userId }}
           />
