@@ -19,7 +19,7 @@ const OrdersForm = (props) => {
   const initialFieldValues = {
     products: "",
     notes: "",
-    total: "",
+    total: 0,
     rider: "",
     customer: props.user,
     customerId: props.userId,
@@ -28,11 +28,11 @@ const OrdersForm = (props) => {
 
   const initialProductValues = {
     productName: "",
-    productQty: "",
+    productQty: 0,
     productUnit: "",
-    productPrice: "",
-    discount: "",
-    subtotal: "",
+    productPrice: 0,
+    discount: 0,
+    subtotal: 0,
   };
 
   const customerId = props.userId;
@@ -44,7 +44,7 @@ const OrdersForm = (props) => {
   var [productList, setProductList] = useState([]);
   var [result, setResult] = useState([]);
   var [value, setValue] = useState("");
-  var [currentProductId, setCurrentProductId] = useState("");
+  var [currentProductId, setCurrentProductId] = useState('');
   var [currentId, setCurrentId] = useState("");
 
   //get the list of product
@@ -107,6 +107,7 @@ const OrdersForm = (props) => {
 
   const handleInputChange = (e) => {
     console.log("inside handleInputChange");
+
     var { name, value } = e.target;
     setProductValues({
       ...productValues,
@@ -153,23 +154,44 @@ const OrdersForm = (props) => {
     });
   };
 
+  useEffect(() => {
+    if (currentProductId == '')
+      setProductValues({
+        ...initialProductValues,
+      })
+    else
+    setProductValues({
+        ...productList[currentProductId], 
+      })
+  }, [currentProductId, productList])
+ 
   const handleProductAddUpdate = (e) => {
     console.log("inside handleProductAddUpdate");
-    // e.preventDefault()
     productValues.productName = selectedOption.value;
     addOrEditProduct(productValues);
-    // window.location.reload(false)
   };
 
   const addOrEditProduct = (obj) => {
-    console.log("inside addOrEditProduct");
-    setProductList([
-      ...productList,
-      {
-        // id: productList.length,
-        value: obj,
-      },
-    ]);
+    console.log("inside addOrEditProduct", obj, currentProductId);
+    if(currentProductId==''){
+      console.log("inside addOrEditProduct-ADD PRODUCT", currentProductId);
+      setProductList([
+        ...productList,
+        {
+          value: obj,
+        },
+      ]);
+      setCurrentProductId('')
+    }else{
+      console.log("inside addOrEditProduct-EDIT PRODUCT",currentProductId); 
+      setProductList([
+        ...productList.splice(0,currentProductId),
+        {
+          value: obj,
+        },
+      ]);
+      setCurrentProductId('')
+    }
   };
 
   const calc =
@@ -211,7 +233,15 @@ const OrdersForm = (props) => {
   }
 
   const [selectedOption, setSelectedOption] = useState(null);
-  console.log(selectedOption);
+
+  useEffect(() => {
+    if (selectedOption !== null){
+      productValues.productPrice = selectedOption.product.price
+      productValues.productUnit = selectedOption.product.unit
+    }
+  }, [selectedOption, productValues])
+
+   console.log(selectedOption);
 
   const onDelete = (key) => {
     console.log("inside delete")
@@ -409,11 +439,16 @@ const OrdersForm = (props) => {
                       return (
                         <tr
                           key={index}
-                        // onClick={() => {
-                        //     setCurrentProductId(index);
-                        // }}
+                          onClick={() => {
+                            setCurrentProductId(index);
+                          }}
                         >
-                          <td></td>
+                          <td>
+                            <Button
+                              onClick={() => { setCurrentProductId(index);}}
+                              className="btn btn-primary shadow btn-xs sharp mr-1">
+                              <i className="fa fa-pencil"></i>
+                            </Button></td>
                           <td>{product.value.productName}</td>
                           <td>{`x${product.value.productQty}`}</td>
                           <td>{product.value.productUnit}</td>
@@ -422,12 +457,11 @@ const OrdersForm = (props) => {
                           <td>{`₱${numberWithCommas(
                             product.value.subtotal
                           )}`}</td>
-                          <td> <Button
-                            onClick={() => { onDelete(index) }}
-                            className="btn btn-danger shadow btn-xs sharp"
-                          >
-                            <i className="fa fa-trash"></i>
-                          </Button></td>
+                          <td>
+                            <Button onClick={() => { onDelete(index) }}
+                              className="btn btn-danger shadow btn-xs sharp" >
+                              <i className="fa fa-trash"></i>
+                            </Button></td>
                         </tr>
                       );
                     })}
