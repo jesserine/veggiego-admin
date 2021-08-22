@@ -212,6 +212,16 @@ const OrdersForm = (props) => {
 
   const [selectedOption, setSelectedOption] = useState(null);
   console.log(selectedOption);
+
+  const onDelete = (key) => {
+    console.log("inside delete")
+    if (key !== -1) {
+      productList.splice(key, 1);
+      setProductList([
+        ...productList])
+    }
+    console.log("after delete")
+  }
   return (
     <Fragment>
       <div className="row">
@@ -399,9 +409,9 @@ const OrdersForm = (props) => {
                       return (
                         <tr
                           key={index}
-                          // onClick={() => {
-                          //     setCurrentProductId(index);
-                          // }}
+                        // onClick={() => {
+                        //     setCurrentProductId(index);
+                        // }}
                         >
                           <td></td>
                           <td>{product.value.productName}</td>
@@ -412,7 +422,12 @@ const OrdersForm = (props) => {
                           <td>{`₱${numberWithCommas(
                             product.value.subtotal
                           )}`}</td>
-                          <td></td>
+                          <td> <Button
+                            onClick={() => { onDelete(index) }}
+                            className="btn btn-danger shadow btn-xs sharp"
+                          >
+                            <i className="fa fa-trash"></i>
+                          </Button></td>
                         </tr>
                       );
                     })}
@@ -420,16 +435,6 @@ const OrdersForm = (props) => {
                 </Table>
               </div>
               <div className="card-footer">
-                <div className="form-group col-md-12">
-                  <label>Notes</label>
-                  <textarea
-                    className="form-control"
-                    rows="4"
-                    id="notes"
-                    name="notes"
-                    onChange={handleOrderInputChange}
-                  ></textarea>
-                </div>
                 <div className="form-group col-md-12">
                   <label>Total</label>
                   <input
@@ -442,6 +447,17 @@ const OrdersForm = (props) => {
                     disabled
                   />
                 </div>
+                <div className="form-group col-md-12">
+                  <label>Notes</label>
+                  <textarea
+                    className="form-control"
+                    rows="4"
+                    id="notes"
+                    name="notes"
+                    onChange={handleOrderInputChange}
+                  ></textarea>
+                </div>
+
                 <div className="form-group col-md-4">
                   <Button className="mt-4" variant="primary" type="submit">
                     Save Order
