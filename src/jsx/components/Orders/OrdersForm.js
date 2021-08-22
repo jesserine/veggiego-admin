@@ -156,6 +156,7 @@ const OrdersForm = (props) => {
   const handleProductAddUpdate = (e) => {
     console.log("inside handleProductAddUpdate");
     // e.preventDefault()
+    productValues.productName = selectedOption.value;
     addOrEditProduct(productValues);
     // window.location.reload(false)
   };
@@ -184,11 +185,29 @@ const OrdersForm = (props) => {
     return options.push({
       value: productNameObjects[id].productName,
       label: productNameObjects[id].productName,
+      product: productNameObjects[id],
     });
   });
 
-  const [selectedOption, setSelectedOption] = useState(null);
+  const customStyles = {
+    option: (provided, state) => ({
+      color: state.isSelected ? "green" : "",
+      padding: 20,
+    }),
+    control: () => ({
+      // none of react-select's styles are passed to <Control />
+      width: 250,
+    }),
+    singleValue: (provided, state) => {
+      const opacity = state.isDisabled ? 0.5 : 1;
+      const transition = "opacity 300ms";
 
+      return { ...provided, opacity, transition };
+    },
+  };
+
+  const [selectedOption, setSelectedOption] = useState(null);
+  console.log(selectedOption);
   return (
     <Fragment>
       <div className="row">
@@ -201,13 +220,14 @@ const OrdersForm = (props) => {
                     <div className="form-group col-md-3">
                       <label>Product</label>
                       <Select
+                        className={"form-control"}
                         defaultValue={selectedOption}
                         onChange={setSelectedOption}
                         options={options}
-                        style={{
-                          lineHeight: "40px",
-                          color: "#7e7e7e",
-                          paddingLeft: " 15px",
+                        styles={customStyles}
+                        components={{
+                          DropdownIndicator: () => null,
+                          IndicatorSeparator: () => null,
                         }}
                       />
                       {/* <select
@@ -244,7 +264,7 @@ const OrdersForm = (props) => {
                         ))}
                       </div>
                     </div>
-                    <div className="form-group col-md-2">
+                    <div className="form-group col mt-2 mt-sm-0">
                       <label>Quantity</label>
                       <input
                         type="text"
@@ -256,7 +276,7 @@ const OrdersForm = (props) => {
                         required
                       />
                     </div>
-                    <div className="form-group col-md-1">
+                    <div className="form-group col mt-2 mt-sm-0">
                       <label>Unit</label>
                       <select
                         defaultValue="Select Unit"
@@ -283,7 +303,7 @@ const OrdersForm = (props) => {
                         })}
                       </select>
                     </div>
-                    <div className="form-group col-md-2">
+                    <div className="form-group col mt-2 mt-sm-0">
                       <label>Price</label>
                       <input
                         type="text"
@@ -295,7 +315,7 @@ const OrdersForm = (props) => {
                         required
                       />
                     </div>
-                    <div className="form-group col-md-1">
+                    <div className="form-group col mt-2 mt-sm-0">
                       <label>Discount</label>
                       <input
                         type="text"
@@ -307,7 +327,7 @@ const OrdersForm = (props) => {
                         required
                       />
                     </div>
-                    <div className="form-group col-md-2">
+                    <div className="form-group col mt-2 mt-sm-0">
                       <label>SubTotal</label>
                       <input
                         type="text"
@@ -319,7 +339,7 @@ const OrdersForm = (props) => {
                         disabled
                       />
                     </div>
-                    <div className="form-group col-md-1 ">
+                    <div className="form-group col mt-2 mt-sm-0">
                       <Button
                         className="mt-4"
                         variant="primary"
