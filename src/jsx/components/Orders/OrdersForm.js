@@ -13,7 +13,7 @@ import {
   Table,
 } from "react-bootstrap";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-import { set } from "date-fns";
+import Select from "react-select";
 
 const OrdersForm = (props) => {
   const initialFieldValues = {
@@ -170,15 +170,25 @@ const OrdersForm = (props) => {
       },
     ]);
   };
-  
-  const calc = 
-  (Number(productValues.productQty) *
-  Number(productValues.productPrice))
-  const discountVal = calc * (Number (productValues.discount) / 100)
-  productValues.subtotal =
-      calc - discountVal
+
+  const calc =
+    Number(productValues.productQty) * Number(productValues.productPrice);
+  const discountVal = calc * (Number(productValues.discount) / 100);
+  productValues.subtotal = calc - discountVal;
 
   const enabled = values.notes != null;
+
+  const options = [];
+
+  Object.keys(productNameObjects).map((id) => {
+    return options.push({
+      value: productNameObjects[id].productName,
+      label: productNameObjects[id].productName,
+    });
+  });
+
+  const [selectedOption, setSelectedOption] = useState(null);
+
   return (
     <Fragment>
       <div className="row">
@@ -190,7 +200,17 @@ const OrdersForm = (props) => {
                   <div className="form-row ">
                     <div className="form-group col-md-3">
                       <label>Product</label>
-                      <select
+                      <Select
+                        defaultValue={selectedOption}
+                        onChange={setSelectedOption}
+                        options={options}
+                        style={{
+                          lineHeight: "40px",
+                          color: "#7e7e7e",
+                          paddingLeft: " 15px",
+                        }}
+                      />
+                      {/* <select
                         defaultValue="Select Unit"
                         id="inputState"
                         className="form-control"
@@ -215,7 +235,7 @@ const OrdersForm = (props) => {
                             </React.Fragment>
                           );
                         })}
-                      </select>
+                      </select> */}
                       <div className="searchBack" value={result}>
                         {result.map((result, index) => (
                           // <a href="orders" id={index}>
