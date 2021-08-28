@@ -17,6 +17,7 @@ const AddressModal = (props) => {
   const [provinceAddr, setProvinceAddr] = useState("");
   const [cityAddr, setCityAddr] = useState("");
   const [barangayAddr, setBarangayAddr] = useState("");
+  const [streetAddr, setStreetAddr] = useState("");
 
   const region = () => {
     regions().then((response) => {
@@ -78,100 +79,96 @@ const AddressModal = (props) => {
             <form onSubmit={(e) => e.preventDefault()}>
               <div className="form-row">
                 <div className="form-group col-md-6">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="1234 Main St"
-                  />
-                </div>
-                <div className="form-group col-md-6">
-                  <label>Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Email"
-                  />
-                </div>
-                <div className="form-group col-md-6">
-                  <label>Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Password"
-                  />
-                </div>
-                <div className="form-group col-md-6">
-                  <label>City</label>
-                  <input type="text" className="form-control" />
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="form-group col-md-4">
-                  <label>State</label>
+                  <label>Region</label>
                   <select
                     defaultValue={"option"}
                     id="inputState"
                     className="form-control"
+                    onChange={province}
+                    onSelect={region}
                   >
                     <option value="option" disabled>
-                      Choose...
+                      Select Region...
                     </option>
-                    <option>Option 1</option>
-                    <option>Option 2</option>
-                    <option>Option 3</option>
+                    {regionData &&
+                      regionData.length > 0 &&
+                      regionData.map((item) => (
+                        <option key={item.region_code} value={item.region_code}>
+                          {item.region_name}
+                        </option>
+                      ))}
                   </select>
                 </div>
-                <div className="form-group col-md-2">
-                  <label>Zip</label>
-                  <input type="text" className="form-control" />
+                <div className="form-group col-md-6">
+                  <label>Province</label>
+                  <select
+                    defaultValue={"option"}
+                    id="inputState"
+                    className="form-control"
+                    onChange={city}
+                  >
+                    <option value="option" disabled>
+                      Select Province...
+                    </option>
+                    {provinceData &&
+                      provinceData.length > 0 &&
+                      provinceData.map((item) => (
+                        <option
+                          key={item.province_code}
+                          value={item.province_code}
+                        >
+                          {item.province_name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <div className="form-group col-md-6">
+                  <label>City</label>
+                  <select
+                    defaultValue={"option"}
+                    id="inputState"
+                    className="form-control"
+                    onChange={barangay}
+                  >
+                    <option value="option" disabled>
+                      Select City...
+                    </option>
+                    {cityData &&
+                      cityData.length > 0 &&
+                      cityData.map((item) => (
+                        <option key={item.city_code} value={item.city_code}>
+                          {item.city_name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <div className="form-group col-md-6">
+                  <label>Barangay</label>
+                  <select
+                    defaultValue={"option"}
+                    id="inputState"
+                    className="form-control"
+                    onChange={brgy}
+                  >
+                    <option value="option" disabled>
+                      Select Barangay...
+                    </option>
+                    {barangayData &&
+                      barangayData.length > 0 &&
+                      barangayData.map((item) => (
+                        <option key={item.brgy_code} value={item.brgy_code}>
+                          {item.brgy_name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <div className="form-group col-md-12">
+                  <label>Street Name, Building, House No.</label>
+                  <input type="text" className="form-control" placeholder="" />
                 </div>
               </div>
             </form>
           </div>
-          <select onChange={province} onSelect={region}>
-            <option disabled>Select Region</option>
-            {regionData &&
-              regionData.length > 0 &&
-              regionData.map((item) => (
-                <option key={item.region_code} value={item.region_code}>
-                  {item.region_name}
-                </option>
-              ))}
-          </select>
-          <br />
-          <select onChange={city}>
-            <option disabled>Select Province</option>
-            {provinceData &&
-              provinceData.length > 0 &&
-              provinceData.map((item) => (
-                <option key={item.province_code} value={item.province_code}>
-                  {item.province_name}
-                </option>
-              ))}
-          </select>
-          <br />
-          <select onChange={barangay}>
-            <option disabled>Select City</option>
-            {cityData &&
-              cityData.length > 0 &&
-              cityData.map((item) => (
-                <option key={item.city_code} value={item.city_code}>
-                  {item.city_name}
-                </option>
-              ))}
-          </select>
-          <br />
-          <select onChange={brgy}>
-            <option disabled>Select Barangay</option>
-            {barangayData &&
-              barangayData.length > 0 &&
-              barangayData.map((item) => (
-                <option key={item.brgy_code} value={item.brgy_code}>
-                  {item.brgy_name}
-                </option>
-              ))}
-          </select>
           <p>Address</p>
           {barangayAddr}, {cityAddr}, {provinceAddr}, {regionAddr}
         </Modal.Body>
