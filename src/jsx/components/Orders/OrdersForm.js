@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
+import MetarialDateAndTime from "../Forms/Pickers/MetarialDateAndTime";
 
 import PageTitle from "../../layouts/PageTitle";
 import {
@@ -21,6 +22,8 @@ const OrdersForm = (props) => {
     notes: "",
     total: 0,
     rider: "",
+    deliveryFee: 0,
+    dateOfDelivery: new Date().toLocaleString(),
     customer: props.user,
     customerId: props.userId,
     dateAdded: new Date().toLocaleString(),
@@ -39,6 +42,7 @@ const OrdersForm = (props) => {
 
   var [values, setValues] = useState(initialFieldValues);
   var [unitObjects, setUnitObjects] = useState({});
+  var [deliveryObjects, setDeliveryObjects] = useState({});
   var [productNameObjects, setProductNameObjects] = useState({});
   var [productValues, setProductValues] = useState(initialProductValues);
   var [productList, setProductList] = useState([]);
@@ -46,7 +50,8 @@ const OrdersForm = (props) => {
   var [value, setValue] = useState("");
   var [currentProductId, setCurrentProductId] = useState('');
   var [currentId, setCurrentId] = useState("");
-
+  const [selectedDate, handleDateChange] = useState(new Date());
+  values.dateOfDelivery = selectedDate;
   //get the list of product
   useEffect(() => {
     if (value.length > 0) {
@@ -91,6 +96,17 @@ const OrdersForm = (props) => {
           ...snapshot.val(),
         });
       else setUnitObjects({});
+    });
+  }, []);
+
+
+  useEffect(() => {
+    firebaseDb.ref("delivery/").on("value", (snapshot) => {
+      if (snapshot.val() != null)
+        setDeliveryObjects({
+          ...snapshot.val(),
+        });
+      else setDeliveryObjects({});
     });
   }, []);
 
@@ -160,11 +176,11 @@ const OrdersForm = (props) => {
         ...initialProductValues,
       })
     else
-    setProductValues({
-        ...productList[currentProductId], 
+      setProductValues({
+        ...productList[currentProductId],
       })
   }, [currentProductId, productList])
- 
+
   const handleProductAddUpdate = (e) => {
     console.log("inside handleProductAddUpdate");
     productValues.productName = selectedOption.value;
@@ -173,7 +189,7 @@ const OrdersForm = (props) => {
 
   const addOrEditProduct = (obj) => {
     console.log("inside addOrEditProduct", obj, currentProductId);
-    if(currentProductId==''){
+    if (currentProductId == '') {
       console.log("inside addOrEditProduct-ADD PRODUCT", currentProductId);
       setProductList([
         ...productList,
@@ -182,10 +198,10 @@ const OrdersForm = (props) => {
         },
       ]);
       setCurrentProductId('')
-    }else{
-      console.log("inside addOrEditProduct-EDIT PRODUCT",currentProductId); 
+    } else {
+      console.log("inside addOrEditProduct-EDIT PRODUCT", currentProductId);
       setProductList([
-        ...productList.splice(0,currentProductId),
+        ...productList.splice(0, currentProductId),
         {
           value: obj,
         },
@@ -235,13 +251,13 @@ const OrdersForm = (props) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
-    if (selectedOption !== null){
+    if (selectedOption !== null) {
       productValues.productPrice = selectedOption.product.price
       productValues.productUnit = selectedOption.product.unit
     }
   }, [selectedOption, productValues])
 
-   console.log(selectedOption);
+  console.log(selectedOption);
 
   const onDelete = (key) => {
     console.log("inside delete")
@@ -445,7 +461,7 @@ const OrdersForm = (props) => {
                         >
                           <td>
                             <Button
-                              onClick={() => { setCurrentProductId(index);}}
+                              onClick={() => { setCurrentProductId(index); }}
                               className="btn btn-primary shadow btn-xs sharp mr-1">
                               <i className="fa fa-pencil"></i>
                             </Button></td>
@@ -469,29 +485,83 @@ const OrdersForm = (props) => {
                 </Table>
               </div>
               <div className="card-footer">
-                <div className="form-group col-md-12">
-                  <label>Total</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="0"
-                    name="total"
-                    value={values.total}
-                    onChange={handleOrderInputChange}
-                    disabled
-                  />
+                <div className="form-row">
+                  <div className="form-group col-md-8">
+                    <label>Delivery Area</label>
+                    <select
+                      defaultValue="Select Unit"
+                      id="inputState"
+                      className="form-control"
+                      name="deliveryFee"
+                      value={values.deliveryFee}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="Unit">Delivery Area</option>
+                      {Object.keys(deliveryObjects).map((id) => {
+                        return (
+                          <React.Fragment key={id}>
+                            {deliveryObjects[id].isActive == "true" ? (
+                              <option value={deliveryObjects[id].location}>
+                                {deliveryObjects[id].location}
+                              </option>
+                            ) : (
+                              ""
+                            )}
+                          </React.Fragment>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <div className="form-group col-md-4">
+                    <label>Delivery Fee</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="0"
+                      name="deliveryFee"
+                      value={values.deliveryFee}
+                      onChange={handleOrderInputChange}
+                      disabled
+                    />
+                  </div>
                 </div>
-                <div className="form-group col-md-12">
-                  <label>Notes</label>
-                  <textarea
-                    className="form-control"
-                    rows="4"
-                    id="notes"
-                    name="notes"
-                    onChange={handleOrderInputChange}
-                  ></textarea>
+                <div className="form-row">
+                  <div className="form-group col-md-12">
+                    <label>Total</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="0"
+                      name="total"
+                      value={values.total}
+                      onChange={handleOrderInputChange}
+                      disabled
+                    />
+                  </div>
                 </div>
-
+                <div className="form-row">
+                  <div className="form-group col-md-12">
+                    <label>Notes</label>
+                    <textarea
+                      className="form-control"
+                      rows="4"
+                      id="notes"
+                      name="notes"
+                      onChange={handleOrderInputChange}
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-md-12">
+                    <label>Date of Delivery</label>
+                    <MetarialDateAndTime 
+                      name="dateOfDelivery"
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                    />
+                  </div>
+                </div>
                 <div className="form-group col-md-4">
                   <Button className="mt-4" variant="primary" type="submit">
                     Save Order
