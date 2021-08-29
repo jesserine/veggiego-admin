@@ -16,8 +16,6 @@ const RidersForm = (props) => {
     riderImage: "",
     riderContactNum: "",
     riderAddress: "",
-    username: "",
-    password: "",
     dateAdded: new Date().toLocaleString(),
     isActive: "true",
   };
