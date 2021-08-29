@@ -4,6 +4,8 @@ import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 import MetarialDateAndTime from "../Forms/Pickers/MetarialDateAndTime";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 import PageTitle from "../../layouts/PageTitle";
 import {
@@ -22,6 +24,7 @@ const OrdersForm = (props) => {
     notes: "",
     total: 0,
     rider: "",
+    deliveryLocation: "",
     deliveryFee: 0,
     dateOfDelivery: new Date().toLocaleString(),
     customer: props.user,
@@ -51,7 +54,9 @@ const OrdersForm = (props) => {
   var [currentProductId, setCurrentProductId] = useState('');
   var [currentId, setCurrentId] = useState("");
   const [selectedDate, handleDateChange] = useState(new Date());
+  console.log(selectedDate)
   values.dateOfDelivery = selectedDate;
+
   //get the list of product
   useEffect(() => {
     if (value.length > 0) {
@@ -123,7 +128,6 @@ const OrdersForm = (props) => {
 
   const handleInputChange = (e) => {
     console.log("inside handleInputChange");
-
     var { name, value } = e.target;
     setProductValues({
       ...productValues,
@@ -162,6 +166,7 @@ const OrdersForm = (props) => {
     addOrder(values);
     window.location.reload(false);
   };
+
   const addOrder = (obj) => {
     obj.products = productList;
     firebaseDb.ref("orders/").push(obj, (err) => {
@@ -218,7 +223,6 @@ const OrdersForm = (props) => {
   const enabled = values.notes != null;
 
   const options = [];
-
   Object.keys(productNameObjects).map((id) => {
     return options.push({
       value: productNameObjects[id].productName,
@@ -249,14 +253,12 @@ const OrdersForm = (props) => {
   }
 
   const [selectedOption, setSelectedOption] = useState(null);
-
   useEffect(() => {
     if (selectedOption !== null) {
       productValues.productPrice = selectedOption.product.price
       productValues.productUnit = selectedOption.product.unit
     }
   }, [selectedOption, productValues])
-
   console.log(selectedOption);
 
   const onDelete = (key) => {
@@ -519,9 +521,6 @@ const OrdersForm = (props) => {
                       type="text"
                       className="form-control"
                       placeholder="0"
-                      name="deliveryFee"
-                      value={values.deliveryFee}
-                      onChange={handleOrderInputChange}
                       disabled
                     />
                   </div>
@@ -555,11 +554,14 @@ const OrdersForm = (props) => {
                 <div className="form-row">
                   <div className="form-group col-md-12">
                     <label>Date of Delivery</label>
-                    <MetarialDateAndTime 
-                      name="dateOfDelivery"
-                      value={selectedDate}
-                      onChange={handleDateChange}
-                    />
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <DateTimePicker
+                        label=""
+                        inputVariant="outlined"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                      />
+                    </MuiPickersUtilsProvider>
                   </div>
                 </div>
                 <div className="form-group col-md-4">
