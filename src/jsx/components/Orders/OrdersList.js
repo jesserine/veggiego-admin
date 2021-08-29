@@ -43,7 +43,7 @@ const OrdersList = () => {
   );
 
   useEffect(() => {
-    firebaseDb.ref("customer/").on("value", (snapshot) => {
+    firebaseDb.ref("orders/").on("value", (snapshot) => {
       if (snapshot.val() != null)
         setOrderObjects({
           ...snapshot.val(),
