@@ -54,8 +54,6 @@ const OrdersForm = (props) => {
   var [currentProductId, setCurrentProductId] = useState('');
   var [currentId, setCurrentId] = useState("");
   const [selectedDate, handleDateChange] = useState(new Date());
-  console.log(selectedDate)
-  values.dateOfDelivery = selectedDate;
 
   //get the list of product
   useEffect(() => {
@@ -162,7 +160,10 @@ const OrdersForm = (props) => {
 
   const handleFormSubmit = (e) => {
     console.log("inside handleFormSubmit");
+    console.log("Date of Delivery", selectedDate.value.toLocaleString())
     e.preventDefault();
+    // values.dateOfDelivery = selectedDate.value.toLocaleString();
+    values.deliveryLocation = selectedDeliveryOption.value;
     addOrder(values);
     window.location.reload(false);
   };
@@ -188,6 +189,7 @@ const OrdersForm = (props) => {
 
   const handleProductAddUpdate = (e) => {
     console.log("inside handleProductAddUpdate");
+    values.total+=productValues.subtotal
     productValues.productName = selectedOption.value;
     addOrEditProduct(productValues);
   };
@@ -230,6 +232,31 @@ const OrdersForm = (props) => {
       product: productNameObjects[id],
     });
   });
+  const [selectedOption, setSelectedOption] = useState(null);
+  useEffect(() => {
+    if (selectedOption !== null) {
+      productValues.productPrice = selectedOption.product.price
+      productValues.productUnit = selectedOption.product.unit
+    }
+  }, [selectedOption, productValues])
+  console.log(selectedOption);
+
+
+  const deliveryOptions = [];
+  Object.keys(deliveryObjects).map((id) => {
+    return deliveryOptions.push({
+      value: deliveryObjects[id].location,
+      label: deliveryObjects[id].location,
+      delivery: deliveryObjects[id],
+    });
+  });
+  const [selectedDeliveryOption, setSelectedDeliveryOption] = useState(null);
+  useEffect(() => {
+    if (selectedDeliveryOption !== null) {
+      values.deliveryFee = selectedDeliveryOption.delivery.deliveryFee
+    }
+  }, [selectedDeliveryOption, values])
+  console.log(selectedDeliveryOption, values.deliveryFee);
 
   const customStyles = {
     option: (provided, state) => ({
@@ -252,23 +279,13 @@ const OrdersForm = (props) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  const [selectedOption, setSelectedOption] = useState(null);
-  useEffect(() => {
-    if (selectedOption !== null) {
-      productValues.productPrice = selectedOption.product.price
-      productValues.productUnit = selectedOption.product.unit
-    }
-  }, [selectedOption, productValues])
-  console.log(selectedOption);
-
   const onDelete = (key) => {
-    console.log("inside delete")
+    // values.total=values.total-Number(productList[key].subtotal);
     if (key !== -1) {
       productList.splice(key, 1);
       setProductList([
         ...productList])
     }
-    console.log("after delete")
   }
   return (
     <Fragment>
@@ -490,7 +507,18 @@ const OrdersForm = (props) => {
                 <div className="form-row">
                   <div className="form-group col-md-8">
                     <label>Delivery Area</label>
-                    <select
+                    <Select
+                        className={"form-control"}
+                        defaultValue={selectedDeliveryOption}
+                        onChange={setSelectedDeliveryOption}
+                        options={deliveryOptions}
+                        styles={customStyles}
+                        components={{
+                          DropdownIndicator: () => null,
+                          IndicatorSeparator: () => null,
+                        }}
+                      />
+                    {/* <select
                       defaultValue="Select Unit"
                       id="inputState"
                       className="form-control"
@@ -513,7 +541,7 @@ const OrdersForm = (props) => {
                           </React.Fragment>
                         );
                       })}
-                    </select>
+                    </select> */}
                   </div>
                   <div className="form-group col-md-4">
                     <label>Delivery Fee</label>
@@ -521,6 +549,8 @@ const OrdersForm = (props) => {
                       type="text"
                       className="form-control"
                       placeholder="0"
+                      value={values.deliveryFee}
+                      onChange={handleOrderInputChange}
                       disabled
                     />
                   </div>
@@ -547,6 +577,7 @@ const OrdersForm = (props) => {
                       rows="4"
                       id="notes"
                       name="notes"
+                      value={values.notes}
                       onChange={handleOrderInputChange}
                     ></textarea>
                   </div>
