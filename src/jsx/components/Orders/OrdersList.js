@@ -1,10 +1,4 @@
 import React, { Fragment, useEffect, useState } from "react";
-import {
-  regions,
-  provinces,
-  cities,
-  barangays,
-} from "select-philippines-address";
 import PageTitle from "../../layouts/PageTitle";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
@@ -13,6 +7,7 @@ import {
   Col,
   Card,
   Table,
+  Button,
   Badge,
   Dropdown,
   ProgressBar,
@@ -24,174 +19,152 @@ import avatar2 from "../../../images/avatar/2.jpg";
 import avatar3 from "../../../images/avatar/3.jpg";
 import { Link, useLocation } from "react-router-dom";
 import OrdersForm from "./OrdersForm";
+import AddRiderToOrderForm from "./AddRiderToOrderForm";
 
 const OrdersList = () => {
-  var [orderObjects, setOrderObjects] = useState({});
-  var [currentId, setCurrentId] = useState("");
-  const location = useLocation();
-  // const { user } = location.state;
+  const initialOrderFieldValues = {
+    products: [],
+    notes: "",
+    total: 0,
+    rider: "",
+    deliveryLocation: "",
+    deliveryFee: 0,
+    dateOfDelivery: new Date().toLocaleString(),
+    customer: [],
+    customerId: "",
+    dateAdded: new Date().toLocaleString(),
+  };
 
-  const svg1 = (
-    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
-      <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-        <rect x="0" y="0" width="24" height="24"></rect>
-        <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-        <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-        <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-      </g>
-    </svg>
-  );
+  var [orderValues, setOrderValues] = useState(initialOrderFieldValues);
+  var [currentId, setCurrentId] = useState("");
 
   useEffect(() => {
     firebaseDb.ref("orders/").on("value", (snapshot) => {
       if (snapshot.val() != null)
-        setOrderObjects({
+      setOrderValues({
           ...snapshot.val(),
         });
-      else setOrderObjects({});
+      else setOrderValues({});
     });
   }, []);
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
-      swal("Nice!", "A new customer profile is added!", "success");
-      firebaseDb.ref("customer/").push(obj, (err) => {
+      swal("Nice!", "A new order is added!", "success");
+      firebaseDb.ref("orders/").push(obj, (err) => {
         if (err) console.log(err);
         else setCurrentId("");
       });
     } else {
-      swal("Nice!", "This customer profile is updated!", "success");
-      firebaseDb.ref(`customer/${currentId}`).set(obj, (err) => {
+      swal("Nice!", "This order is updated!", "success");
+      firebaseDb.ref(`orders/${currentId}`).set(obj, (err) => {
         if (err) console.log(err);
         else setCurrentId("");
       });
     }
   };
 
-  const [regionData, setRegion] = useState([]);
-  const [provinceData, setProvince] = useState([]);
-  const [cityData, setCity] = useState([]);
-  const [barangayData, setBarangay] = useState([]);
-
-  const [regionAddr, setRegionAddr] = useState("");
-  const [provinceAddr, setProvinceAddr] = useState("");
-  const [cityAddr, setCityAddr] = useState("");
-  const [barangayAddr, setBarangayAddr] = useState("");
-
-  const region = () => {
-    regions().then((response) => {
-      setRegion(response);
-    });
-  };
-
-  const province = (e) => {
-    setRegionAddr(e.target.selectedOptions[0].text);
-    provinces(e.target.value).then((response) => {
-      setProvince(response);
-      setCity([]);
-      setBarangay([]);
-    });
-  };
-
-  const city = (e) => {
-    setProvinceAddr(e.target.selectedOptions[0].text);
-    cities(e.target.value).then((response) => {
-      setCity(response);
-    });
-  };
-
-  const barangay = (e) => {
-    setCityAddr(e.target.selectedOptions[0].text);
-    barangays(e.target.value).then((response) => {
-      setBarangay(response);
-    });
-  };
-
-  const brgy = (e) => {
-    setBarangayAddr(e.target.selectedOptions[0].text);
-  };
-
-  useEffect(() => {
-    region();
-  }, []);
-
   return (
-    <Fragment>
-      {/* <p>{JSON.stringify(user)}</p>
-         <Card className="text-white bg-primary">
-                  <Card.Header>
-                     <Card.Title className="text-white">
-                        Primary card title
-                     </Card.Title>
-                  </Card.Header>
-                  <Card.Body className=" mb-0">
-                     <Card.Text>
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
-                     </Card.Text>
-                  </Card.Body>
-               </Card>
-         <div className="row">
-            <div className="col-xl-4 col-lg-4">
-               <OrdersForm {...{ addOrEdit, currentId, orderObjects }} />
-            </div>
-            <div className="col-xl-8 col-lg-8">
-               <Row>
-
-
-               </Row>
-            </div>
-         </div> */}
-      <div className="App">
-        <header className="App-header">
-          <h1>REACT JS</h1>
-          <h4>select-philippines-address demo</h4>
-          <select onChange={province} onSelect={region}>
-            <option disabled>Select Region</option>
-            {regionData &&
-              regionData.length > 0 &&
-              regionData.map((item) => (
-                <option key={item.region_code} value={item.region_code}>
-                  {item.region_name}
-                </option>
-              ))}
-          </select>
-          <br />
-          <select onChange={city}>
-            <option disabled>Select Province</option>
-            {provinceData &&
-              provinceData.length > 0 &&
-              provinceData.map((item) => (
-                <option key={item.province_code} value={item.province_code}>
-                  {item.province_name}
-                </option>
-              ))}
-          </select>
-          <br />
-          <select onChange={barangay}>
-            <option disabled>Select City</option>
-            {cityData &&
-              cityData.length > 0 &&
-              cityData.map((item) => (
-                <option key={item.city_code} value={item.city_code}>
-                  {item.city_name}
-                </option>
-              ))}
-          </select>
-          <br />
-          <select onChange={brgy}>
-            <option disabled>Select Barangay</option>
-            {barangayData &&
-              barangayData.length > 0 &&
-              barangayData.map((item) => (
-                <option key={item.brgy_code} value={item.brgy_code}>
-                  {item.brgy_name}
-                </option>
-              ))}
-          </select>
-          <p>Address</p>
-          {barangayAddr}, {cityAddr}, {provinceAddr}, {regionAddr}
-        </header>
+      <Fragment>
+      <div className="row">
+        <div className="col-xl-4 col-lg-6">
+          <AddRiderToOrderForm
+            {...{ addOrEdit, currentId, orderValues }}
+          />
+        </div>
+        <div className="col-xl-8 col-lg-6">
+          <Row>
+            <Col lg={12}>
+              <Card>
+                <Card.Header>
+                  <Card.Title>Customer Orders</Card.Title>
+                  {/* <Button
+                    variant="primary btn-rounded"
+                    onClick={() => {
+                      setCurrentId("");
+                    }}
+                  >
+                    <span className="btn-icon-left text-primary">
+                      <i className="fa fa-plus" />
+                    </span>
+                    Add
+                  </Button> */}
+                </Card.Header>
+                <Card.Body>
+                  {/* <div className="search_bar dropdown show mb-3">
+                    <div className="dropdown-menushow">
+                      <form onSubmit={(e) => e.preventDefault()}>
+                        <input
+                          className="form-control"
+                          type="search"
+                          placeholder="Search Customer"
+                          aria-label="Search"
+                          // onChange ={(event) => setSearchTerm(event.target.value)}
+                        />
+                      </form>
+                    </div>
+                  </div> */}
+                  <Table responsive hover>
+                    <thead>
+                      <tr>
+                        <th>
+                          <strong>CUSTOMER NAME</strong>
+                        </th>
+                        <th>
+                          <strong>CONTACT NUMBER</strong>
+                        </th>
+                        <th>
+                          <strong>ADDRESS</strong>
+                        </th>
+                        <th>
+                          <strong>ORDERS</strong>
+                        </th>
+                        <th>
+                          <strong>TOTAL</strong>
+                        </th>
+                        <th>
+                          <strong>DELIVERY FEE</strong>
+                        </th>
+                        <th>
+                          <strong>DATE OF DELIVERY</strong>
+                        </th>
+                        <th>
+                          <strong>NOTES</strong>
+                        </th>
+                        <th>
+                          <strong>RIDER NAME</strong>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.keys(orderValues).map((id) => {
+                        return (
+                          <tr
+                            key={id}
+                            onClick={() => {
+                              setCurrentId(id);
+                            }}
+                          >
+                            {/* {orderValues[id].customer.map(customer => <td>{customer.name}</td>)} */}
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{orderValues[id].total}</td>
+                            <td>{orderValues[id].deliveryFee}</td>
+                            <td>{orderValues[id].dateOfDelivery}</td>
+                            <td>{orderValues[id].notes}</td>
+                            <td>{orderValues[id].rider}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </Table>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </div>
       </div>
     </Fragment>
   );
