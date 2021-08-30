@@ -56,7 +56,7 @@ const DeliveryFeeForm = (props) => {
    window.location.reload(false)
  }
 
- const enabled = values.location!=null && values.deliveryFee<=0
+ const enabled = values.location!=null && values.deliveryFee>=0
    return (
       <Fragment>
          <div className="row">
