@@ -69,7 +69,7 @@ const CustomerOrder = () => {
       {/* <p>{JSON.stringify(user)}</p>
          <p>{JSON.stringify(userId)}</p> */}
       <div className="row">
-        <div className="col-xl-4 col-xxl-12 col-lg-12 col-sm-12">
+        <div className="col-xl-4 col-xxl-4 col-lg-12 col-sm-12">
           <div className="card overflow-hidden">
             <div
               className="text-center p-3 overlay-box "
@@ -110,7 +110,7 @@ const CustomerOrder = () => {
             </div>
           </div>
         </div>
-        <div className="col-xl-8 col-xxl-12 col-lg-12 col-sm-12">
+        <div className="col-xl-8 col-xxl-8 col-lg-12 col-sm-12">
           <OrdersForm
             {...{ addOrEdit, currentId, orderObjects, user, userId }}
           />
