@@ -41,7 +41,7 @@ const OrdersList = () => {
   useEffect(() => {
     firebaseDb.ref("orders/").on("value", (snapshot) => {
       if (snapshot.val() != null)
-      setOrderValues({
+        setOrderValues({
           ...snapshot.val(),
         });
       else setOrderValues({});
@@ -64,13 +64,12 @@ const OrdersList = () => {
     }
   };
 
+  console.log("orderValues", orderValues);
   return (
-      <Fragment>
+    <Fragment>
       <div className="row">
         <div className="col-xl-4 col-lg-6">
-          <AddRiderToOrderForm
-            {...{ addOrEdit, currentId, orderValues }}
-          />
+          <AddRiderToOrderForm {...{ addOrEdit, currentId, orderValues }} />
         </div>
         <div className="col-xl-8 col-lg-6">
           <Row>
@@ -79,34 +78,37 @@ const OrdersList = () => {
                 <Card.Header>
                   <Card.Title>Customer Orders</Card.Title>
                   {/* <Button
-                    variant="primary btn-rounded"
-                    onClick={() => {
-                      setCurrentId("");
-                    }}
-                  >
-                    <span className="btn-icon-left text-primary">
-                      <i className="fa fa-plus" />
-                    </span>
-                    Add
-                  </Button> */}
+                     variant="primary btn-rounded"
+                     onClick={() => {
+                       setCurrentId("");
+                     }}
+                   >
+                     <span className="btn-icon-left text-primary">
+                       <i className="fa fa-plus" />
+                     </span>
+                     Add
+                   </Button> */}
                 </Card.Header>
                 <Card.Body>
                   {/* <div className="search_bar dropdown show mb-3">
-                    <div className="dropdown-menushow">
-                      <form onSubmit={(e) => e.preventDefault()}>
-                        <input
-                          className="form-control"
-                          type="search"
-                          placeholder="Search Customer"
-                          aria-label="Search"
-                          // onChange ={(event) => setSearchTerm(event.target.value)}
-                        />
-                      </form>
-                    </div>
-                  </div> */}
+                     <div className="dropdown-menushow">
+                       <form onSubmit={(e) => e.preventDefault()}>
+                         <input
+                           className="form-control"
+                           type="search"
+                           placeholder="Search Customer"
+                           aria-label="Search"
+                           // onChange ={(event) => setSearchTerm(event.target.value)}
+                         />
+                       </form>
+                     </div>
+                   </div> */}
                   <Table responsive hover>
                     <thead>
                       <tr>
+                        <th>
+                          <strong>STATUS</strong>
+                        </th>
                         <th>
                           <strong>CUSTOMER NAME</strong>
                         </th>
@@ -114,22 +116,10 @@ const OrdersList = () => {
                           <strong>CONTACT NUMBER</strong>
                         </th>
                         <th>
-                          <strong>ADDRESS</strong>
-                        </th>
-                        <th>
-                          <strong>ORDERS</strong>
-                        </th>
-                        <th>
                           <strong>TOTAL</strong>
                         </th>
                         <th>
-                          <strong>DELIVERY FEE</strong>
-                        </th>
-                        <th>
                           <strong>DATE OF DELIVERY</strong>
-                        </th>
-                        <th>
-                          <strong>NOTES</strong>
                         </th>
                         <th>
                           <strong>RIDER NAME</strong>
@@ -145,16 +135,18 @@ const OrdersList = () => {
                               setCurrentId(id);
                             }}
                           >
-                            {/* {orderValues[id].customer.map(customer => <td>{customer.name}</td>)} */}
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                              {orderValues[id].customer &&
+                                orderValues[id].customer.name}
+                            </td>
+                            <td>
+                              {orderValues[id].customer &&
+                                orderValues[id].customer.contactNumber}
+                            </td>
                             <td>{orderValues[id].total}</td>
-                            <td>{orderValues[id].deliveryFee}</td>
                             <td>{orderValues[id].dateOfDelivery}</td>
-                            <td>{orderValues[id].notes}</td>
                             <td>{orderValues[id].rider}</td>
+                            {/* {console.log(orderValues[id].customer.name)} */}
                           </tr>
                         );
                       })}
