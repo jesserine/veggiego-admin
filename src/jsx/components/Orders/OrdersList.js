@@ -68,10 +68,10 @@ const OrdersList = () => {
   return (
     <Fragment>
       <div className="row">
-        <div className="col-xl-4 col-lg-6">
+        <div className="col-xl-6 col-lg-6">
           <AddRiderToOrderForm {...{ addOrEdit, currentId, orderValues }} />
         </div>
-        <div className="col-xl-8 col-lg-6">
+        <div className="col-xl-6 col-lg-6">
           <Row>
             <Col lg={12}>
               <Card>
@@ -135,6 +135,7 @@ const OrdersList = () => {
                               setCurrentId(id);
                             }}
                           >
+                            <td></td>
                             <td>
                               {orderValues[id].customer &&
                                 orderValues[id].customer.name}
