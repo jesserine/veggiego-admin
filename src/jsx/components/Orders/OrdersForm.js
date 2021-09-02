@@ -1,21 +1,11 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
-import MetarialDateAndTime from "../Forms/Pickers/MetarialDateAndTime";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
-import PageTitle from "../../layouts/PageTitle";
-import {
-  SplitButton,
-  ButtonGroup,
-  Button,
-  Dropdown,
-  Table,
-} from "react-bootstrap";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import Select from "react-select";
 
 const OrdersForm = (props) => {
@@ -34,7 +24,7 @@ const OrdersForm = (props) => {
 
   const initialProductValues = {
     productName: "",
-    productQty: 0,
+    productQty: 1,
     productUnit: "",
     productPrice: 0,
     discount: 0,
@@ -51,37 +41,11 @@ const OrdersForm = (props) => {
   var [productList, setProductList] = useState([]);
   var [result, setResult] = useState([]);
   var [value, setValue] = useState("");
-  var [currentProductId, setCurrentProductId] = useState('');
+  var [currentProductId, setCurrentProductId] = useState("");
   var [currentId, setCurrentId] = useState("");
   const [selectedDate, handleDateChange] = useState(new Date());
 
-  //get the list of product
-  useEffect(() => {
-    if (value.length > 0) {
-      firebaseDb.ref("products/").on("value", (snapshot) => {
-        if (snapshot.val() != null) {
-          const productsDb = snapshot.val();
-          setResult([]);
-          let searchQuery = value.toLowerCase();
-          for (let id in productsDb) {
-            let fruit = productsDb[id].productName.toLowerCase();
-            if (
-              fruit.slice(0, searchQuery.length).indexOf(searchQuery) !== -1
-            ) {
-              setResult((prevResult) => {
-                return [...prevResult, productsDb[id].productName];
-              });
-            }
-          }
-        } else {
-          setResult([]);
-        }
-      });
-    } else {
-      setResult([]);
-    }
-  }, [value]);
-
+  // retrieves all products in firebase
   useEffect(() => {
     firebaseDb.ref("products/").on("value", (snapshot) => {
       if (snapshot.val() != null)
@@ -92,6 +56,46 @@ const OrdersForm = (props) => {
     });
   }, []);
 
+  // prepares products data for combobox
+  const [selectedOption, setSelectedOption] = useState(null);
+  const options = [];
+
+  Object.keys(productNameObjects).map((id) => {
+    return options.push({
+      value: productNameObjects[id].productName,
+      label: productNameObjects[id].productName,
+      product: productNameObjects[id],
+    });
+  });
+
+  useEffect(() => {
+    if (selectedOption) {
+      setProductValues((prev) => ({
+        ...prev,
+        productQty: 1,
+        productPrice: selectedOption.product.price,
+        productUnit: selectedOption.product.unit,
+      }));
+      console.log(productValues);
+    }
+  }, [selectedOption]);
+
+  // calculates subtotal
+  useEffect(() => {
+    const calc =
+      Number(productValues.productQty) * Number(productValues.productPrice);
+    const discountVal = calc * (Number(productValues.discount) / 100);
+    setProductValues((prev) => ({
+      ...prev,
+      subtotal: calc - discountVal,
+    }));
+  }, [
+    productValues.productQty,
+    productValues.productPrice,
+    productValues.discount,
+  ]);
+
+  // retrieves all units in firebase
   useEffect(() => {
     firebaseDb.ref("unit/").on("value", (snapshot) => {
       if (snapshot.val() != null)
@@ -101,7 +105,6 @@ const OrdersForm = (props) => {
       else setUnitObjects({});
     });
   }, []);
-
 
   useEffect(() => {
     firebaseDb.ref("delivery/").on("value", (snapshot) => {
@@ -114,7 +117,7 @@ const OrdersForm = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props.currentId == "")
+    if (props.currentId === "")
       setValues({
         ...initialFieldValues,
       });
@@ -125,7 +128,6 @@ const OrdersForm = (props) => {
   }, [props.currentId, props.unitObjects]);
 
   const handleInputChange = (e) => {
-    console.log("inside handleInputChange");
     var { name, value } = e.target;
     setProductValues({
       ...productValues,
@@ -134,7 +136,6 @@ const OrdersForm = (props) => {
   };
 
   const handleOrderInputChange = (e) => {
-    console.log("inside handleOrderInputChange");
     var { name, value } = e.target;
     setValues({
       ...values,
@@ -159,8 +160,7 @@ const OrdersForm = (props) => {
   }
 
   const handleFormSubmit = (e) => {
-    console.log("inside handleFormSubmit");
-    console.log("Date of Delivery", selectedDate.value.toLocaleString())
+    console.log("Date of Delivery", selectedDate.value.toLocaleString());
     e.preventDefault();
     // values.dateOfDelivery = selectedDate.value.toLocaleString();
     values.deliveryLocation = selectedDeliveryOption.value;
@@ -177,26 +177,27 @@ const OrdersForm = (props) => {
   };
 
   useEffect(() => {
-    if (currentProductId == '')
+    if (currentProductId === "")
       setProductValues({
         ...initialProductValues,
-      })
+      });
     else
       setProductValues({
         ...productList[currentProductId],
-      })
-  }, [currentProductId, productList])
+      });
+  }, [currentProductId, productList]);
 
   const handleProductAddUpdate = (e) => {
     console.log("inside handleProductAddUpdate");
-    values.total+=productValues.subtotal
+    //FIX THIS SHEEET - change to setstate
+    values.total += productValues.subtotal;
     productValues.productName = selectedOption.value;
     addOrEditProduct(productValues);
   };
 
   const addOrEditProduct = (obj) => {
     console.log("inside addOrEditProduct", obj, currentProductId);
-    if (currentProductId == '') {
+    if (currentProductId === "") {
       console.log("inside addOrEditProduct-ADD PRODUCT", currentProductId);
       setProductList([
         ...productList,
@@ -204,7 +205,7 @@ const OrdersForm = (props) => {
           value: obj,
         },
       ]);
-      setCurrentProductId('')
+      setCurrentProductId("");
     } else {
       console.log("inside addOrEditProduct-EDIT PRODUCT", currentProductId);
       setProductList([
@@ -213,34 +214,11 @@ const OrdersForm = (props) => {
           value: obj,
         },
       ]);
-      setCurrentProductId('')
+      setCurrentProductId("");
     }
   };
 
-  const calc =
-    Number(productValues.productQty) * Number(productValues.productPrice);
-  const discountVal = calc * (Number(productValues.discount) / 100);
-  productValues.subtotal = calc - discountVal;
-
   const enabled = values.notes != null;
-
-  const options = [];
-  Object.keys(productNameObjects).map((id) => {
-    return options.push({
-      value: productNameObjects[id].productName,
-      label: productNameObjects[id].productName,
-      product: productNameObjects[id],
-    });
-  });
-  const [selectedOption, setSelectedOption] = useState(null);
-  useEffect(() => {
-    if (selectedOption !== null) {
-      productValues.productPrice = selectedOption.product.price
-      productValues.productUnit = selectedOption.product.unit
-    }
-  }, [selectedOption, productValues])
-  console.log(selectedOption);
-
 
   const deliveryOptions = [];
   Object.keys(deliveryObjects).map((id) => {
@@ -250,13 +228,14 @@ const OrdersForm = (props) => {
       delivery: deliveryObjects[id],
     });
   });
+
+  //
   const [selectedDeliveryOption, setSelectedDeliveryOption] = useState(null);
-  useEffect(() => {
-    if (selectedDeliveryOption !== null) {
-      values.deliveryFee = selectedDeliveryOption.delivery.deliveryFee
-    }
-  }, [selectedDeliveryOption, values])
-  console.log(selectedDeliveryOption, values.deliveryFee);
+  // useEffect(() => {
+  //   if (selectedDeliveryOption !== null) {
+  //     values.deliveryFee = selectedDeliveryOption.delivery.deliveryFee;
+  //   }
+  // }, [selectedDeliveryOption, values]);
 
   const customStyles = {
     option: (provided, state) => ({
@@ -283,10 +262,9 @@ const OrdersForm = (props) => {
     // values.total=values.total-Number(productList[key].subtotal);
     if (key !== -1) {
       productList.splice(key, 1);
-      setProductList([
-        ...productList])
+      setProductList([...productList]);
     }
-  }
+  };
   return (
     <Fragment>
       <div className="row">
@@ -295,6 +273,57 @@ const OrdersForm = (props) => {
             <form onSubmit={handleFormSubmit}>
               <div className="card-header">
                 <div className="basic-form">
+                  <div className="form-row">
+                    <div className="form-group col-md-8">
+                      <label>Delivery Area</label>
+                      <Select
+                        className={"form-control"}
+                        defaultValue={selectedDeliveryOption}
+                        onChange={setSelectedDeliveryOption}
+                        options={deliveryOptions}
+                        styles={customStyles}
+                        components={{
+                          DropdownIndicator: () => null,
+                          IndicatorSeparator: () => null,
+                        }}
+                      />
+                      {/* <select
+                      defaultValue="Select Unit"
+                      id="inputState"
+                      className="form-control"
+                      name="deliveryFee"
+                      value={values.deliveryFee}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="Unit">Delivery Area</option>
+                      {Object.keys(deliveryObjects).map((id) => {
+                        return (
+                          <React.Fragment key={id}>
+                            {deliveryObjects[id].isActive == "true" ? (
+                              <option value={deliveryObjects[id].location}>
+                                {deliveryObjects[id].location}
+                              </option>
+                            ) : (
+                              ""
+                            )}
+                          </React.Fragment>
+                        );
+                      })}
+                    </select> */}
+                    </div>
+                    <div className="form-group col-md-4">
+                      <label>Delivery Fee</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="0"
+                        value={values.deliveryFee}
+                        onChange={handleOrderInputChange}
+                        disabled
+                      />
+                    </div>
+                  </div>
                   <div className="form-row ">
                     <div className="form-group col-md-3">
                       <label>Product</label>
@@ -346,7 +375,7 @@ const OrdersForm = (props) => {
                     <div className="form-group col mt-2 mt-sm-0">
                       <label>Quantity</label>
                       <input
-                        type="text"
+                        type="number"
                         className="form-control"
                         placeholder="0"
                         name="productQty"
@@ -366,11 +395,15 @@ const OrdersForm = (props) => {
                         onChange={handleInputChange}
                         required
                       >
-                        <option value="Unit">Unit</option>
+                        <option value="Unit">
+                          {selectedOption
+                            ? selectedOption.product.unit
+                            : "Unit "}
+                        </option>
                         {Object.keys(unitObjects).map((id) => {
                           return (
                             <React.Fragment key={id}>
-                              {unitObjects[id].isActive == "true" ? (
+                              {unitObjects[id].isActive === "true" ? (
                                 <option value={unitObjects[id].unitName}>
                                   {unitObjects[id].unitName}
                                 </option>
@@ -385,7 +418,7 @@ const OrdersForm = (props) => {
                     <div className="form-group col mt-2 mt-sm-0">
                       <label>Price</label>
                       <input
-                        type="text"
+                        type="number"
                         className="form-control"
                         placeholder="0"
                         name="productPrice"
@@ -397,7 +430,7 @@ const OrdersForm = (props) => {
                     <div className="form-group col mt-2 mt-sm-0">
                       <label>Discount</label>
                       <input
-                        type="text"
+                        type="number"
                         className="form-control"
                         placeholder="0"
                         name="discount"
@@ -407,7 +440,7 @@ const OrdersForm = (props) => {
                       />
                     </div>
                     <div className="form-group col mt-2 mt-sm-0">
-                      <label>SubTotal</label>
+                      <label>Subtotal</label>
                       <input
                         type="text"
                         className="form-control"
@@ -420,12 +453,20 @@ const OrdersForm = (props) => {
                     </div>
                     <div className="form-group col mt-2 mt-sm-0">
                       <Button
-                        className="mt-4"
+                        className="btn btn-primary btn-sm mt-5"
                         variant="primary"
                         //  type="submit"
                         onClick={handleProductAddUpdate}
                       >
                         +
+                      </Button>
+                      <Button
+                        className="btn btn-primary btn-sm ml-1 mt-5"
+                        variant="primary"
+                        //  type="submit"
+                        onClick={handleProductAddUpdate}
+                      >
+                        <i className="las la-eraser" />
                       </Button>
                     </div>
                   </div>
@@ -480,10 +521,14 @@ const OrdersForm = (props) => {
                         >
                           <td>
                             <Button
-                              onClick={() => { setCurrentProductId(index); }}
-                              className="btn btn-primary shadow btn-xs sharp mr-1">
+                              onClick={() => {
+                                setCurrentProductId(index);
+                              }}
+                              className="btn btn-primary shadow btn-xs sharp mr-1"
+                            >
                               <i className="fa fa-pencil"></i>
-                            </Button></td>
+                            </Button>
+                          </td>
                           <td>{product.value.productName}</td>
                           <td>{`x${product.value.productQty}`}</td>
                           <td>{product.value.productUnit}</td>
@@ -493,10 +538,15 @@ const OrdersForm = (props) => {
                             product.value.subtotal
                           )}`}</td>
                           <td>
-                            <Button onClick={() => { onDelete(index) }}
-                              className="btn btn-danger shadow btn-xs sharp" >
+                            <Button
+                              onClick={() => {
+                                onDelete(index);
+                              }}
+                              className="btn btn-danger shadow btn-xs sharp"
+                            >
                               <i className="fa fa-trash"></i>
-                            </Button></td>
+                            </Button>
+                          </td>
                         </tr>
                       );
                     })}
@@ -505,72 +555,8 @@ const OrdersForm = (props) => {
               </div>
               <div className="card-footer">
                 <div className="form-row">
-                  <div className="form-group col-md-8">
-                    <label>Delivery Area</label>
-                    <Select
-                        className={"form-control"}
-                        defaultValue={selectedDeliveryOption}
-                        onChange={setSelectedDeliveryOption}
-                        options={deliveryOptions}
-                        styles={customStyles}
-                        components={{
-                          DropdownIndicator: () => null,
-                          IndicatorSeparator: () => null,
-                        }}
-                      />
-                    {/* <select
-                      defaultValue="Select Unit"
-                      id="inputState"
-                      className="form-control"
-                      name="deliveryFee"
-                      value={values.deliveryFee}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="Unit">Delivery Area</option>
-                      {Object.keys(deliveryObjects).map((id) => {
-                        return (
-                          <React.Fragment key={id}>
-                            {deliveryObjects[id].isActive == "true" ? (
-                              <option value={deliveryObjects[id].location}>
-                                {deliveryObjects[id].location}
-                              </option>
-                            ) : (
-                              ""
-                            )}
-                          </React.Fragment>
-                        );
-                      })}
-                    </select> */}
-                  </div>
-                  <div className="form-group col-md-4">
-                    <label>Delivery Fee</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="0"
-                      value={values.deliveryFee}
-                      onChange={handleOrderInputChange}
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group col-md-12">
-                    <label>Total</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="0"
-                      name="total"
-                      value={values.total}
-                      onChange={handleOrderInputChange}
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group col-md-12">
+                  <div className="form-group col-md-9 pr-5">
+                    {" "}
                     <label>Notes</label>
                     <textarea
                       className="form-control"
@@ -581,7 +567,17 @@ const OrdersForm = (props) => {
                       onChange={handleOrderInputChange}
                     ></textarea>
                   </div>
+                  <div className="form-group col-md-3 pull-right">
+                    <label>Total</label>
+                    <h3>₱{numberWithCommas(values.total)}</h3>
+                    <label>Delivery Fee</label>
+                    <h3>₱{numberWithCommas(0)}</h3>
+                    <hr></hr>
+                    <label>Grand Total</label>
+                    <h1>₱{numberWithCommas(values.total)}</h1>
+                  </div>
                 </div>
+
                 <div className="form-row">
                   <div className="form-group col-md-12">
                     <label>Date of Delivery</label>
