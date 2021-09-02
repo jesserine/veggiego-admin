@@ -18,6 +18,8 @@ const AddRiderToOrderForm = (props) => {
     customer: "",
     customerId: "",
     dateAdded: new Date().toLocaleString(),
+    status: "",
+    grandTotal: 0,
   };
 
   var [values, setValues] = useState(initialOrderFieldValues);
@@ -29,16 +31,6 @@ const AddRiderToOrderForm = (props) => {
   const [imageUrl, setImageUrl] = useState();
 
   const selectedId = props.currentId;
-
-  // useEffect(() => {
-  //   firebaseDb.ref("orders/").on("value", (snapshot) => {
-  //     if (snapshot.val() != null)
-  //       setOrderValues({
-  //         ...snapshot.val(),
-  //       });
-  //     else setOrderValues({});
-  //   });
-  // }, []);
 
   useEffect(() => {
     firebaseDb.ref("riders/").on("value", (snapshot) => {
@@ -96,141 +88,126 @@ const AddRiderToOrderForm = (props) => {
   return (
     <Fragment>
       <div className="row">
-        <div className="col-xl-12 col-lg-12">
+        <div className="col-lg-12">
           <div className="card">
             <div className="card-header">
-              <h4 className="card-title">
-                {props.currentId === ""
-                  ? "Customer "
-                  : viewMode
-                  ? "View "
-                  : "Edit "}
-                Order Info
+              {" "}
+              <h4>
+                <strong>Invoice</strong> {props.currentId}{" "}
               </h4>
-              {props.currentId !== "" ? (
-                <Button
-                  variant="primary btn-rounded"
-                  onClick={() => {
-                    setViewMode(!viewMode);
-                  }}
-                >
-                  <span className="btn-icon-left text-primary">
-                    {viewMode ? (
-                      <i className="fa fa-pencil" />
-                    ) : (
-                      <i className="fa fa-eye" />
-                    )}
-                  </span>
-                  {viewMode ? "Edit " : "View "}
-                </Button>
-              ) : null}
             </div>
             <div className="card-body">
-              <div className="basic-form">
-                <form onSubmit={handleFormSubmit}>
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">Name</label>
-                    <div className="col-sm-9 ">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Name"
-                        name="customer.name"
-                        value={values.customer.name}
-                        onChange={handleInputChange}
-                        required
-                        disabled={viewMode}
-                      />
-                    </div>
+              <div className="row">
+                <div className="col-xl-6 col-sm-6 mb-4">
+                  <h5>Customer:</h5>
+                  <div>
+                    {" "}
+                    <strong>{values.customer.name}</strong>{" "}
                   </div>
-
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">Contact</label>
-                    <div className="col-sm-9">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="09-xxx-xxx-xxx"
-                        name="customer.contactNumber"
-                        value={values.customer.contactNumber}
-                        onChange={handleInputChange}
-                        required
-                        disabled={viewMode}
-                      />
-                    </div>
+                  <div>Phone: {values.customer.contactNumber}</div>
+                  <div>Address: {values.customer.address}</div>
+                  <div>Landmark: {values.customer.landmark}</div>
+                </div>
+                <div className="col-xl-6 col-sm-6 mb-4">
+                  <h5>Date of Delivery:</h5>
+                  <div>
+                    {" "}
+                    <strong>{values.dateOfDelivery}</strong>{" "}
                   </div>
-
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">Address</label>
-                    <div className="col-sm-9">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="customer.address"
-                        value={values.customer.address}
-                        onChange={handleInputChange}
-                        required
-                        disabled={viewMode}
-                      />
-                    </div>
+                  <br />
+                  <h5>Status:</h5>
+                  <div>
+                    {" "}
+                    <strong>{values.status}</strong>{" "}
                   </div>
-
-                  <div className="form-group row">
-                    <label className="col-sm-3 col-form-label">Landmark</label>
-                    <div className="col-sm-9">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="landmark"
-                        value={values.landmark}
-                        onChange={handleInputChange}
-                        disabled={viewMode}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group row" hidden>
-                    <label className="col-sm-3 col-form-label">Notes</label>
-                    <div className="col-sm-9">
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="notes"
-                        value={values.notes}
-                        onChange={handleInputChange}
-                        disabled={viewMode}
-                      />
-                    </div>
-                  </div>
-                  {props.currentId === "" ? (
-                    <div className="form-row">
-                      <div className="form-group mt-4 col-md-12 mt-5">
-                        <input
-                          type="submit"
-                          value={
-                            props.currentId === ""
-                              ? "Save Customer"
-                              : "Update Customer"
-                          }
-                          className="btn btn-primary btn-block"
-                          hidden
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="form-row">
-                      <div className="form-group mt-4 col-md-12 mt-5">
-                        <input
-                          type="submit"
-                          value={"Update Customer Order"}
-                          className="btn btn-primary btn-block"
-                          disabled={viewMode}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </form>
+                </div>
               </div>
+              <br />
+              <div className="table-responsive">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th className="center">#</th>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Unit</th>
+                      <th className="right">Price</th>
+                      <th className="center">Discount</th>
+                      <th className="right">SubTotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {values.products &&
+                      values.products.map((product, index) => (
+                        <tr>
+                          <td className="center">
+                            {Number(index) + Number(1)}
+                          </td>
+                          <td className="left strong">
+                            {product.value.productName}
+                          </td>
+                          <td className="left">{product.value.productQty}</td>
+                          <td className="left">{product.value.productUnit}</td>
+                          <td className="right">
+                            P {product.value.productPrice}
+                          </td>
+                          <td className="center">{product.value.discount} %</td>
+                          <td className="right">
+                            P {product.value.subtotal && product.value.subtotal}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="row">
+                <div className="col-lg-4 col-sm-5"> </div>
+                <div className="col-lg-4 col-sm-5 ml-auto">
+                  <table className="table table-clear">
+                    <tbody>
+                      <tr>
+                        <td className="left">
+                          <strong>Total</strong>
+                        </td>
+                        <td className="right">P{values.total}</td>
+                      </tr>
+                      <tr>
+                        <td className="left">
+                          <strong>Delivery Fee</strong>
+                        </td>
+                        <td className="right">P{values.deliveryFee}</td>
+                      </tr>
+                      <tr>
+                        <td className="left">
+                          <strong>Grand Total</strong>
+                        </td>
+                        <td className="right">
+                          <strong>P{values.grandTotal}</strong>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <br />
+              <div className="col-xl-12 col-sm-6 mb-4">
+                <h5>Notes:</h5>
+                <div>test notes {values.notes}</div>
+              </div>
+              <div className="col-xl-12 col-sm-6 mb-4">
+                <h5>Rider:</h5>
+                <div>
+                  {" "}
+                  <strong>Webz Rider</strong>{" "}
+                </div>
+                <div>Phone: +91 987 654 3210</div>
+                <div>Address: Madalinskiego 8</div>
+                <div>
+                  Landmark: 71-101 Szczecin, Poland 71-101 Szczecin, Poland
+                  71-101 Szczecin, Poland
+                </div>
+              </div>
+              <div className="col-xl-12 col-sm-6 mb-4"></div>
             </div>
           </div>
         </div>
