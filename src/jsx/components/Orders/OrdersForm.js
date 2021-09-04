@@ -13,6 +13,7 @@ const OrdersForm = (props) => {
     products: "",
     notes: "",
     total: 0,
+    grandTotal: 0,
     rider: "",
     deliveryLocation: "",
     deliveryFee: 0,
@@ -20,6 +21,7 @@ const OrdersForm = (props) => {
     customer: props.user,
     customerId: props.userId,
     dateAdded: new Date().toLocaleString(),
+    status: "inactive",
   };
 
   const initialProductValues = {
@@ -40,10 +42,13 @@ const OrdersForm = (props) => {
   var [productValues, setProductValues] = useState(initialProductValues);
   var [productList, setProductList] = useState([]);
   var [result, setResult] = useState([]);
-  var [value, setValue] = useState("");
   var [currentProductId, setCurrentProductId] = useState("");
   var [currentId, setCurrentId] = useState("");
   const [selectedDate, handleDateChange] = useState(new Date());
+
+  /************************
+  --- FIREBASE FUNCTIONS ---
+  ************************/
 
   // retrieves all products in firebase
   useEffect(() => {
@@ -55,6 +60,44 @@ const OrdersForm = (props) => {
       else setProductNameObjects({});
     });
   }, []);
+
+  // retrieves all product units in firebase
+  useEffect(() => {
+    firebaseDb.ref("unit/").on("value", (snapshot) => {
+      if (snapshot.val() != null)
+        setUnitObjects({
+          ...snapshot.val(),
+        });
+      else setUnitObjects({});
+    });
+  }, []);
+
+  // retrieves delivery data in firebase
+  useEffect(() => {
+    firebaseDb.ref("delivery/").on("value", (snapshot) => {
+      if (snapshot.val() != null)
+        setDeliveryObjects({
+          ...snapshot.val(),
+        });
+      else setDeliveryObjects({});
+    });
+  }, []);
+
+  /*********************************
+  --- DATA MANIPULATION FUNCTIONS ---
+  ***********************************/
+
+  //initialize values state
+  useEffect(() => {
+    if (props.currentId === "")
+      setValues({
+        ...initialFieldValues,
+      });
+    else
+      setValues({
+        ...props.unitObjects[props.currentId],
+      });
+  }, [props.currentId, props.unitObjects]);
 
   // prepares products data for combobox
   const [selectedOption, setSelectedOption] = useState(null);
@@ -68,6 +111,7 @@ const OrdersForm = (props) => {
     });
   });
 
+  // sets initial values of quantity, price and unit once a product is selected
   useEffect(() => {
     if (selectedOption) {
       setProductValues((prev) => ({
@@ -75,12 +119,12 @@ const OrdersForm = (props) => {
         productQty: 1,
         productPrice: selectedOption.product.price,
         productUnit: selectedOption.product.unit,
+        productName: selectedOption.product.productName,
       }));
-      console.log(productValues);
     }
   }, [selectedOption]);
 
-  // calculates subtotal
+  // calculates subtotal and updates productValues state
   useEffect(() => {
     const calc =
       Number(productValues.productQty) * Number(productValues.productPrice);
@@ -95,37 +139,95 @@ const OrdersForm = (props) => {
     productValues.discount,
   ]);
 
-  // retrieves all units in firebase
+  // calculates grand total and updates productValues state
   useEffect(() => {
-    firebaseDb.ref("unit/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setUnitObjects({
-          ...snapshot.val(),
-        });
-      else setUnitObjects({});
-    });
-  }, []);
+    setValues((prev) => ({
+      ...prev,
+      grandTotal: Number(values.total) + Number(values.deliveryFee),
+    }));
+  }, [values.total]);
 
-  useEffect(() => {
-    firebaseDb.ref("delivery/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setDeliveryObjects({
-          ...snapshot.val(),
-        });
-      else setDeliveryObjects({});
+  // prepares delivery data for combobox
+  const deliveryOptions = [];
+  Object.keys(deliveryObjects).map((id) => {
+    return deliveryOptions.push({
+      value: deliveryObjects[id].location,
+      label: deliveryObjects[id].location,
+      delivery: deliveryObjects[id],
     });
-  }, []);
+  });
 
+  // updates delivery data on combobox selection
+  const [selectedDeliveryOption, setSelectedDeliveryOption] = useState({
+    value: "Free Delivery",
+    label: "Free Delivery",
+    delivery: { deliveryFee: Number(0), location: "Free Delivery" },
+  });
   useEffect(() => {
-    if (props.currentId === "")
-      setValues({
-        ...initialFieldValues,
-      });
-    else
-      setValues({
-        ...props.unitObjects[props.currentId],
-      });
-  }, [props.currentId, props.unitObjects]);
+    if (selectedDeliveryOption !== null) {
+      values.deliveryFee = selectedDeliveryOption.delivery.deliveryFee;
+      setValues((prev) => ({
+        ...prev,
+        deliveryLocation: selectedDeliveryOption.delivery.deliveryLocation,
+        deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
+        grandTotal: Number(values.total) + Number(values.deliveryFee),
+      }));
+    }
+  }, [selectedDeliveryOption]);
+
+  // add product to cart - this should update values state!
+  const addToCart = () => {
+    setValues((prev) => ({
+      ...prev,
+      deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
+      deliveryLocation: selectedDeliveryOption.delivery.location,
+      total: Number(values.total) + Number(productValues.subtotal),
+      grandTotal: Number(values.total) + Number(values.deliveryFee),
+    }));
+
+    setProductValues((prev) => ({
+      ...prev,
+      productName: selectedOption.value,
+    }));
+
+    updateProductValues(productValues);
+  };
+
+  // update values on added product
+  const updateProductValues = (productValues) => {
+    setValues((prev) => ({
+      ...prev,
+      products: [...values.products, productValues],
+    }));
+  };
+
+  // remove product from cart
+  const removeFromCart = (product) => {
+    const filteredArr = values.products.filter((item) => item !== product);
+    const newTotal = filteredArr.reduce((a, b) => a + (b["subtotal"] || 0), 0);
+    console.log("filteredArr", filteredArr);
+    setValues((prev) => ({
+      ...prev,
+      products: filteredArr,
+      total: newTotal,
+      grandTotal: Number(values.total) + Number(values.deliveryFee),
+    }));
+  };
+
+  // edit product from cart
+  const editProductFromCart = (product, index) => {
+    console.log("editing", product, index);
+    setSelectedDeliveryOption(product.productName);
+    setProductValues((prev) => ({
+      ...prev,
+      productName: product.productName,
+      productQty: product.productQty,
+      productUnit: product.productUnit,
+      productPrice: product.productPrice,
+      discount: product.discount,
+      subtotal: product.subtotal,
+    }));
+  };
 
   const handleInputChange = (e) => {
     var { name, value } = e.target;
@@ -143,24 +245,7 @@ const OrdersForm = (props) => {
     });
   };
 
-  const [imageUrl, setImageUrl] = useState();
-  const readImages = async (e) => {
-    const file = e.target.files[0];
-    const id = uuid();
-    const imagesRef = storage.ref("images").child(id);
-
-    await imagesRef.put(file);
-    imagesRef.getDownloadURL().then((url) => {
-      setImageUrl(url);
-    });
-  };
-
-  if (typeof imageUrl !== "undefined" && imageUrl != null) {
-    values.productImage = imageUrl;
-  }
-
   const handleFormSubmit = (e) => {
-    console.log("Date of Delivery", selectedDate.value.toLocaleString());
     e.preventDefault();
     // values.dateOfDelivery = selectedDate.value.toLocaleString();
     values.deliveryLocation = selectedDeliveryOption.value;
@@ -176,67 +261,40 @@ const OrdersForm = (props) => {
     });
   };
 
-  useEffect(() => {
-    if (currentProductId === "")
-      setProductValues({
-        ...initialProductValues,
-      });
-    else
-      setProductValues({
-        ...productList[currentProductId],
-      });
-  }, [currentProductId, productList]);
+  // useEffect(() => {
+  //   if (currentProductId === "")
+  //     setProductValues({
+  //       ...initialProductValues,
+  //     });
+  //   else
+  //     setProductValues({
+  //       ...productList[currentProductId],
+  //     });
+  // }, [currentProductId, productList]);
 
-  const handleProductAddUpdate = (e) => {
-    console.log("inside handleProductAddUpdate");
-    //FIX THIS SHEEET - change to setstate
-    values.total += productValues.subtotal;
-    productValues.productName = selectedOption.value;
-    addOrEditProduct(productValues);
-  };
-
-  const addOrEditProduct = (obj) => {
-    console.log("inside addOrEditProduct", obj, currentProductId);
-    if (currentProductId === "") {
-      console.log("inside addOrEditProduct-ADD PRODUCT", currentProductId);
-      setProductList([
-        ...productList,
-        {
-          value: obj,
-        },
-      ]);
-      setCurrentProductId("");
-    } else {
-      console.log("inside addOrEditProduct-EDIT PRODUCT", currentProductId);
-      setProductList([
-        ...productList.splice(0, currentProductId),
-        {
-          value: obj,
-        },
-      ]);
-      setCurrentProductId("");
-    }
-  };
+  // const addOrEditProduct = (obj) => {
+  //   if (currentProductId === "") {
+  //     setProductList([
+  //       ...productList,
+  //       {
+  //         value: obj,
+  //       },
+  //     ]);
+  //     setCurrentProductId("");
+  //   } else {
+  //     setProductList([
+  //       ...productList.splice(0, currentProductId),
+  //       {
+  //         value: obj,
+  //       },
+  //     ]);
+  //     setCurrentProductId("");
+  //   }
+  // };
 
   const enabled = values.notes != null;
 
-  const deliveryOptions = [];
-  Object.keys(deliveryObjects).map((id) => {
-    return deliveryOptions.push({
-      value: deliveryObjects[id].location,
-      label: deliveryObjects[id].location,
-      delivery: deliveryObjects[id],
-    });
-  });
-
-  //
-  const [selectedDeliveryOption, setSelectedDeliveryOption] = useState(null);
-  // useEffect(() => {
-  //   if (selectedDeliveryOption !== null) {
-  //     values.deliveryFee = selectedDeliveryOption.delivery.deliveryFee;
-  //   }
-  // }, [selectedDeliveryOption, values]);
-
+  // styles for combobox
   const customStyles = {
     option: (provided, state) => ({
       color: state.isSelected ? "green" : "",
@@ -254,17 +312,10 @@ const OrdersForm = (props) => {
     },
   };
 
-  function numberWithCommas(x) {
+  const numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-
-  const onDelete = (key) => {
-    // values.total=values.total-Number(productList[key].subtotal);
-    if (key !== -1) {
-      productList.splice(key, 1);
-      setProductList([...productList]);
-    }
   };
+
   return (
     <Fragment>
       <div className="row">
@@ -456,17 +507,9 @@ const OrdersForm = (props) => {
                         className="btn btn-primary btn-sm mt-5"
                         variant="primary"
                         //  type="submit"
-                        onClick={handleProductAddUpdate}
+                        onClick={addToCart}
                       >
                         +
-                      </Button>
-                      <Button
-                        className="btn btn-primary btn-sm ml-1 mt-5"
-                        variant="primary"
-                        //  type="submit"
-                        onClick={handleProductAddUpdate}
-                      >
-                        <i className="las la-eraser" />
                       </Button>
                     </div>
                   </div>
@@ -511,45 +554,42 @@ const OrdersForm = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {productList.map((product, index) => {
-                      return (
-                        <tr
-                          key={index}
-                          onClick={() => {
-                            setCurrentProductId(index);
-                          }}
-                        >
-                          <td>
-                            <Button
-                              onClick={() => {
-                                setCurrentProductId(index);
-                              }}
-                              className="btn btn-primary shadow btn-xs sharp mr-1"
-                            >
-                              <i className="fa fa-pencil"></i>
-                            </Button>
-                          </td>
-                          <td>{product.value.productName}</td>
-                          <td>{`x${product.value.productQty}`}</td>
-                          <td>{product.value.productUnit}</td>
-                          <td>{`₱${product.value.productPrice}`}</td>
-                          <td>{`${product.value.discount}%`}</td>
-                          <td>{`₱${numberWithCommas(
-                            product.value.subtotal
-                          )}`}</td>
-                          <td>
-                            <Button
-                              onClick={() => {
-                                onDelete(index);
-                              }}
-                              className="btn btn-danger shadow btn-xs sharp"
-                            >
-                              <i className="fa fa-trash"></i>
-                            </Button>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {values.products &&
+                      values.products.map((product, index) => {
+                        return (
+                          <tr
+                            key={index}
+                            onClick={() => {
+                              setCurrentProductId(index);
+                            }}
+                          >
+                            <td>
+                              <Button
+                                onClick={() => {
+                                  editProductFromCart(product, index);
+                                }}
+                                className="btn btn-primary shadow btn-xs sharp mr-1"
+                              >
+                                <i className="fa fa-pencil"></i>
+                              </Button>
+                            </td>
+                            <td>{product.productName}</td>
+                            <td>{`x${product.productQty}`}</td>
+                            <td>{product.productUnit}</td>
+                            <td>{`₱${product.productPrice}`}</td>
+                            <td>{`${product.discount}%`}</td>
+                            <td>{`₱${numberWithCommas(product.subtotal)}`}</td>
+                            <td>
+                              <Button
+                                onClick={() => removeFromCart(product)}
+                                className="btn btn-danger shadow btn-xs sharp"
+                              >
+                                <i className="fa fa-trash"></i>
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </Table>
               </div>
@@ -571,10 +611,10 @@ const OrdersForm = (props) => {
                     <label>Total</label>
                     <h3>₱{numberWithCommas(values.total)}</h3>
                     <label>Delivery Fee</label>
-                    <h3>₱{numberWithCommas(0)}</h3>
+                    <h3>₱{numberWithCommas(values.deliveryFee)}</h3>
                     <hr></hr>
                     <label>Grand Total</label>
-                    <h1>₱{numberWithCommas(values.total)}</h1>
+                    <h1>₱{numberWithCommas(Number(values.grandTotal))}</h1>
                   </div>
                 </div>
 
