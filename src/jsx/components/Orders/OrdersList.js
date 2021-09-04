@@ -116,7 +116,7 @@ const OrdersList = () => {
                           <strong>CONTACT NUMBER</strong>
                         </th>
                         <th>
-                          <strong>TOTAL</strong>
+                          <strong>GRAND TOTAL</strong>
                         </th>
                         <th>
                           <strong>DATE OF DELIVERY</strong>
