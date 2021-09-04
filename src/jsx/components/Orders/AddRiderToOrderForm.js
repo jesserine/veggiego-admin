@@ -143,17 +143,13 @@ const AddRiderToOrderForm = (props) => {
                           <td className="center">
                             {Number(index) + Number(1)}
                           </td>
-                          <td className="left strong">
-                            {product.value.productName}
-                          </td>
-                          <td className="left">{product.value.productQty}</td>
-                          <td className="left">{product.value.productUnit}</td>
+                          <td className="left strong">{product.productName}</td>
+                          <td className="left">{product.productQty}</td>
+                          <td className="left">{product.productUnit}</td>
+                          <td className="right">P {product.productPrice}</td>
+                          <td className="center">{product.discount} %</td>
                           <td className="right">
-                            P {product.value.productPrice}
-                          </td>
-                          <td className="center">{product.value.discount} %</td>
-                          <td className="right">
-                            P {product.value.subtotal && product.value.subtotal}
+                            P {product.subtotal && product.subtotal}
                           </td>
                         </tr>
                       ))}
@@ -192,7 +188,7 @@ const AddRiderToOrderForm = (props) => {
               <br />
               <div className="col-xl-12 col-sm-6 mb-4">
                 <h5>Notes:</h5>
-                <div>test notes {values.notes}</div>
+                <div>{values.notes}</div>
               </div>
               <div className="col-xl-12 col-sm-6 mb-4">
                 <h5>Rider:</h5>
