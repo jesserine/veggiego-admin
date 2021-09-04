@@ -5,6 +5,7 @@ import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 import bg5 from "../../../images/big/customer-header.jpg";
 import { SplitButton, Row, Modal, Button } from "react-bootstrap";
+import Select from "react-select";
 
 const AddRiderToOrderForm = (props) => {
   const initialOrderFieldValues = {
@@ -32,6 +33,7 @@ const AddRiderToOrderForm = (props) => {
 
   const selectedId = props.currentId;
 
+  // retrieves rider data in firebase
   useEffect(() => {
     firebaseDb.ref("riders/").on("value", (snapshot) => {
       if (snapshot.val() != null)
@@ -41,6 +43,45 @@ const AddRiderToOrderForm = (props) => {
       else setRiderValues({});
     });
   }, []);
+
+  // prepares rider data for combobox
+  const [selectedRiderOption, setSelectedRiderOption] = useState(null);
+  const riderOptions = [];
+  Object.keys(riderValues).map((id) => {
+    return riderOptions.push({
+      value: riderValues[id].riderName,
+      label: riderValues[id].riderName,
+      rider: riderValues[id],
+    });
+  });
+
+  // updates rider info on the order
+  useEffect(() => {
+    if (selectedRiderOption !== null) {
+      setValues((prev) => ({
+        ...prev,
+        rider: selectedRiderOption.rider,
+      }));
+    }
+  });
+
+  // styles for combobox
+  const customStyles = {
+    option: (provided, state) => ({
+      color: state.isSelected ? "green" : "",
+      padding: 20,
+    }),
+    control: () => ({
+      // none of react-select's styles are passed to <Control />
+      width: 250,
+    }),
+    singleValue: (provided, state) => {
+      const opacity = state.isDisabled ? 0.5 : 1;
+      const transition = "opacity 300ms";
+
+      return { ...provided, opacity, transition };
+    },
+  };
 
   useEffect(() => {
     if (props.currentId === "") {
@@ -190,18 +231,20 @@ const AddRiderToOrderForm = (props) => {
                 <h5>Notes:</h5>
                 <div>{values.notes}</div>
               </div>
+              <br />
               <div className="col-xl-12 col-sm-6 mb-4">
                 <h5>Rider:</h5>
-                <div>
-                  {" "}
-                  <strong>Webz Rider</strong>{" "}
-                </div>
-                <div>Phone: +91 987 654 3210</div>
-                <div>Address: Madalinskiego 8</div>
-                <div>
-                  Landmark: 71-101 Szczecin, Poland 71-101 Szczecin, Poland
-                  71-101 Szczecin, Poland
-                </div>
+                <Select
+                  className={"form-control"}
+                  defaultValue={selectedRiderOption}
+                  onChange={setSelectedRiderOption}
+                  options={riderOptions}
+                  styles={customStyles}
+                  components={{
+                    DropdownIndicator: () => null,
+                    IndicatorSeparator: () => null,
+                  }}
+                />
               </div>
               <div className="col-xl-12 col-sm-6 mb-4"></div>
             </div>
