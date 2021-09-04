@@ -135,7 +135,11 @@ const OrdersList = () => {
                               setCurrentId(id);
                             }}
                           >
-                            <td></td>
+                            <td>
+                              <Badge variant="warning light">
+                                {orderValues[id].status}
+                              </Badge>
+                            </td>
                             <td>
                               {orderValues[id].customer &&
                                 orderValues[id].customer.name}

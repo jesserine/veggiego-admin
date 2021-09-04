@@ -3,6 +3,8 @@ import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { createMuiTheme } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/styles";
 import DateFnsUtils from "@date-io/date-fns";
 
 import { Button, Table } from "react-bootstrap";
@@ -17,11 +19,11 @@ const OrdersForm = (props) => {
     rider: "",
     deliveryLocation: "",
     deliveryFee: 0,
-    dateOfDelivery: new Date().toLocaleString(),
+    dateOfDelivery: "",
     customer: props.user,
     customerId: props.userId,
     dateAdded: new Date().toLocaleString(),
-    status: "inactive",
+    status: "ACTIVE",
   };
 
   const initialProductValues = {
@@ -40,11 +42,11 @@ const OrdersForm = (props) => {
   var [deliveryObjects, setDeliveryObjects] = useState({});
   var [productNameObjects, setProductNameObjects] = useState({});
   var [productValues, setProductValues] = useState(initialProductValues);
-  var [productList, setProductList] = useState([]);
+  // var [productList, setProductList] = useState([]);
   var [result, setResult] = useState([]);
   var [currentProductId, setCurrentProductId] = useState("");
   var [currentId, setCurrentId] = useState("");
-  const [selectedDate, handleDateChange] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   /************************
   --- FIREBASE FUNCTIONS ---
@@ -184,14 +186,12 @@ const OrdersForm = (props) => {
     //   },
     // ]);
 
-    console.log("selectedDate", selectedDate.toLocaleString());
     setValues((prev) => ({
       ...prev,
       deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
       deliveryLocation: selectedDeliveryOption.delivery.location,
       total: Number(values.total) + Number(productValues.subtotal),
       grandTotal: Number(values.total) + Number(values.deliveryFee),
-      dateOfDelivery: selectedDate.toLocaleString(),
       // products: productList,
       products: [...values.products, productValues],
     }));
@@ -225,6 +225,15 @@ const OrdersForm = (props) => {
       grandTotal: Number(values.total) + Number(values.deliveryFee),
     }));
   };
+
+  // check for delivery date change
+  useEffect(() => {
+    console.log("selectedDate", selectedDate);
+    setValues((prev) => ({
+      ...prev,
+      dateOfDelivery: selectedDate.toLocaleString(),
+    }));
+  }, [selectedDate]);
 
   // edit product from cart
   const editProductFromCart = (product, index) => {
@@ -261,7 +270,7 @@ const OrdersForm = (props) => {
     e.preventDefault();
     // values.dateOfDelivery = selectedDate.value.toLocaleString();
     values.deliveryLocation = selectedDeliveryOption.value;
-    // addOrder(values);
+    addOrder(values);
     window.location.reload(false);
   };
 
@@ -306,6 +315,10 @@ const OrdersForm = (props) => {
 
   const enabled = values.notes != null;
 
+  /*********************************
+  --- STYLING ---
+  ***********************************/
+
   // styles for combobox
   const customStyles = {
     option: (provided, state) => ({
@@ -324,6 +337,15 @@ const OrdersForm = (props) => {
     },
   };
 
+  // styles for datepicker
+  const materialTheme = createMuiTheme({
+    palette: {
+      primary: {
+        main: "#52b141",
+      },
+    },
+  });
+
   const numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -337,7 +359,7 @@ const OrdersForm = (props) => {
               <div className="card-header">
                 <div className="basic-form">
                   <div className="form-row">
-                    <div className="form-group col-md-8">
+                    <div className="form-group col-md-6">
                       <label>Delivery Area</label>
                       <Select
                         className={"form-control"}
@@ -350,32 +372,8 @@ const OrdersForm = (props) => {
                           IndicatorSeparator: () => null,
                         }}
                       />
-                      {/* <select
-                      defaultValue="Select Unit"
-                      id="inputState"
-                      className="form-control"
-                      name="deliveryFee"
-                      value={values.deliveryFee}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="Unit">Delivery Area</option>
-                      {Object.keys(deliveryObjects).map((id) => {
-                        return (
-                          <React.Fragment key={id}>
-                            {deliveryObjects[id].isActive == "true" ? (
-                              <option value={deliveryObjects[id].location}>
-                                {deliveryObjects[id].location}
-                              </option>
-                            ) : (
-                              ""
-                            )}
-                          </React.Fragment>
-                        );
-                      })}
-                    </select> */}
                     </div>
-                    <div className="form-group col-md-4">
+                    <div className="form-group col-md-2">
                       <label>Delivery Fee</label>
                       <input
                         type="text"
@@ -385,6 +383,19 @@ const OrdersForm = (props) => {
                         onChange={handleOrderInputChange}
                         disabled
                       />
+                    </div>
+                    <div className="form-group col-md-4">
+                      <label>Date of Delivery</label>
+                      <ThemeProvider theme={materialTheme}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                          <DateTimePicker
+                            label=""
+                            inputVariant="outlined"
+                            value={selectedDate}
+                            onChange={setSelectedDate}
+                          />
+                        </MuiPickersUtilsProvider>
+                      </ThemeProvider>
                     </div>
                   </div>
                   <div className="form-row ">
@@ -630,19 +641,7 @@ const OrdersForm = (props) => {
                   </div>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group col-md-12">
-                    <label>Date of Delivery</label>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <DateTimePicker
-                        label=""
-                        inputVariant="outlined"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                      />
-                    </MuiPickersUtilsProvider>
-                  </div>
-                </div>
+                <div className="form-row"></div>
                 <div className="form-group col-md-4">
                   <Button className="mt-4" variant="primary" type="submit">
                     Save Order
