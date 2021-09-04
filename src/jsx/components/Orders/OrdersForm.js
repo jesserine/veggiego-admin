@@ -177,12 +177,23 @@ const OrdersForm = (props) => {
 
   // add product to cart - this should update values state!
   const addToCart = () => {
+    // setProductList([
+    //   ...productList,
+    //   {
+    //     value: productValues,
+    //   },
+    // ]);
+
+    console.log("selectedDate", selectedDate.toLocaleString());
     setValues((prev) => ({
       ...prev,
       deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
       deliveryLocation: selectedDeliveryOption.delivery.location,
       total: Number(values.total) + Number(productValues.subtotal),
       grandTotal: Number(values.total) + Number(values.deliveryFee),
+      dateOfDelivery: selectedDate.toLocaleString(),
+      // products: productList,
+      products: [...values.products, productValues],
     }));
 
     setProductValues((prev) => ({
@@ -190,15 +201,16 @@ const OrdersForm = (props) => {
       productName: selectedOption.value,
     }));
 
-    updateProductValues(productValues);
+    console.log("productList:", values);
+    //updateProductValues(productValues);
   };
 
   // update values on added product
   const updateProductValues = (productValues) => {
     setValues((prev) => ({
       ...prev,
-      products: [...values.products, productValues],
     }));
+    console.log("productList:", values);
   };
 
   // remove product from cart
@@ -249,12 +261,12 @@ const OrdersForm = (props) => {
     e.preventDefault();
     // values.dateOfDelivery = selectedDate.value.toLocaleString();
     values.deliveryLocation = selectedDeliveryOption.value;
-    addOrder(values);
+    // addOrder(values);
     window.location.reload(false);
   };
 
   const addOrder = (obj) => {
-    obj.products = productList;
+    // obj.products = productList;
     firebaseDb.ref("orders/").push(obj, (err) => {
       if (err) console.log(err);
       else setCurrentId("");
