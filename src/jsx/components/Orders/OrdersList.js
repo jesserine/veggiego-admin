@@ -64,7 +64,27 @@ const OrdersList = () => {
     }
   };
 
-  console.log("orderValues", orderValues);
+  const statusBadge = (status) => {
+    switch (status) {
+      case "PREORDER":
+        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+      case "ACTIVE":
+        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+      case "PROCESSING":
+        return <Badge variant="secondary light">{status.toUpperCase()}</Badge>;
+      case "FOR DELIVERY":
+        return <Badge variant="warning light">{status.toUpperCase()}</Badge>;
+      case "IN TRANSIT":
+        return <Badge variant="success light">{status.toUpperCase()}</Badge>;
+      case "DELIVERED":
+        return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
+      case "CANCELLED":
+        return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
+      default:
+        return <Badge variant="dark light">{status.toUpperCase()}</Badge>;
+    }
+  };
+
   return (
     <Fragment>
       <div className="row">
@@ -136,9 +156,8 @@ const OrdersList = () => {
                             }}
                           >
                             <td>
-                              <Badge variant="warning light">
-                                {orderValues[id].status}
-                              </Badge>
+                              {orderValues[id].status &&
+                                statusBadge(orderValues[id].status)}
                             </td>
                             <td>
                               {orderValues[id].customer &&

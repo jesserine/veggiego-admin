@@ -4,7 +4,7 @@ import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 import bg5 from "../../../images/big/customer-header.jpg";
-import { SplitButton, Row, Modal, Button } from "react-bootstrap";
+import { SplitButton, Row, Modal, Badge } from "react-bootstrap";
 import Select from "react-select";
 
 const AddRiderToOrderForm = (props) => {
@@ -126,6 +126,27 @@ const AddRiderToOrderForm = (props) => {
     values.housePicture = imageUrl;
   }
 
+  const statusBadge = (status) => {
+    switch (status) {
+      case "PREORDER":
+        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+      case "ACTIVE":
+        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+      case "PROCESSING":
+        return <Badge variant="secondary light">{status.toUpperCase()}</Badge>;
+      case "FOR DELIVERY":
+        return <Badge variant="warning light">{status.toUpperCase()}</Badge>;
+      case "IN TRANSIT":
+        return <Badge variant="success light">{status.toUpperCase()}</Badge>;
+      case "DELIVERED":
+        return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
+      case "CANCELLED":
+        return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
+      default:
+        return <Badge variant="dark light">{status.toUpperCase()}</Badge>;
+    }
+  };
+
   return (
     <Fragment>
       <div className="row">
@@ -159,7 +180,9 @@ const AddRiderToOrderForm = (props) => {
                   <h5>Status:</h5>
                   <div>
                     {" "}
-                    <strong>{values.status}</strong>{" "}
+                    <strong>
+                      {values.status && statusBadge(values.status)}
+                    </strong>{" "}
                   </div>
                 </div>
               </div>
