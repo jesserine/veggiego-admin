@@ -20,7 +20,7 @@ import bg5 from "../../../images/big/customer-header.jpg";
 import { Link, useLocation } from "react-router-dom";
 import OrdersForm from "./OrdersForm";
 
-const CustomerOrder = () => {
+const CustomerOrder = (props) => {
   var [orderObjects, setOrderObjects] = useState({});
   var [currentId, setCurrentId] = useState("");
   const location = useLocation();

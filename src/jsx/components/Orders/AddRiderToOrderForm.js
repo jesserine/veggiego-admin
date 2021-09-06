@@ -139,6 +139,7 @@ const AddRiderToOrderForm = (props) => {
               <h4>
                 <strong>Invoice</strong> {props.currentId}{" "}
               </h4>
+              {/* {JSON.stringify(values)} */}
               <span className="float-right">
                 {showUpdateButton && (
                   <Link
@@ -146,6 +147,8 @@ const AddRiderToOrderForm = (props) => {
                       pathname: "/customer-order",
                       state: {
                         order: values,
+                        user: values.customer,
+                        userId: values.customerId,
                       },
                     }}
                     className="btn-sm btn-warning btn-block"

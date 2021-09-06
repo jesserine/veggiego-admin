@@ -65,7 +65,7 @@ class SideBar extends Component {
     let customers = ["customers", "customer-form"];
     let riders = ["riders"];
     let products = ["products"];
-    let orders = ["orders"];
+    let orders = ["orders, customer-order"];
     let settings = ["settings"];
 
     return (

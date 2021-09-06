@@ -47,6 +47,7 @@ const OrdersForm = (props) => {
   var [currentProductId, setCurrentProductId] = useState("");
   var [currentId, setCurrentId] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isEditingProduct, setIsEditingProduct] = useState(false);
 
   /************************
   --- FIREBASE FUNCTIONS ---
@@ -113,12 +114,15 @@ const OrdersForm = (props) => {
     });
   });
 
-  // sets initial values of quantity, price and unit once a product is selected
+  // sets values of quantity, price and unit once a product is selected
   useEffect(() => {
     if (selectedOption) {
+      console.log("selectedOption", selectedOption);
       setProductValues((prev) => ({
         ...prev,
-        productQty: 1,
+        productQty: selectedOption.product.quantity
+          ? selectedOption.product.quantity
+          : 1,
         productPrice: selectedOption.product.price,
         productUnit: selectedOption.product.unit,
         productName: selectedOption.product.productName,
@@ -179,13 +183,6 @@ const OrdersForm = (props) => {
 
   // add product to cart - this should update values state!
   const addToCart = () => {
-    // setProductList([
-    //   ...productList,
-    //   {
-    //     value: productValues,
-    //   },
-    // ]);
-
     setValues((prev) => ({
       ...prev,
       deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
@@ -202,15 +199,25 @@ const OrdersForm = (props) => {
     }));
 
     console.log("productList:", values);
-    //updateProductValues(productValues);
+  };
+
+  // reset product values form
+  const clearProductValues = () => {
+    setSelectedOption(null);
+
+    setProductValues({
+      productName: "",
+      productQty: 1,
+      productUnit: "",
+      productPrice: 0,
+      discount: 0,
+      subtotal: 0,
+    });
   };
 
   // update values on added product
-  const updateProductValues = (productValues) => {
-    setValues((prev) => ({
-      ...prev,
-    }));
-    console.log("productList:", values);
+  const updateCart = () => {
+    setIsEditingProduct(false);
   };
 
   // remove product from cart
@@ -238,16 +245,21 @@ const OrdersForm = (props) => {
   // edit product from cart
   const editProductFromCart = (product, index) => {
     console.log("editing", product, index);
-    setSelectedDeliveryOption(product.productName);
-    setProductValues((prev) => ({
-      ...prev,
-      productName: product.productName,
-      productQty: product.productQty,
-      productUnit: product.productUnit,
-      productPrice: product.productPrice,
-      discount: product.discount,
-      subtotal: product.subtotal,
-    }));
+    setIsEditingProduct(true);
+
+    setSelectedOption({
+      value: product.productName,
+      label: product.productName,
+      product: {
+        price: product.productPrice,
+        unit: product.productUnit,
+        productName: product.productName,
+        quantity: product.productQty,
+      },
+      index: index,
+    });
+
+    console.log("updated selectedOption", selectedOption);
   };
 
   const handleInputChange = (e) => {
@@ -405,6 +417,7 @@ const OrdersForm = (props) => {
                         className={"form-control"}
                         defaultValue={selectedOption}
                         onChange={setSelectedOption}
+                        value={selectedOption}
                         options={options}
                         styles={customStyles}
                         components={{
@@ -502,7 +515,7 @@ const OrdersForm = (props) => {
                       />
                     </div>
                     <div className="form-group col mt-2 mt-sm-0">
-                      <label>Discount</label>
+                      <label>Discount %</label>
                       <input
                         type="number"
                         className="form-control"
@@ -525,14 +538,29 @@ const OrdersForm = (props) => {
                         disabled
                       />
                     </div>
-                    <div className="form-group col mt-2 mt-sm-0">
+                    <div className="form-group mt-1 mt-sm-0">
+                      {isEditingProduct && (
+                        <Button
+                          className="btn-sm mt-5 ml-1"
+                          variant="primary light btn-square"
+                          onClick={updateCart}
+                        >
+                          <i className="fa fa-check" />
+                        </Button>
+                      )}
                       <Button
-                        className="btn btn-primary btn-sm mt-5"
-                        variant="primary"
-                        //  type="submit"
+                        className="btn-sm mt-5 ml-1"
+                        variant="primary light btn-square"
                         onClick={addToCart}
                       >
-                        +
+                        <i className="fa fa-plus" />
+                      </Button>
+                      <Button
+                        className="btn-sm mt-5 ml-1"
+                        variant="warning light btn-square"
+                        onClick={clearProductValues}
+                      >
+                        <i className="fa fa-times" />
                       </Button>
                     </div>
                   </div>
