@@ -211,7 +211,7 @@ const AddRiderToOrderForm = (props) => {
                             </td>
                             <td className="left">{product.productQty}</td>
                             <td className="left">{product.productUnit}</td>
-                            <td className="right">P {product.productPrice}</td>
+                            <td className="right">₱{product.productPrice}</td>
                             <td className="center">{product.discount} %</td>
                             <td className="right">
                               P {product.subtotal && product.subtotal}

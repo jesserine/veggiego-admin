@@ -13,7 +13,7 @@ import Select from "react-select";
 
 const OrdersForm = (props) => {
   const initialFieldValues = {
-    products: "",
+    products: [],
     notes: "",
     total: 0,
     grandTotal: 0,
@@ -194,7 +194,6 @@ const OrdersForm = (props) => {
         deliveryLocation: selectedDeliveryOption.delivery.location,
         total: Number(values.total) + Number(productValues.subtotal),
         grandTotal: Number(values.total) + Number(values.deliveryFee),
-        // products: productList,
         products: [...values.products, productValues],
       }));
 
@@ -220,8 +219,6 @@ const OrdersForm = (props) => {
       });
       setTimeout(async () => {}, 3000);
     }
-
-    console.log("productList:", values);
   };
 
   // reset product values form
@@ -252,6 +249,31 @@ const OrdersForm = (props) => {
   // update values on added product
   const updateCart = () => {
     //do update state logic
+    const index = selectedOption.index;
+    const updatedProductList = values.products.slice();
+
+    updatedProductList[index] = {
+      discount: productValues.discount,
+      productName: productValues.productName,
+      productQty: productValues.productQty,
+      productPrice: productValues.productPrice,
+      productUnit: productValues.productUnit,
+      subtotal: productValues.subtotal,
+    };
+
+    const newTotal = updatedProductList.reduce(
+      (a, b) => a + (b["subtotal"] || 0),
+      0
+    );
+
+    setValues((prev) => ({
+      ...prev,
+      deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
+      deliveryLocation: selectedDeliveryOption.delivery.location,
+      total: newTotal,
+      grandTotal: Number(values.total) + Number(values.deliveryFee),
+      products: updatedProductList,
+    }));
 
     //toast
     toast.success("Product updated!", {
@@ -305,8 +327,6 @@ const OrdersForm = (props) => {
       },
       index: index,
     });
-
-    console.log("updated selectedOption", selectedOption);
   };
 
   const handleInputChange = (e) => {
@@ -340,39 +360,6 @@ const OrdersForm = (props) => {
       else setCurrentId("");
     });
   };
-
-  // useEffect(() => {
-  //   if (currentProductId === "")
-  //     setProductValues({
-  //       ...initialProductValues,
-  //     });
-  //   else
-  //     setProductValues({
-  //       ...productList[currentProductId],
-  //     });
-  // }, [currentProductId, productList]);
-
-  // const addOrEditProduct = (obj) => {
-  //   if (currentProductId === "") {
-  //     setProductList([
-  //       ...productList,
-  //       {
-  //         value: obj,
-  //       },
-  //     ]);
-  //     setCurrentProductId("");
-  //   } else {
-  //     setProductList([
-  //       ...productList.splice(0, currentProductId),
-  //       {
-  //         value: obj,
-  //       },
-  //     ]);
-  //     setCurrentProductId("");
-  //   }
-  // };
-
-  const enabled = values.notes != null;
 
   /*********************************
   --- STYLING ---
@@ -471,33 +458,8 @@ const OrdersForm = (props) => {
                           DropdownIndicator: () => null,
                           IndicatorSeparator: () => null,
                         }}
+                        isDisabled={isEditingProduct}
                       />
-                      {/* <select
-                        defaultValue="Select Unit"
-                        id="inputState"
-                        className="form-control"
-                        name="productName"
-                        value={productValues.productName}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="Product">Product</option>
-                        {Object.keys(productNameObjects).map((id) => {
-                          return (
-                            <React.Fragment key={id}>
-                              {productNameObjects[id].isActive == "true" ? (
-                                <option
-                                  value={productNameObjects[id].productName}
-                                >
-                                  {productNameObjects[id].productName}
-                                </option>
-                              ) : (
-                                ""
-                              )}
-                            </React.Fragment>
-                          );
-                        })}
-                      </select> */}
                       <div className="searchBack" value={result}>
                         {result.map((result, index) => (
                           // <a href="orders" id={index}>
@@ -614,14 +576,6 @@ const OrdersForm = (props) => {
                         </Button>
                       )}
                     </div>
-                  </div>
-                  <div className="form-row">
-                    {/* <div className="form-group col-md-12">
-                                            <input type="submit"
-                                                value={props.currentId == '' ? 'Save' : 'Update'}
-                                                className="btn btn-primary btn-block"
-                                                disabled={!enabled} />
-                                        </div> */}
                   </div>
                 </div>
               </div>

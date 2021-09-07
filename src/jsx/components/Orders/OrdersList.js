@@ -2,22 +2,8 @@ import React, { Fragment, useEffect, useState } from "react";
 import PageTitle from "../../layouts/PageTitle";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
-import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Button,
-  Badge,
-  Dropdown,
-  ProgressBar,
-} from "react-bootstrap";
+import { Row, Col, Card, Table, Badge } from "react-bootstrap";
 
-/// imge
-import avatar1 from "../../../images/avatar/1.jpg";
-import avatar2 from "../../../images/avatar/2.jpg";
-import avatar3 from "../../../images/avatar/3.jpg";
-import { Link, useLocation } from "react-router-dom";
 import OrdersForm from "./OrdersForm";
 import AddRiderToOrderForm from "./AddRiderToOrderForm";
 
@@ -92,32 +78,8 @@ const OrdersList = () => {
               <Card>
                 <Card.Header>
                   <Card.Title>Customer Orders</Card.Title>
-                  {/* <Button
-                     variant="primary btn-rounded"
-                     onClick={() => {
-                       setCurrentId("");
-                     }}
-                   >
-                     <span className="btn-icon-left text-primary">
-                       <i className="fa fa-plus" />
-                     </span>
-                     Add
-                   </Button> */}
                 </Card.Header>
                 <Card.Body>
-                  {/* <div className="search_bar dropdown show mb-3">
-                     <div className="dropdown-menushow">
-                       <form onSubmit={(e) => e.preventDefault()}>
-                         <input
-                           className="form-control"
-                           type="search"
-                           placeholder="Search Customer"
-                           aria-label="Search"
-                           // onChange ={(event) => setSearchTerm(event.target.value)}
-                         />
-                       </form>
-                     </div>
-                   </div> */}
                   <Table responsive hover>
                     <thead>
                       <tr>
@@ -155,7 +117,7 @@ const OrdersList = () => {
                             <td>
                               {orderValues[orderId].customer.contactNumber}
                             </td>
-                            <td>{orderValues[orderId].grandTotal}</td>
+                            <td>₱{orderValues[orderId].grandTotal}</td>
                             <td>{orderValues[orderId].dateOfDelivery}</td>
                             <td>
                               {orderValues[orderId].rider
@@ -166,34 +128,6 @@ const OrdersList = () => {
                         );
                       })}
                     </tbody>
-                    {/* <tbody>
-                      {orderValues.map((id) => {
-                        return (
-                          <tr
-                            key={id}
-                            onClick={() => {
-                              setCurrentId(id);
-                            }}
-                          >
-                            <td>
-                              {orderValues[id].status &&
-                                statusBadge(orderValues[id].status)}
-                            </td>
-                            <td>
-                              {orderValues[id].customer &&
-                                orderValues[id].customer.name}
-                            </td>
-                            <td>
-                              {orderValues[id].customer &&
-                                orderValues[id].customer.contactNumber}
-                            </td>
-                            <td>{orderValues[id].total}</td>
-                            <td>{orderValues[id].dateOfDelivery}</td>
-                            <td>{orderValues[id].rider}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody> */}
                   </Table>
                 </Card.Body>
               </Card>
