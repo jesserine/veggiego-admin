@@ -42,16 +42,13 @@ const Home = () => {
     status: "ACTIVE",
   };
 
-  const [orderValues, setOrderValues] = useState(initialOrderValues);
+  const [orderValues, setOrderValues] = useState();
   const [todaysOrder, setTodaysOrder] = useState([]);
   // retrieves all orders in firebase
   useEffect(() => {
     firebaseDb.ref("orders/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setOrderValues({
-          ...snapshot.val(),
-        });
-      else setOrderValues({});
+      console.log(snapshot.val());
+      setOrderValues(snapshot.val());
     });
   }, []);
 
@@ -60,39 +57,37 @@ const Home = () => {
   const [processingOrder, setProcessingOrder] = useState(0);
   const [inTransitOrder, setInTransitOrder] = useState(0);
   const [deliveredOrder, setDeliveredOrder] = useState(0);
+
   useEffect(() => {
-    // console.log("orderValues, ", orderValues);
     if (orderValues) {
-      Object.keys(orderValues).map((id) => {
-        if (orderValues[id] && orderValues[id].status) {
-          // console.log("orderValues with ID, ", orderValues[id]);
-          switch (orderValues[id].status.toUpperCase()) {
-            case "ACTIVE":
-              console.log("active!");
-              setActiveOrder(Number(activeOrder) + 1);
-              break;
-            case "IN ACTIVE":
-              console.log("inactive!");
-              break;
-            case "PROCESSING":
-              console.log("processing!");
-              setProcessingOrder(Number(processingOrder) + 1);
-              break;
-            case "IN TRANSIT":
-              console.log("in transit!");
-              setInTransitOrder(Number(inTransitOrder) + 1);
-              break;
-            case "DELIVERED":
-              console.log("delivered!");
-              setDeliveredOrder(Number(deliveredOrder) + 1);
-              break;
-          }
+      var activeCount = 0;
+      var processingCount = 0;
+      var inTransitCount = 0;
+      var deliveredCount = 0;
+      Object.keys(orderValues).map((orderId) => {
+        switch (orderValues[orderId].status) {
+          case "ACTIVE":
+            activeCount++;
+            break;
+          case "PROCESSING":
+            processingCount++;
+            break;
+          case "IN TRANSIT":
+            inTransitCount++;
+            break;
+          case "DELIVERED":
+            deliveredCount++;
+            break;
         }
       });
+      setActiveOrder(activeCount);
+      setProcessingOrder(processingCount);
+      setInTransitOrder(inTransitCount);
+      setDeliveredOrder(deliveredCount);
     }
-  }, []);
+  }, [orderValues]);
 
-  //sets the values for today's orders
+  //Sets the values for today's orders
   const dateToday = new Date().toLocaleDateString();
   console.log("date today", dateToday);
   useEffect(() => {
@@ -113,7 +108,29 @@ const Home = () => {
         }
       });
     }
-  }, []);
+  }, [orderValues]);
+
+  //Sets the status Badge
+  const statusBadge = (status) => {
+    switch (status) {
+      case "PREORDER":
+        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+      case "ACTIVE":
+        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+      case "PROCESSING":
+        return <Badge variant="secondary light">{status.toUpperCase()}</Badge>;
+      case "FOR DELIVERY":
+        return <Badge variant="warning light">{status.toUpperCase()}</Badge>;
+      case "IN TRANSIT":
+        return <Badge variant="success light">{status.toUpperCase()}</Badge>;
+      case "DELIVERED":
+        return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
+      case "CANCELLED":
+        return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
+      default:
+        return <Badge variant="dark light">{status.toUpperCase()}</Badge>;
+    }
+  };
 
   return (
     <>
@@ -208,59 +225,29 @@ const Home = () => {
                   >
                     <thead>
                       <tr>
-                        <th scope="col">ORDER NUMBER</th>
                         <th scope="col">CUSTOMER NAME</th>
                         <th scope="col">TOTAL PRICE</th>
                         <th scope="col">TIME OF DELIVERY</th>
+                        <th scope="col">ASSIGNED RIDER</th>
                         <th scope="col">STATUS</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th>1</th>
-                        <td>Jesserine Lopez</td>
-                        <td>₱100</td>
-                        <td>1:00</td>
-                        <td>
-                          <Badge variant="primary light">ACTIVE</Badge>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>2</th>
-                        <td>Nicolas Chiong</td>
-                        <td>₱100</td>
-                        <td>1:00</td>
-                        <td>
-                          <Badge variant="success light">PROCESSING</Badge>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>3</th>
-                        <td>Manny Pacquiao</td>
-                        <td>₱100</td>
-                        <td>1:00</td>
-                        <td>
-                          <Badge variant="success light">PROCESSING</Badge>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>4</th>
-                        <td>Leni Duterte</td>
-                        <td>₱100</td>
-                        <td>1:00</td>
-                        <td>
-                          <Badge variant="warning light">FOR DELIVERY</Badge>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>5</th>
-                        <td>Olivia Robredo</td>
-                        <td>₱100</td>
-                        <td>1:00</td>
-                        <td>
-                          <Badge variant="info light">IN TRANSIT</Badge>
-                        </td>
-                      </tr>
+                      {Object.keys(todaysOrder).map((orderId) => {
+                        return (
+                          <tr key={orderId}>
+                            <td>{todaysOrder[orderId].customer.name}</td>
+                            <td>{todaysOrder[orderId].grandTotal}</td>
+                            <td>{todaysOrder[orderId].dateOfDelivery}</td>
+                            <td>
+                              {todaysOrder[orderId].rider
+                                ? todaysOrder[orderId].rider.riderName
+                                : "Not Assigned"}
+                            </td>
+                            <td>{statusBadge(todaysOrder[orderId].status)}</td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </Table>
                 </Card.Body>
