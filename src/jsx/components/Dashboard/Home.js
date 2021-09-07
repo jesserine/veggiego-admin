@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Row,
@@ -11,20 +11,110 @@ import {
   Nav,
   Tab,
 } from "react-bootstrap";
+import firebaseDb from "../../../firebase";
 
 import loadable from "@loadable/component";
 import pMinDelay from "p-min-delay";
-const ApexNagetivePosative3 = loadable(() =>
-  pMinDelay(import("../charts/apexcharts/NagetivePositive3"), 500)
-);
-const ApexRedialBar2 = loadable(() =>
-  pMinDelay(import("../charts/apexcharts/RadialBar2"), 500)
-);
-const LineChart7 = loadable(() =>
-  pMinDelay(import("../charts/Chartjs/line7"), 0)
-);
 
-function Home() {
+const Home = () => {
+  const ApexNagetivePosative3 = loadable(() =>
+    pMinDelay(import("../charts/apexcharts/NagetivePositive3"), 500)
+  );
+  const ApexRedialBar2 = loadable(() =>
+    pMinDelay(import("../charts/apexcharts/RadialBar2"), 500)
+  );
+  const LineChart7 = loadable(() =>
+    pMinDelay(import("../charts/Chartjs/line7"), 0)
+  );
+
+  const initialOrderValues = {
+    products: "",
+    notes: "",
+    total: 0,
+    grandTotal: 0,
+    rider: "",
+    deliveryLocation: "",
+    deliveryFee: 0,
+    dateOfDelivery: new Date().toLocaleString(),
+    customer: "",
+    customerId: "",
+    dateAdded: new Date().toLocaleString(),
+    status: "ACTIVE",
+  };
+
+  const [orderValues, setOrderValues] = useState(initialOrderValues);
+  const [todaysOrder, setTodaysOrder] = useState([]);
+  // retrieves all orders in firebase
+  useEffect(() => {
+    firebaseDb.ref("orders/").on("value", (snapshot) => {
+      if (snapshot.val() != null)
+        setOrderValues({
+          ...snapshot.val(),
+        });
+      else setOrderValues({});
+    });
+  }, []);
+
+  // Sets the count of active, processing, in transit, and delivered orders
+  const [activeOrder, setActiveOrder] = useState(0);
+  const [processingOrder, setProcessingOrder] = useState(0);
+  const [inTransitOrder, setInTransitOrder] = useState(0);
+  const [deliveredOrder, setDeliveredOrder] = useState(0);
+  useEffect(() => {
+    // console.log("orderValues, ", orderValues);
+    if (orderValues) {
+      Object.keys(orderValues).map((id) => {
+        if (orderValues[id] && orderValues[id].status) {
+          // console.log("orderValues with ID, ", orderValues[id]);
+          switch (orderValues[id].status.toUpperCase()) {
+            case "ACTIVE":
+              console.log("active!");
+              setActiveOrder(Number(activeOrder) + 1);
+              break;
+            case "IN ACTIVE":
+              console.log("inactive!");
+              break;
+            case "PROCESSING":
+              console.log("processing!");
+              setProcessingOrder(Number(processingOrder) + 1);
+              break;
+            case "IN TRANSIT":
+              console.log("in transit!");
+              setInTransitOrder(Number(inTransitOrder) + 1);
+              break;
+            case "DELIVERED":
+              console.log("delivered!");
+              setDeliveredOrder(Number(deliveredOrder) + 1);
+              break;
+          }
+        }
+      });
+    }
+  }, []);
+
+  //sets the values for today's orders
+  const dateToday = new Date().toLocaleDateString();
+  console.log("date today", dateToday);
+  useEffect(() => {
+    if (orderValues) {
+      Object.keys(orderValues).map((id) => {
+        if (
+          orderValues[id].dateOfDelivery &&
+          dateToday ===
+            new Date(orderValues[id].dateOfDelivery).toLocaleDateString()
+        ) {
+          console.log(
+            "orderValues - delivery date, ",
+            new Date(orderValues[id].dateOfDelivery).toLocaleDateString()
+          );
+          setTodaysOrder((prev) => [...prev, orderValues[id]]);
+          // setTodaysOrder((prev) => [...prev, orderValues[id]]);
+          console.log("todays orders: ", todaysOrder);
+        }
+      });
+    }
+  }, []);
+
   return (
     <>
       <div className="form-head d-flex mb-0 mb-lg-4 align-items-start">
@@ -42,7 +132,9 @@ function Home() {
                   <div className="media align-items-center">
                     <div className="media-body">
                       <p className="fs-18 mb-2 wspace-no">Active Orders</p>
-                      <h1 className="fs-36 font-w600 text-black mb-0">5</h1>
+                      <h1 className="fs-36 font-w600 text-black mb-0">
+                        {activeOrder}
+                      </h1>
                     </div>
                     <span className="ml-3 bg-primary text-white">
                       <i className="flaticon-381-promotion" />
@@ -58,7 +150,7 @@ function Home() {
                     <div className="media-body">
                       <p className="fs-18 mb-2 wspace-no">Processing</p>
                       <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
-                        4
+                        {processingOrder}
                       </h1>
                     </div>
                     <span className="ml-3 bg-warning text-white">
@@ -67,7 +159,7 @@ function Home() {
                   </div>
                 </div>
               </div>
-            </div> 
+            </div>
             <div className="col-lg-3 col-sm-12 col-md-6 ">
               <div className="card widget-stat">
                 <div className="card-body p-4">
@@ -75,7 +167,7 @@ function Home() {
                     <div className="media-body">
                       <p className="fs-18 mb-2 wspace-no">In Transit</p>
                       <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
-                        4
+                        {inTransitOrder}
                       </h1>
                     </div>
                     <span className="ml-3 bg-warning text-white">
@@ -92,7 +184,7 @@ function Home() {
                     <div className="media-body">
                       <p className="fs-18 mb-2 wspace-no">Delivered</p>
                       <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
-                        4
+                        {deliveredOrder}
                       </h1>
                     </div>
                     <span className="ml-3 bg-primary text-white">
@@ -119,6 +211,7 @@ function Home() {
                         <th scope="col">ORDER NUMBER</th>
                         <th scope="col">CUSTOMER NAME</th>
                         <th scope="col">TOTAL PRICE</th>
+                        <th scope="col">TIME OF DELIVERY</th>
                         <th scope="col">STATUS</th>
                       </tr>
                     </thead>
@@ -126,9 +219,8 @@ function Home() {
                       <tr>
                         <th>1</th>
                         <td>Jesserine Lopez</td>
-                        <td>
-                          ₱100
-                        </td>
+                        <td>₱100</td>
+                        <td>1:00</td>
                         <td>
                           <Badge variant="primary light">ACTIVE</Badge>
                         </td>
@@ -136,9 +228,8 @@ function Home() {
                       <tr>
                         <th>2</th>
                         <td>Nicolas Chiong</td>
-                        <td>
-                          ₱100
-                        </td>
+                        <td>₱100</td>
+                        <td>1:00</td>
                         <td>
                           <Badge variant="success light">PROCESSING</Badge>
                         </td>
@@ -146,9 +237,8 @@ function Home() {
                       <tr>
                         <th>3</th>
                         <td>Manny Pacquiao</td>
-                        <td>
-                          ₱100
-                        </td>
+                        <td>₱100</td>
+                        <td>1:00</td>
                         <td>
                           <Badge variant="success light">PROCESSING</Badge>
                         </td>
@@ -156,9 +246,8 @@ function Home() {
                       <tr>
                         <th>4</th>
                         <td>Leni Duterte</td>
-                        <td>
-                          ₱100
-                        </td>
+                        <td>₱100</td>
+                        <td>1:00</td>
                         <td>
                           <Badge variant="warning light">FOR DELIVERY</Badge>
                         </td>
@@ -166,9 +255,8 @@ function Home() {
                       <tr>
                         <th>5</th>
                         <td>Olivia Robredo</td>
-                        <td>
-                          ₱100
-                        </td>
+                        <td>₱100</td>
+                        <td>1:00</td>
                         <td>
                           <Badge variant="info light">IN TRANSIT</Badge>
                         </td>
@@ -308,6 +396,6 @@ function Home() {
       </div>
     </>
   );
-}
+};
 
 export default Home;
