@@ -3,15 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 
-/// Scroll
-import PerfectScrollbar from "react-perfect-scrollbar";
-
 /// Image
 import profile from "../../../images/profile/kmb.jpeg";
-import avatar from "../../../images/avatar/1.jpg";
-import { Dropdown } from "react-bootstrap";
-import ProfileSidebar from "../ProfileSidebar";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const Header = ({
   onNote,
@@ -290,17 +284,6 @@ const Header = ({
                     </svg>
 
                     <span className="ml-2">Logout </span>
-                    <ToastContainer
-                      position="top-right"
-                      autoClose={5000}
-                      hideProgressBar={false}
-                      newestOnTop
-                      closeOnClick
-                      rtl={false}
-                      pauseOnFocusLoss
-                      draggable
-                      pauseOnHover
-                    />
                   </Link>
                 </div>
               </li>

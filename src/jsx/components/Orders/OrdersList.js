@@ -35,16 +35,11 @@ const OrdersList = () => {
     dateAdded: new Date().toLocaleString(),
   };
 
-  var [orderValues, setOrderValues] = useState(initialOrderFieldValues);
+  var [orderValues, setOrderValues] = useState([]);
   var [currentId, setCurrentId] = useState("");
-
   useEffect(() => {
     firebaseDb.ref("orders/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setOrderValues({
-          ...snapshot.val(),
-        });
-      else setOrderValues({});
+      setOrderValues(snapshot.val());
     });
   }, []);
 
@@ -147,7 +142,32 @@ const OrdersList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.keys(orderValues).map((id) => {
+                      {Object.keys(orderValues).map((orderId) => {
+                        return (
+                          <tr
+                            key={orderId}
+                            onClick={() => {
+                              setCurrentId(orderId);
+                            }}
+                          >
+                            <td>{statusBadge(orderValues[orderId].status)}</td>
+                            <td>{orderValues[orderId].customer.name}</td>
+                            <td>
+                              {orderValues[orderId].customer.contactNumber}
+                            </td>
+                            <td>{orderValues[orderId].grandTotal}</td>
+                            <td>{orderValues[orderId].dateOfDelivery}</td>
+                            <td>
+                              {orderValues[orderId].rider
+                                ? orderValues[orderId].rider.riderName
+                                : "Not Assigned"}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                    {/* <tbody>
+                      {orderValues.map((id) => {
                         return (
                           <tr
                             key={id}
@@ -170,11 +190,10 @@ const OrdersList = () => {
                             <td>{orderValues[id].total}</td>
                             <td>{orderValues[id].dateOfDelivery}</td>
                             <td>{orderValues[id].rider}</td>
-                            {/* {console.log(orderValues[id].customer.name)} */}
                           </tr>
                         );
                       })}
-                    </tbody>
+                    </tbody> */}
                   </Table>
                 </Card.Body>
               </Card>

@@ -6,6 +6,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import DateFnsUtils from "@date-io/date-fns";
+import { ToastContainer, toast } from "react-toastify";
 
 import { Button, Table } from "react-bootstrap";
 import Select from "react-select";
@@ -126,6 +127,9 @@ const OrdersForm = (props) => {
         productPrice: selectedOption.product.price,
         productUnit: selectedOption.product.unit,
         productName: selectedOption.product.productName,
+        discount: selectedOption.product.discount
+          ? selectedOption.product.discount
+          : 0,
       }));
     }
   }, [selectedOption]);
@@ -183,20 +187,39 @@ const OrdersForm = (props) => {
 
   // add product to cart - this should update values state!
   const addToCart = () => {
-    setValues((prev) => ({
-      ...prev,
-      deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
-      deliveryLocation: selectedDeliveryOption.delivery.location,
-      total: Number(values.total) + Number(productValues.subtotal),
-      grandTotal: Number(values.total) + Number(values.deliveryFee),
-      // products: productList,
-      products: [...values.products, productValues],
-    }));
+    if (selectedOption) {
+      setValues((prev) => ({
+        ...prev,
+        deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
+        deliveryLocation: selectedDeliveryOption.delivery.location,
+        total: Number(values.total) + Number(productValues.subtotal),
+        grandTotal: Number(values.total) + Number(values.deliveryFee),
+        // products: productList,
+        products: [...values.products, productValues],
+      }));
 
-    setProductValues((prev) => ({
-      ...prev,
-      productName: selectedOption.value,
-    }));
+      toast.success(selectedOption.value + " added to cart!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      console.log("empty field");
+      toast.error("Select a product first!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(async () => {}, 3000);
+    }
 
     console.log("productList:", values);
   };
@@ -204,6 +227,7 @@ const OrdersForm = (props) => {
   // reset product values form
   const clearProductValues = () => {
     setSelectedOption(null);
+    setIsEditingProduct(false);
 
     setProductValues({
       productName: "",
@@ -213,10 +237,33 @@ const OrdersForm = (props) => {
       discount: 0,
       subtotal: 0,
     });
+
+    toast.success("Product form cleared", {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   // update values on added product
   const updateCart = () => {
+    //do update state logic
+
+    //toast
+    toast.success("Product updated!", {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
     setIsEditingProduct(false);
   };
 
@@ -235,7 +282,6 @@ const OrdersForm = (props) => {
 
   // check for delivery date change
   useEffect(() => {
-    console.log("selectedDate", selectedDate);
     setValues((prev) => ({
       ...prev,
       dateOfDelivery: selectedDate.toLocaleString(),
@@ -255,6 +301,7 @@ const OrdersForm = (props) => {
         unit: product.productUnit,
         productName: product.productName,
         quantity: product.productQty,
+        discount: product.discount,
       },
       index: index,
     });
@@ -538,30 +585,34 @@ const OrdersForm = (props) => {
                         disabled
                       />
                     </div>
-                    <div className="form-group mt-1 mt-sm-0">
+                    <div className="form-group mt-sm-0">
                       {isEditingProduct && (
                         <Button
                           className="btn-sm mt-5 ml-1"
-                          variant="primary light btn-square"
+                          variant="primary btn-square"
                           onClick={updateCart}
                         >
                           <i className="fa fa-check" />
                         </Button>
                       )}
-                      <Button
-                        className="btn-sm mt-5 ml-1"
-                        variant="primary light btn-square"
-                        onClick={addToCart}
-                      >
-                        <i className="fa fa-plus" />
-                      </Button>
-                      <Button
-                        className="btn-sm mt-5 ml-1"
-                        variant="warning light btn-square"
-                        onClick={clearProductValues}
-                      >
-                        <i className="fa fa-times" />
-                      </Button>
+                      {!isEditingProduct && (
+                        <Button
+                          className="btn-sm mt-5 ml-1"
+                          variant="primary light btn-square"
+                          onClick={addToCart}
+                        >
+                          <i className="fa fa-plus" />
+                        </Button>
+                      )}
+                      {selectedOption && (
+                        <Button
+                          className="btn-sm mt-5 ml-1"
+                          variant="warning light btn-square"
+                          onClick={clearProductValues}
+                        >
+                          <i className="fa fa-times" />
+                        </Button>
+                      )}
                     </div>
                   </div>
                   <div className="form-row">
