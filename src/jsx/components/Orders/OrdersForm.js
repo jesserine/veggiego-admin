@@ -6,7 +6,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import DateFnsUtils from "@date-io/date-fns";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 import { Button, Table } from "react-bootstrap";
 import Select from "react-select";
@@ -339,6 +339,7 @@ const OrdersForm = (props) => {
 
   const handleOrderInputChange = (e) => {
     var { name, value } = e.target;
+    console.log(name, value);
     setValues({
       ...values,
       [name]: value,
@@ -427,7 +428,7 @@ const OrdersForm = (props) => {
                         placeholder="0"
                         value={values.deliveryFee}
                         onChange={handleOrderInputChange}
-                        disabled
+                        disabled={selectedDeliveryOption.value !== "Custom"}
                       />
                     </div>
                     <div className="form-group col-md-4">

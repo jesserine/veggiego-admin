@@ -174,13 +174,11 @@ const AddRiderToOrderForm = (props) => {
                   <div className="col-xl-6 col-sm-6 mb-4">
                     <h5>Date of Delivery:</h5>
                     <div>
-                      {" "}
                       <strong>{values.dateOfDelivery}</strong>{" "}
                     </div>
                     <br />
                     <h5>Status:</h5>
                     <div>
-                      {" "}
                       <strong>{values.status}</strong>{" "}
                     </div>
                   </div>

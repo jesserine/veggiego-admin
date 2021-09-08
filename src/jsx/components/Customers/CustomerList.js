@@ -4,7 +4,7 @@ import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
 import { Row, Col, Card, Table, Button } from "react-bootstrap";
 
-import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import CustomerForm from "./CustomerForm";
 import AddressModal from "./AddressModal";
 
@@ -196,6 +196,20 @@ const CustomerList = () => {
                             key={id}
                             onClick={() => {
                               setCurrentId(id);
+                              toast.success(
+                                "Viewing customer '" +
+                                  contactObjects[id].name +
+                                  "'",
+                                {
+                                  position: "bottom-right",
+                                  autoClose: 3000,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: true,
+                                  draggable: true,
+                                  progress: undefined,
+                                }
+                              );
                             }}
                           >
                             <td>{contactObjects[id].name}</td>
