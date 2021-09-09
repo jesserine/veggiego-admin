@@ -227,8 +227,7 @@ const Home = () => {
                       <tr>
                         <th scope="col">CUSTOMER NAME</th>
                         <th scope="col">TOTAL PRICE</th>
-                        <th scope="col">TIME OF DELIVERY</th>
-                        <th scope="col">ASSIGNED RIDER</th>
+                        <th scope="col">TIME OF DELIVERY</th>                        <th scope="col">ASSIGNED RIDER</th>
                         <th scope="col">STATUS</th>
                       </tr>
                     </thead>
