@@ -1,4 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { useDataContext } from "../../../contexts/DataContext";
+
 import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
@@ -34,58 +36,23 @@ const OrdersForm = (props) => {
     productPrice: 0,
     discount: 0,
     subtotal: 0,
+    productImage: "",
   };
 
   const customerId = props.userId;
 
+  const { productList, unitList, deliveryLocList } = useDataContext();
+
   var [values, setValues] = useState(initialFieldValues);
-  var [unitObjects, setUnitObjects] = useState({});
-  var [deliveryObjects, setDeliveryObjects] = useState({});
-  var [productNameObjects, setProductNameObjects] = useState({});
+  const [unitObjects, setUnitObjects] = useState(unitList);
+  const [deliveryObjects, setDeliveryObjects] = useState(deliveryLocList);
+  const [productNameObjects, setProductNameObjects] = useState(productList);
   var [productValues, setProductValues] = useState(initialProductValues);
-  // var [productList, setProductList] = useState([]);
   var [result, setResult] = useState([]);
   var [currentProductId, setCurrentProductId] = useState("");
   var [currentId, setCurrentId] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isEditingProduct, setIsEditingProduct] = useState(false);
-
-  /************************
-  --- FIREBASE FUNCTIONS ---
-  ************************/
-
-  // retrieves all products in firebase
-  useEffect(() => {
-    firebaseDb.ref("products/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setProductNameObjects({
-          ...snapshot.val(),
-        });
-      else setProductNameObjects({});
-    });
-  }, []);
-
-  // retrieves all product units in firebase
-  useEffect(() => {
-    firebaseDb.ref("unit/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setUnitObjects({
-          ...snapshot.val(),
-        });
-      else setUnitObjects({});
-    });
-  }, []);
-
-  // retrieves delivery data in firebase
-  useEffect(() => {
-    firebaseDb.ref("delivery/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setDeliveryObjects({
-          ...snapshot.val(),
-        });
-      else setDeliveryObjects({});
-    });
-  }, []);
 
   /*********************************
   --- DATA MANIPULATION FUNCTIONS ---
@@ -106,11 +73,21 @@ const OrdersForm = (props) => {
   // prepares products data for combobox
   const [selectedOption, setSelectedOption] = useState(null);
   const options = [];
-
+  console.log(productNameObjects);
   Object.keys(productNameObjects).map((id) => {
     return options.push({
       value: productNameObjects[id].productName,
-      label: productNameObjects[id].productName,
+      label: (
+        <div>
+          <img
+            src={productNameObjects[id].productImage}
+            height="30px"
+            width="30px"
+            alt={productNameObjects[id].productName}
+          />{" "}
+          {productNameObjects[id].productName}
+        </div>
+      ),
       product: productNameObjects[id],
     });
   });
@@ -130,6 +107,7 @@ const OrdersForm = (props) => {
         discount: selectedOption.product.discount
           ? selectedOption.product.discount
           : 0,
+        productImage: selectedOption.product.productImage,
       }));
     }
   }, [selectedOption]);
@@ -206,8 +184,9 @@ const OrdersForm = (props) => {
         draggable: true,
         progress: undefined,
       });
+
+      clearProductValues(false);
     } else {
-      console.log("empty field");
       toast.error("Select a product first!", {
         position: "bottom-right",
         autoClose: 3000,
@@ -222,7 +201,7 @@ const OrdersForm = (props) => {
   };
 
   // reset product values form
-  const clearProductValues = () => {
+  const clearProductValues = (showToast) => {
     setSelectedOption(null);
     setIsEditingProduct(false);
 
@@ -235,15 +214,17 @@ const OrdersForm = (props) => {
       subtotal: 0,
     });
 
-    toast.success("Product form cleared", {
-      position: "bottom-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    if (showToast) {
+      toast.success("Product form cleared", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
 
   // update values on added product
@@ -259,6 +240,7 @@ const OrdersForm = (props) => {
       productPrice: productValues.productPrice,
       productUnit: productValues.productUnit,
       subtotal: productValues.subtotal,
+      productImage: updatedProductList[index].productImage,
     };
 
     const newTotal = updatedProductList.reduce(
@@ -630,7 +612,15 @@ const OrdersForm = (props) => {
                                 <i className="fa fa-pencil"></i>
                               </Button>
                             </td>
-                            <td>{product.productName}</td>
+                            <td>
+                              <img
+                                src={product.productImage}
+                                className="rounded-lg mr-2"
+                                width="24"
+                                alt=""
+                              />
+                              {product.productName}
+                            </td>
                             <td>{`x${product.productQty}`}</td>
                             <td>{product.productUnit}</td>
                             <td>{`₱${product.productPrice}`}</td>

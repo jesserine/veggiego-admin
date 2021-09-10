@@ -51,7 +51,17 @@ const AddRiderToOrderForm = (props) => {
   Object.keys(riderValues).map((id) => {
     return riderOptions.push({
       value: riderValues[id].riderName,
-      label: riderValues[id].riderName,
+      label: (
+        <div>
+          <img
+            src={riderValues[id].riderImage}
+            height="30px"
+            width="30px"
+            alt={riderValues[id].riderName}
+          />{" "}
+          {riderValues[id].riderName}
+        </div>
+      ),
       rider: riderValues[id],
     });
   });
@@ -254,25 +264,27 @@ const AddRiderToOrderForm = (props) => {
                   <h5>Notes:</h5>
                   <div>{values.notes}</div>
                 </div>
-                <br />{" "}
-                <div className="col-xl-12 col-sm-6 mb-4">
-                  <h5>Rider:</h5>
-                  <Select
-                    className={"form-control"}
-                    defaultValue={selectedRiderOption}
-                    onChange={setSelectedRiderOption}
-                    options={riderOptions}
-                    styles={customStyles}
-                    components={{
-                      DropdownIndicator: () => null,
-                      IndicatorSeparator: () => null,
-                    }}
-                  />
-                </div>
-                <div className="col-xl-12 col-sm-6 mb-4">
-                  <Button className="mt-4" variant="primary" type="submit">
-                    Save Rider Change
-                  </Button>
+                <br />
+                <div className="row">
+                  <div className="col-xl-7 col-sm-6 mb-4">
+                    <h5>Rider:</h5>
+                    <Select
+                      className={"form-control"}
+                      defaultValue={selectedRiderOption}
+                      onChange={setSelectedRiderOption}
+                      options={riderOptions}
+                      styles={customStyles}
+                      components={{
+                        DropdownIndicator: () => null,
+                        IndicatorSeparator: () => null,
+                      }}
+                    />
+                  </div>
+                  <div className="col-xl-5 col-sm-6 mb-4">
+                    <Button className="mt-4" variant="primary" type="submit">
+                      Assign Rider to Order
+                    </Button>
+                  </div>
                 </div>
               </form>
             </div>

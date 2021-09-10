@@ -19,33 +19,9 @@ const CustomerList = () => {
 
   useEffect(() => {
     if (searchTerm.length > 0) {
-      firebaseDb.ref("customer/").on("value", (snapshot) => {
-        if (snapshot.val() != null) {
-          const customerDb = snapshot.val();
-          setCustomers([]);
-          let searchQuery = searchTerm.toLocaleLowerCase();
-          for (let id in customerDb) {
-            let customer = customerDb[id].name.toLocaleLowerCase();
-            if (
-              customer.slice(0, searchQuery.length).indexOf(searchQuery) !== -1
-            ) {
-              setCustomers((prevResult) => {
-                return [...prevResult, customerDb[id]];
-              });
-            }
-          }
-        } else {
-          setCustomers([]);
-        }
-      });
+      //rewrite search functions
     } else {
-      firebaseDb.ref("customer/").on("value", (snapshot) => {
-        if (snapshot.val() != null)
-          setCustomers({
-            ...snapshot.val(),
-          });
-        else setCustomers({});
-      });
+      //rewrite search functions
     }
   }, [searchTerm]);
 

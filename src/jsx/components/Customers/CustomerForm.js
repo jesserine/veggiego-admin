@@ -32,18 +32,7 @@ const CustomerForm = (props) => {
   var [values, setValues] = useState(initialFieldValues);
   var [orderValues, setOrderValues] = useState(initialOrderValues);
 
-  var [customers, setContactObjects] = useState({});
   var [currentId, setCurrentId] = useState("");
-
-  useEffect(() => {
-    firebaseDb.ref("customer/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setContactObjects({
-          ...snapshot.val(),
-        });
-      else setContactObjects({});
-    });
-  }, []);
 
   const selectedId = props.currentId;
 

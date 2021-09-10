@@ -12,6 +12,8 @@ export const DataProvider = ({ children }) => {
   const [riderList, setRiderList] = useState();
   const [productList, setProductList] = useState();
   const [orderList, setOrderList] = useState();
+  const [unitList, setUnitList] = useState();
+  const [deliveryLocList, setDeliveryLocList] = useState();
 
   const [loading, setLoading] = useState(true);
 
@@ -43,11 +45,27 @@ export const DataProvider = ({ children }) => {
     });
   }, []);
 
+  useEffect(() => {
+    database.ref("unit/").on("value", (snapshot) => {
+      setUnitList(snapshot.val());
+      setLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    database.ref("delivery/").on("value", (snapshot) => {
+      setDeliveryLocList(snapshot.val());
+      setLoading(false);
+    });
+  }, []);
+
   const value = {
     customerList,
     riderList,
     productList,
     orderList,
+    unitList,
+    deliveryLocList,
   };
 
   return (
