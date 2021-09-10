@@ -184,9 +184,9 @@ const CustomerList = () => {
                         <th>
                           <strong>LANDMARK</strong>
                         </th>
-                        <th>
+                        {/* <th>
                           <strong>ID</strong>
-                        </th>
+                        </th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -201,7 +201,7 @@ const CustomerList = () => {
                                   contactObjects[id].name +
                                   "'",
                                 {
-                                  position: "bottom-right",
+                                  position: "bottom-left",
                                   autoClose: 3000,
                                   hideProgressBar: false,
                                   closeOnClick: true,
@@ -216,7 +216,7 @@ const CustomerList = () => {
                             <td>{contactObjects[id].contactNumber}</td>
                             <td>{contactObjects[id].address}</td>
                             <td>{contactObjects[id].landmark}</td>
-                            <td>{id}</td>
+                            {/* <td>{id}</td> */}
                           </tr>
                         );
                       })}

@@ -174,6 +174,18 @@ const CustomerForm = (props) => {
                           {values.landmark}{" "}
                         </strong>
                       </li>
+                      {values.housePicture && (
+                        <li className="list-group-item ">
+                          <p className="mb-0">House Photo</p>
+                          <div className="profile-photo">
+                            <img
+                              src={values.housePicture}
+                              className="img-fluid rounded-square"
+                              alt="profile"
+                            />
+                          </div>
+                        </li>
+                      )}
                     </ul>
                     <div className="form-row">
                       <div className="form-group mt-5 col-md-12">
