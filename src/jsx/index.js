@@ -3,8 +3,9 @@ import React, { useState } from "react";
 /// React router dom
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-/// Authentication
+/// Contexts
 import { AuthProvider } from "../contexts/AuthContext";
+import { DataProvider } from "../contexts/DataContext";
 
 /// Css
 import "./index.css";
@@ -243,25 +244,27 @@ const Markup = ({ showProfileSideBar }) => {
   return (
     <Router basename="/">
       <AuthProvider>
-        <Switch>
-          {routes.map((data, i) =>
-            data.url === "register" || data.url === "login" ? (
-              <AuthRoute
-                key={i}
-                exact
-                path={`/${data.url}`}
-                component={data.component}
-              />
-            ) : (
-              <PrivateRoute
-                key={i}
-                exact
-                path={`/${data.url}`}
-                component={data.component}
-              />
-            )
-          )}
-        </Switch>
+        <DataProvider>
+          <Switch>
+            {routes.map((data, i) =>
+              data.url === "register" || data.url === "login" ? (
+                <AuthRoute
+                  key={i}
+                  exact
+                  path={`/${data.url}`}
+                  component={data.component}
+                />
+              ) : (
+                <PrivateRoute
+                  key={i}
+                  exact
+                  path={`/${data.url}`}
+                  component={data.component}
+                />
+              )
+            )}
+          </Switch>
+        </DataProvider>
       </AuthProvider>
     </Router>
   );

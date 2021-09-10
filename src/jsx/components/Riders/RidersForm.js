@@ -21,17 +21,6 @@ const RidersForm = (props) => {
   };
 
   var [values, setValues] = useState(initialFieldValues);
-  var [riderObjects, setRiderObjects] = useState({});
-
-  useEffect(() => {
-    firebaseDb.ref("riders/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setRiderObjects({
-          ...snapshot.val(),
-        });
-      else setRiderObjects({});
-    });
-  }, []);
 
   useEffect(() => {
     if (props.currentId === "") {
@@ -42,10 +31,10 @@ const RidersForm = (props) => {
     } else {
       setViewMode(true);
       setValues({
-        ...props.riderObjects[props.currentId],
+        ...props.riders[props.currentId],
       });
     }
-  }, [props.currentId, props.riderObjects]);
+  }, [props.currentId, props.riders]);
 
   const handleInputChange = (e) => {
     var { name, value } = e.target;
@@ -80,7 +69,6 @@ const RidersForm = (props) => {
     window.location.reload(false);
   };
 
-  const enabled = values.username != null;
   return (
     <Fragment>
       <div className="row">

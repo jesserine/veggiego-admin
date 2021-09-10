@@ -20,7 +20,6 @@ const ProductsForm = (props) => {
   };
 
   var [values, setValues] = useState(initialFieldValues);
-  var [productObjects, setProductObjects] = useState({});
   var [categoryObjects, setCategoryObjects] = useState({});
   var [unitObjects, setUnitObjects] = useState({});
 
@@ -45,16 +44,6 @@ const ProductsForm = (props) => {
   }, []);
 
   useEffect(() => {
-    firebaseDb.ref("products/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setProductObjects({
-          ...snapshot.val(),
-        });
-      else setProductObjects({});
-    });
-  }, []);
-
-  useEffect(() => {
     if (props.currentId === "") {
       setViewMode(false);
       setValues({
@@ -63,10 +52,10 @@ const ProductsForm = (props) => {
     } else {
       setViewMode(true);
       setValues({
-        ...props.productObjects[props.currentId],
+        ...props.products[props.currentId],
       });
     }
-  }, [props.currentId, props.productObjects]);
+  }, [props.currentId, props.products]);
 
   const handleInputChange = (e) => {
     var { name, value } = e.target;

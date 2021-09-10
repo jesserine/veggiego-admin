@@ -6,6 +6,7 @@ import { Row, Col, Card, Table, Badge } from "react-bootstrap";
 
 import OrdersForm from "./OrdersForm";
 import AddRiderToOrderForm from "./AddRiderToOrderForm";
+import { Link } from "react-router-dom";
 
 const OrdersList = () => {
   const initialOrderFieldValues = {
@@ -78,6 +79,20 @@ const OrdersList = () => {
               <Card>
                 <Card.Header>
                   <Card.Title>Customer Orders</Card.Title>
+                  <span className="float-right">
+                    <Link
+                      to={{
+                        pathname: "/customer-order",
+                        state: {
+                          user: null,
+                          userId: null,
+                        },
+                      }}
+                      className="btn-sm btn-primary btn-block"
+                    >
+                      Add new order
+                    </Link>
+                  </span>
                 </Card.Header>
                 <Card.Body>
                   <Table responsive hover>

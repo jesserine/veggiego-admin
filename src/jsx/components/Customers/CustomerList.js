@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import PageTitle from "../../layouts/PageTitle";
+import { useDataContext } from "../../../contexts/DataContext";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
 import { Row, Col, Card, Table, Button } from "react-bootstrap";
@@ -9,63 +9,45 @@ import CustomerForm from "./CustomerForm";
 import AddressModal from "./AddressModal";
 
 const CustomerList = () => {
-  var [contactObjects, setContactObjects] = useState({});
+  /// Get customer list from context provider
+  const { customerList } = useDataContext();
+  const [customers, setCustomers] = useState(customerList);
+
   const [addressList, setAddressList] = useState([]);
   var [currentId, setCurrentId] = useState("");
   var [searchTerm, setSearchTerm] = useState("");
-
-  const svg1 = (
-    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
-      <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-        <rect x="0" y="0" width="24" height="24"></rect>
-        <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-        <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-        <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-      </g>
-    </svg>
-  );
 
   useEffect(() => {
     if (searchTerm.length > 0) {
       firebaseDb.ref("customer/").on("value", (snapshot) => {
         if (snapshot.val() != null) {
           const customerDb = snapshot.val();
-          setContactObjects([]);
+          setCustomers([]);
           let searchQuery = searchTerm.toLocaleLowerCase();
           for (let id in customerDb) {
             let customer = customerDb[id].name.toLocaleLowerCase();
             if (
               customer.slice(0, searchQuery.length).indexOf(searchQuery) !== -1
             ) {
-              setContactObjects((prevResult) => {
+              setCustomers((prevResult) => {
                 return [...prevResult, customerDb[id]];
               });
             }
           }
         } else {
-          setContactObjects([]);
+          setCustomers([]);
         }
       });
     } else {
       firebaseDb.ref("customer/").on("value", (snapshot) => {
         if (snapshot.val() != null)
-          setContactObjects({
+          setCustomers({
             ...snapshot.val(),
           });
-        else setContactObjects({});
+        else setCustomers({});
       });
     }
   }, [searchTerm]);
-
-  useEffect(() => {
-    firebaseDb.ref("customer/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setContactObjects({
-          ...snapshot.val(),
-        });
-      else setContactObjects({});
-    });
-  }, []);
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
@@ -116,7 +98,7 @@ const CustomerList = () => {
       <div className="row">
         <div className="col-xl-4 col-lg-6">
           <CustomerForm
-            {...{ addOrEdit, currentId, contactObjects }}
+            {...{ addOrEdit, currentId, customers }}
             toggleModal={handleAddressModalState}
           />
         </div>
@@ -126,17 +108,16 @@ const CustomerList = () => {
               <Card>
                 <Card.Header>
                   <Card.Title>My Customers</Card.Title>
-                  <Button
-                    variant="primary btn-rounded"
-                    onClick={() => {
-                      setCurrentId("");
-                    }}
-                  >
-                    <span className="btn-icon-left text-primary">
-                      <i className="fa fa-plus" />
-                    </span>
-                    Add
-                  </Button>
+                  <span className="float-right">
+                    <Button
+                      className="btn-sm btn-primary btn-block"
+                      onClick={() => {
+                        setCurrentId("");
+                      }}
+                    >
+                      Add new customer
+                    </Button>
+                  </span>
                 </Card.Header>
                 <Card.Body>
                   <div className="search_bar dropdown show mb-3">
@@ -190,16 +171,14 @@ const CustomerList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.keys(contactObjects).map((id) => {
+                      {Object.keys(customers).map((id) => {
                         return (
                           <tr
                             key={id}
                             onClick={() => {
                               setCurrentId(id);
                               toast.success(
-                                "Viewing customer '" +
-                                  contactObjects[id].name +
-                                  "'",
+                                "Viewing customer '" + customers[id].name + "'",
                                 {
                                   position: "bottom-left",
                                   autoClose: 3000,
@@ -212,10 +191,10 @@ const CustomerList = () => {
                               );
                             }}
                           >
-                            <td>{contactObjects[id].name}</td>
-                            <td>{contactObjects[id].contactNumber}</td>
-                            <td>{contactObjects[id].address}</td>
-                            <td>{contactObjects[id].landmark}</td>
+                            <td>{customers[id].name}</td>
+                            <td>{customers[id].contactNumber}</td>
+                            <td>{customers[id].address}</td>
+                            <td>{customers[id].landmark}</td>
                             {/* <td>{id}</td> */}
                           </tr>
                         );

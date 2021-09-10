@@ -137,7 +137,8 @@ const AddRiderToOrderForm = (props) => {
             <div className="card-header">
               {" "}
               <h4>
-                <strong>Invoice</strong> {props.currentId}{" "}
+                <strong>Delivery Receipt</strong>{" "}
+                {props.currentId.substr(props.currentId.length - 5)}{" "}
               </h4>
               {/* {JSON.stringify(values)} */}
               <span className="float-right">

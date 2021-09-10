@@ -32,7 +32,7 @@ const CustomerForm = (props) => {
   var [values, setValues] = useState(initialFieldValues);
   var [orderValues, setOrderValues] = useState(initialOrderValues);
 
-  var [contactObjects, setContactObjects] = useState({});
+  var [customers, setContactObjects] = useState({});
   var [currentId, setCurrentId] = useState("");
 
   useEffect(() => {
@@ -56,10 +56,10 @@ const CustomerForm = (props) => {
     } else {
       setViewMode(true);
       setValues({
-        ...props.contactObjects[props.currentId],
+        ...props.customers[props.currentId],
       });
     }
-  }, [props.currentId, props.contactObjects]);
+  }, [props.currentId, props.customers]);
 
   const handleInputChange = (e) => {
     var { name, value } = e.target;
