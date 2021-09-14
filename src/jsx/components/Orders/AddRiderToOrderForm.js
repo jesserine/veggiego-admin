@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { useDataContext } from "../../../contexts/DataContext";
 import { Link } from "react-router-dom";
 import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
@@ -23,27 +24,18 @@ const AddRiderToOrderForm = (props) => {
     grandTotal: 0,
   };
 
+  const { riderList } = useDataContext();
+
   var [values, setValues] = useState(initialOrderFieldValues);
   var [orderValues, setOrderValues] = useState({});
   var [currentId, setCurrentId] = useState("");
-  var [riderValues, setRiderValues] = useState({});
+  var [riderValues, setRiderValues] = useState(riderList);
 
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [viewMode, setViewMode] = useState(false);
   const [imageUrl, setImageUrl] = useState();
 
   const selectedId = props.currentId;
-
-  // retrieves rider data in firebase
-  useEffect(() => {
-    firebaseDb.ref("riders/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setRiderValues({
-          ...snapshot.val(),
-        });
-      else setRiderValues({});
-    });
-  }, []);
 
   // prepares rider data for combobox
   const [selectedRiderOption, setSelectedRiderOption] = useState(null);
@@ -109,6 +101,16 @@ const AddRiderToOrderForm = (props) => {
       });
     }
   }, [props.currentId, props.orderValues]);
+
+  useEffect(() => {
+    setValues({
+      ...props.orderValues[
+        Object.keys(props.orderValues)[
+          Object.keys(props.orderValues).length - 1
+        ]
+      ],
+    });
+  }, []);
 
   const handleInputChange = (e) => {
     var { name, value } = e.target;
@@ -189,9 +191,7 @@ const AddRiderToOrderForm = (props) => {
                     </div>
                     <br />
                     <h5>Status:</h5>
-                    <div>
-                      <strong>{values.status}</strong>{" "}
-                    </div>
+                    <div>{props.statusBadge(values.status)}</div>
                   </div>
                 </div>
                 <br />
@@ -223,7 +223,7 @@ const AddRiderToOrderForm = (props) => {
                             <td className="right">₱{product.productPrice}</td>
                             <td className="center">{product.discount} %</td>
                             <td className="right">
-                              P {product.subtotal && product.subtotal}
+                              ₱{product.subtotal && product.subtotal}
                             </td>
                           </tr>
                         ))}
@@ -239,20 +239,20 @@ const AddRiderToOrderForm = (props) => {
                           <td className="left">
                             <strong>Total</strong>
                           </td>
-                          <td className="right">P{values.total}</td>
+                          <td className="right">₱{values.total}</td>
                         </tr>
                         <tr>
                           <td className="left">
                             <strong>Delivery Fee</strong>
                           </td>
-                          <td className="right">P{values.deliveryFee}</td>
+                          <td className="right">₱{values.deliveryFee}</td>
                         </tr>
                         <tr>
                           <td className="left">
                             <strong>Grand Total</strong>
                           </td>
                           <td className="right">
-                            <strong>P{values.grandTotal}</strong>
+                            <strong>₱{values.grandTotal}</strong>
                           </td>
                         </tr>
                       </tbody>

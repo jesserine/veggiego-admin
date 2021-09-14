@@ -20,6 +20,7 @@ const CustomerOrder = (props) => {
   const location = useLocation();
   const { user, userId } = location.state;
   const [currentCustomer, setCurrentCustomer] = useState(user);
+  const [currentCustomerId, setCurrentCustomerId] = useState(userId);
 
   const [selectedOption, setSelectedOption] = useState(null);
   const options = [];
@@ -34,13 +35,16 @@ const CustomerOrder = (props) => {
         </div>
       ),
       customer: customers[id],
+      customerId: id,
     });
   });
 
   useEffect(() => {
     if (selectedOption) {
-      const { customer } = selectedOption;
+      const { customer, customerId } = selectedOption;
       setCurrentCustomer(customer);
+      setCurrentCustomerId(customerId);
+      setSelectedOption(null);
     }
   }, [selectedOption]);
 
@@ -135,25 +139,32 @@ const CustomerOrder = (props) => {
           </div>
         ) : (
           <div className="col-xl-4 col-xxl-4 col-lg-12 col-sm-12">
-            {/* <p>Please select a user {JSON.stringify(customers)}</p> */}
-            <label>Please select a user</label>
-            <Select
-              className={"form-control"}
-              defaultValue={selectedOption}
-              onChange={setSelectedOption}
-              value={selectedOption}
-              options={options}
-              styles={customStyles}
-              components={{
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
-            />
+            <div className="card overflow-hidden">
+              {/* <p>Please select a user {JSON.stringify(customers)}</p> */}
+
+              <div style={{ margin: 25 }}>
+                <label>Please select a customer</label>
+                <Select
+                  className={"form-control"}
+                  defaultValue={selectedOption}
+                  onChange={setSelectedOption}
+                  value={selectedOption}
+                  options={options}
+                  styles={customStyles}
+                  components={{
+                    DropdownIndicator: () => null,
+                    IndicatorSeparator: () => null,
+                  }}
+                />
+              </div>
+            </div>
           </div>
         )}
 
         <div className="col-xl-8 col-xxl-8 col-lg-12 col-sm-12">
-          <OrdersForm {...{ addOrEdit, currentId, currentCustomer, userId }} />
+          <OrdersForm
+            {...{ addOrEdit, currentId, currentCustomer, currentCustomerId }}
+          />
         </div>
       </div>
     </Fragment>

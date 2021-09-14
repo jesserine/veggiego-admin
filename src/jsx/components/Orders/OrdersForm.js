@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useDataContext } from "../../../contexts/DataContext";
-
+import { useHistory } from "react-router-dom";
 import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
@@ -14,6 +14,8 @@ import { Button, Table } from "react-bootstrap";
 import Select from "react-select";
 
 const OrdersForm = (props) => {
+  const history = useHistory();
+
   const initialFieldValues = {
     products: [],
     notes: "",
@@ -24,7 +26,7 @@ const OrdersForm = (props) => {
     deliveryFee: 0,
     dateOfDelivery: "",
     customer: props.currentCustomer,
-    customerId: props.userId,
+    customerId: props.currentCustomerId,
     dateAdded: new Date().toLocaleString(),
     status: "ACTIVE",
   };
@@ -38,8 +40,6 @@ const OrdersForm = (props) => {
     subtotal: 0,
     productImage: "",
   };
-
-  const customerId = props.userId;
 
   const { productList, unitList, deliveryLocList } = useDataContext();
 
@@ -73,7 +73,6 @@ const OrdersForm = (props) => {
   // prepares products data for combobox
   const [selectedOption, setSelectedOption] = useState(null);
   const options = [];
-  console.log(productNameObjects);
   Object.keys(productNameObjects).map((id) => {
     return options.push({
       value: productNameObjects[id].productName,
@@ -95,7 +94,6 @@ const OrdersForm = (props) => {
   // sets values of quantity, price and unit once a product is selected
   useEffect(() => {
     if (selectedOption) {
-      console.log("selectedOption", selectedOption);
       setProductValues((prev) => ({
         ...prev,
         productQty: selectedOption.product.quantity
@@ -156,7 +154,7 @@ const OrdersForm = (props) => {
       values.deliveryFee = selectedDeliveryOption.delivery.deliveryFee;
       setValues((prev) => ({
         ...prev,
-        deliveryLocation: selectedDeliveryOption.delivery.deliveryLocation,
+        deliveryLocation: selectedDeliveryOption.delivery.location,
         deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
         grandTotal: Number(values.total) + Number(values.deliveryFee),
       }));
@@ -275,7 +273,6 @@ const OrdersForm = (props) => {
   const removeFromCart = (product) => {
     const filteredArr = values.products.filter((item) => item !== product);
     const newTotal = filteredArr.reduce((a, b) => a + (b["subtotal"] || 0), 0);
-    console.log("filteredArr", filteredArr);
     setValues((prev) => ({
       ...prev,
       products: filteredArr,
@@ -294,7 +291,6 @@ const OrdersForm = (props) => {
 
   // edit product from cart
   const editProductFromCart = (product, index) => {
-    console.log("editing", product, index);
     setIsEditingProduct(true);
 
     setSelectedOption({
@@ -321,28 +317,47 @@ const OrdersForm = (props) => {
 
   const handleOrderInputChange = (e) => {
     var { name, value } = e.target;
-    console.log(name, value);
     setValues({
       ...values,
       [name]: value,
     });
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    // values.dateOfDelivery = selectedDate.value.toLocaleString();
-    values.deliveryLocation = selectedDeliveryOption.value;
-    addOrder(values);
-    window.location.reload(false);
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    console.log("values", values);
+    firebaseDb
+      .ref("orders/")
+      .push(values)
+      .then(() => {
+        history.push({
+          pathname: "/orders",
+          state: {
+            isAdded: true,
+          },
+        });
+      })
+      .catch((error) => {
+        toast.error("An error has occured: " + error, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
   };
 
-  const addOrder = (obj) => {
-    // obj.products = productList;
-    firebaseDb.ref("orders/").push(obj, (err) => {
-      if (err) console.log(err);
-      else setCurrentId("");
-    });
-  };
+  /// update customer data on select to values state
+  useEffect(() => {
+    setValues((prev) => ({
+      ...prev,
+      customer: props.currentCustomer,
+      customerId: props.currentCustomerId,
+    }));
+  }, [props.currentCustomer, props.currentCustomerId]);
 
   /*********************************
   --- STYLING ---

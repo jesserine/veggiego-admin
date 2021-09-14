@@ -1,34 +1,51 @@
 import React, { Fragment, useEffect, useState } from "react";
-import PageTitle from "../../layouts/PageTitle";
+import { useDataContext } from "../../../contexts/DataContext";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
-import { Row, Col, Card, Table, Badge } from "react-bootstrap";
+import { Row, Col, Card, Table, Badge, Dropdown } from "react-bootstrap";
 
-import OrdersForm from "./OrdersForm";
+import { toast } from "react-toastify";
 import AddRiderToOrderForm from "./AddRiderToOrderForm";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { set } from "date-fns";
 
 const OrdersList = () => {
-  const initialOrderFieldValues = {
-    products: [],
-    notes: "",
-    total: 0,
-    rider: "",
-    deliveryLocation: "",
-    deliveryFee: 0,
-    dateOfDelivery: new Date().toLocaleString(),
-    customer: [],
-    customerId: "",
-    dateAdded: new Date().toLocaleString(),
-  };
-
-  var [orderValues, setOrderValues] = useState([]);
+  const { orderList } = useDataContext();
+  var [orderValues, setOrderValues] = useState(orderList);
   var [currentId, setCurrentId] = useState("");
+  const [filterStatus, setFilterStatus] = useState("ACTIVE");
+
+  const location = useLocation();
+
   useEffect(() => {
-    firebaseDb.ref("orders/").on("value", (snapshot) => {
-      setOrderValues(snapshot.val());
-    });
+    if (location.state) {
+      const { isAdded } = location.state;
+      setTimeout(async () => {
+        if (isAdded) {
+          toast.success("Order successfully placed!", {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      }, 500);
+    }
   }, []);
+
+  /// filter order list based on status
+  useEffect(() => {
+    var filteredOrders = [];
+    Object.keys(orderValues).map((orderId) => {
+      orderValues[orderId].status === filterStatus &&
+        filteredOrders.push(orderValues[orderId]);
+    });
+    console.log(filteredOrders);
+    // setOrderValues(filteredOrders);
+  }, [filterStatus]);
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
@@ -71,14 +88,61 @@ const OrdersList = () => {
     <Fragment>
       <div className="row">
         <div className="col-xl-6 col-lg-6">
-          <AddRiderToOrderForm {...{ addOrEdit, currentId, orderValues }} />
+          <AddRiderToOrderForm
+            {...{ addOrEdit, currentId, orderValues, statusBadge }}
+          />
         </div>
         <div className="col-xl-6 col-lg-6">
           <Row>
             <Col lg={12}>
               <Card>
                 <Card.Header>
-                  <Card.Title>Customer Orders</Card.Title>
+                  <Card.Title>
+                    Customer Orders
+                    <Dropdown>
+                      <Dropdown.Toggle variant="" size="m" className="mt-1">
+                        {statusBadge(filterStatus)}
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          onSelect={() => setFilterStatus("PREORDER")}
+                        >
+                          {statusBadge("PREORDER")}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onSelect={() => setFilterStatus("ACTIVE")}
+                        >
+                          {statusBadge("ACTIVE")}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onSelect={() => setFilterStatus("PROCESSING")}
+                        >
+                          {statusBadge("PROCESSING")}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onSelect={() => setFilterStatus("FOR DELIVERY")}
+                        >
+                          {statusBadge("FOR DELIVERY")}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onSelect={() => setFilterStatus("IN TRANSIT")}
+                        >
+                          {statusBadge("IN TRANSIT")}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onSelect={() => setFilterStatus("DELIVERED")}
+                        >
+                          {statusBadge("DELIVERED")}
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onSelect={() => setFilterStatus("CANCELLED")}
+                        >
+                          {statusBadge("CANCELLED")}
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </Card.Title>
+
                   <span className="float-right">
                     <Link
                       to={{
