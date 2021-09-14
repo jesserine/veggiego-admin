@@ -38,13 +38,11 @@ const OrdersList = () => {
 
   /// filter order list based on status
   useEffect(() => {
-    var filteredOrders = [];
-    Object.keys(orderValues).map((orderId) => {
-      orderValues[orderId].status === filterStatus &&
-        filteredOrders.push(orderValues[orderId]);
-    });
+    var filteredOrders = Object.keys(orderList)
+      .filter((orderId) => orderList[orderId].status === filterStatus)
+      .reduce((res, key) => ((res[key] = orderList[key]), res), {});
     console.log(filteredOrders);
-    // setOrderValues(filteredOrders);
+    setOrderValues(filteredOrders);
   }, [filterStatus]);
 
   const addOrEdit = (obj) => {
@@ -105,14 +103,14 @@ const OrdersList = () => {
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item
-                          onSelect={() => setFilterStatus("PREORDER")}
-                        >
-                          {statusBadge("PREORDER")}
-                        </Dropdown.Item>
-                        <Dropdown.Item
                           onSelect={() => setFilterStatus("ACTIVE")}
                         >
                           {statusBadge("ACTIVE")}
+                        </Dropdown.Item>{" "}
+                        <Dropdown.Item
+                          onSelect={() => setFilterStatus("PREORDER")}
+                        >
+                          {statusBadge("PREORDER")}
                         </Dropdown.Item>
                         <Dropdown.Item
                           onSelect={() => setFilterStatus("PROCESSING")}
