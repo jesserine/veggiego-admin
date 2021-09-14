@@ -23,7 +23,7 @@ const OrdersForm = (props) => {
     deliveryLocation: "",
     deliveryFee: 0,
     dateOfDelivery: "",
-    customer: props.user,
+    customer: props.currentCustomer,
     customerId: props.userId,
     dateAdded: new Date().toLocaleString(),
     status: "ACTIVE",
