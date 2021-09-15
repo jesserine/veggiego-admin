@@ -7,7 +7,6 @@ import { Row, Col, Card, Table, Badge, Dropdown } from "react-bootstrap";
 import { toast } from "react-toastify";
 import AddRiderToOrderForm from "./AddRiderToOrderForm";
 import { Link, useLocation } from "react-router-dom";
-import { set } from "date-fns";
 
 const OrdersList = () => {
   const { orderList } = useDataContext();
@@ -41,7 +40,6 @@ const OrdersList = () => {
     var filteredOrders = Object.keys(orderList)
       .filter((orderId) => orderList[orderId].status === filterStatus)
       .reduce((res, key) => ((res[key] = orderList[key]), res), {});
-    console.log(filteredOrders);
     setOrderValues(filteredOrders);
   }, [filterStatus]);
 
@@ -59,6 +57,11 @@ const OrdersList = () => {
         else setCurrentId("");
       });
     }
+  };
+
+  const handleFilterStatus = (status) => {
+    setFilterStatus(status);
+    setCurrentId("");
   };
 
   const statusBadge = (status) => {
@@ -103,37 +106,37 @@ const OrdersList = () => {
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item
-                          onSelect={() => setFilterStatus("ACTIVE")}
+                          onSelect={() => handleFilterStatus("ACTIVE")}
                         >
                           {statusBadge("ACTIVE")}
                         </Dropdown.Item>{" "}
                         <Dropdown.Item
-                          onSelect={() => setFilterStatus("PREORDER")}
+                          onSelect={() => handleFilterStatus("PREORDER")}
                         >
                           {statusBadge("PREORDER")}
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onSelect={() => setFilterStatus("PROCESSING")}
+                          onSelect={() => handleFilterStatus("PROCESSING")}
                         >
                           {statusBadge("PROCESSING")}
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onSelect={() => setFilterStatus("FOR DELIVERY")}
+                          onSelect={() => handleFilterStatus("FOR DELIVERY")}
                         >
                           {statusBadge("FOR DELIVERY")}
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onSelect={() => setFilterStatus("IN TRANSIT")}
+                          onSelect={() => handleFilterStatus("IN TRANSIT")}
                         >
                           {statusBadge("IN TRANSIT")}
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onSelect={() => setFilterStatus("DELIVERED")}
+                          onSelect={() => handleFilterStatus("DELIVERED")}
                         >
                           {statusBadge("DELIVERED")}
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onSelect={() => setFilterStatus("CANCELLED")}
+                          onSelect={() => handleFilterStatus("CANCELLED")}
                         >
                           {statusBadge("CANCELLED")}
                         </Dropdown.Item>

@@ -110,15 +110,7 @@ const AddRiderToOrderForm = (props) => {
         ]
       ],
     });
-  }, []);
-
-  const handleInputChange = (e) => {
-    var { name, value } = e.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
-  };
+  }, [props.orderValues]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
