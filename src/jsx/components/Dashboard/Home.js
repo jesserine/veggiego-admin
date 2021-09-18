@@ -1,4 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { useDataContext } from "../../../contexts/DataContext";
+
 import { Link } from "react-router-dom";
 import {
   Row,
@@ -41,16 +43,12 @@ const Home = () => {
     dateAdded: new Date().toLocaleString(),
     status: "ACTIVE",
   };
+  const { orderList, productList } = useDataContext();
 
-  const [orderValues, setOrderValues] = useState();
+  const [orderValues, setOrderValues] = useState(orderList);
   const [todaysOrder, setTodaysOrder] = useState([]);
-  // retrieves all orders in firebase
-  useEffect(() => {
-    firebaseDb.ref("orders/").on("value", (snapshot) => {
-      console.log(snapshot.val());
-      setOrderValues(snapshot.val());
-    });
-  }, []);
+  const [productValues, setProductValues] = useState(productList);
+  const [preorderProducts, setPreorderProducts] = useState([]);
 
   // Sets the count of active, processing, in transit, and delivered orders
   const [activeOrder, setActiveOrder] = useState(0);
@@ -94,9 +92,8 @@ const Home = () => {
     if (orderValues) {
       Object.keys(orderValues).map((id) => {
         if (
-          orderValues[id].dateOfDelivery &&
-          dateToday ===
-            new Date(orderValues[id].dateOfDelivery).toLocaleDateString()
+          new Date(dateToday).toLocaleDateString() ===
+          new Date(orderValues[id].dateOfDelivery).toLocaleDateString()
         ) {
           console.log(
             "orderValues - delivery date, ",
@@ -105,6 +102,28 @@ const Home = () => {
           setTodaysOrder((prev) => [...prev, orderValues[id]]);
           // setTodaysOrder((prev) => [...prev, orderValues[id]]);
           console.log("todays orders: ", todaysOrder);
+        }
+      });
+    }
+  }, [orderValues]);
+
+  //Sets the values for pre-ordered products
+  var current = new Date();
+  const dateTomorrow = new Date(current.getTime() + 86400000);
+  dateTomorrow.toLocaleDateString();
+  console.log("Date Tomorrow", dateTomorrow.toLocaleDateString());
+  useEffect(() => {
+    if (orderValues) {
+      console.log("orderValues - preorder, ", orderValues);
+      Object.keys(orderValues).map((id) => {
+        if (
+          new Date(dateTomorrow).toLocaleDateString() ===
+          new Date(orderValues[id].dateOfDelivery).toLocaleDateString()
+        ) {
+          orderValues[id].products.map((value, index) => {
+            setPreorderProducts((prev) => [...prev, value]);
+            console.log("orderValues - product ", preorderProducts);
+          });
         }
       });
     }
@@ -227,7 +246,8 @@ const Home = () => {
                       <tr>
                         <th scope="col">CUSTOMER NAME</th>
                         <th scope="col">TOTAL PRICE</th>
-                        <th scope="col">TIME OF DELIVERY</th>                        <th scope="col">ASSIGNED RIDER</th>
+                        <th scope="col">TIME OF DELIVERY</th>
+                        <th scope="col">ASSIGNED RIDER</th>
                         <th scope="col">STATUS</th>
                       </tr>
                     </thead>
@@ -337,12 +357,13 @@ const Home = () => {
                       </svg>
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="dropdown-menu-right">
-                      <Dropdown.Item className="text-black" to="/">
-                        Info
-                      </Dropdown.Item>
-                      <Dropdown.Item className="text-black" to="/">
-                        Details
-                      </Dropdown.Item>
+                      {/* {Object.keys(productValues && productValues).map((id) => {
+                        return (
+                          <Dropdown.Item className="text-black" to="/">
+                            {productValues[id].productName}
+                          </Dropdown.Item>
+                        );
+                      })} */}
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
@@ -351,22 +372,19 @@ const Home = () => {
                     <div className="d-flex align-items-center pb-3 mb-3 border-bottom">
                       <i className="las la-carrot gs-icon bgl-primary text-primary mr-3" />
                       <span className="text-black fs-15 font-w400">
-                        Prepare the following products tomorrow
+                        Prepare the following products tomorrow (
+                        {dateTomorrow.toLocaleDateString()})
                       </span>
                     </div>
                     <div className="fs-14 mb-4">
-                      <ul className="d-flex justify-content-between pb-2">
-                        <li className="font-w500 text-dark">Carrots</li>
-                        <li>3 kg</li>
-                      </ul>
-                      <ul className="d-flex justify-content-between pb-2">
-                        <li className="font-w500 text-dark">Brocolli</li>
-                        <li>5 kg</li>
-                      </ul>
-                      <ul className="d-flex justify-content-between pb-2">
-                        <li className="font-w500 text-dark">Garlic</li>
-                        <li>2 kg</li>
-                      </ul>
+                      {/* {Object.keys(preorderProducts).map((id) => {
+                        <ul className="d-flex justify-content-between pb-2">
+                          <li className="font-w500 text-dark">
+                            {preorderProducts[id].productName}
+                          </li>
+                          <li>3 kg</li>
+                        </ul>;
+                      })} */}
                     </div>
                   </div>
                 </div>
