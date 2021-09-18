@@ -5,7 +5,7 @@ import swal from "sweetalert";
 import { Row, Col, Card, Table, Badge, Dropdown } from "react-bootstrap";
 
 import { toast } from "react-toastify";
-import AddRiderToOrderForm from "./AddRiderToOrderForm";
+import OrderReceipt from "./OrderReceipt";
 import { Link, useLocation } from "react-router-dom";
 
 const OrdersList = () => {
@@ -80,6 +80,10 @@ const OrdersList = () => {
         return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
       case "CANCELLED":
         return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
+      case "PAID":
+        return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
+      case "NOT PAID":
+        return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
       default:
         return <Badge variant="dark light">{status.toUpperCase()}</Badge>;
     }
@@ -89,7 +93,7 @@ const OrdersList = () => {
     <Fragment>
       <div className="row">
         <div className="col-xl-6 col-lg-6">
-          <AddRiderToOrderForm
+          <OrderReceipt
             {...{ addOrEdit, currentId, orderValues, statusBadge }}
           />
         </div>
@@ -178,9 +182,9 @@ const OrdersList = () => {
                         <th>
                           <strong>DATE OF DELIVERY</strong>
                         </th>
-                        <th>
+                        {/* <th>
                           <strong>RIDER NAME</strong>
-                        </th>
+                        </th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -199,11 +203,11 @@ const OrdersList = () => {
                             </td>
                             <td>₱{orderValues[orderId].grandTotal}</td>
                             <td>{orderValues[orderId].dateOfDelivery}</td>
-                            <td>
+                            {/* <td>
                               {orderValues[orderId].rider
                                 ? orderValues[orderId].rider.riderName
                                 : "Not Assigned"}
-                            </td>
+                            </td> */}
                           </tr>
                         );
                       })}
