@@ -8,25 +8,27 @@ export const useDataContext = () => {
 };
 
 export const DataProvider = ({ children }) => {
-  const [customerList, setCustomerList] = useState();
-  const [riderList, setRiderList] = useState();
-  const [productList, setProductList] = useState();
-  const [orderList, setOrderList] = useState();
-  const [unitList, setUnitList] = useState();
-  const [deliveryLocList, setDeliveryLocList] = useState();
+  const [customerList, setCustomerList] = useState(null);
+  const [riderList, setRiderList] = useState(null);
+  const [productList, setProductList] = useState(null);
+  const [orderList, setOrderList] = useState(null);
+  const [unitList, setUnitList] = useState(null);
+  const [deliveryLocList, setDeliveryLocList] = useState(null);
+  const [categoryList, setCategoryList] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    database.ref("customer/").on("value", (snapshot) => {
+    database.ref("customer/").once("value", (snapshot) => {
       setCustomerList(snapshot.val());
       setLoading(false);
     });
   }, []);
 
   useEffect(() => {
-    database.ref("riders/").on("value", (snapshot) => {
+    database.ref("riders/").once("value", (snapshot) => {
       setRiderList(snapshot.val());
+      console.log("getting riders list...", snapshot.val());
       setLoading(false);
     });
   }, []);
@@ -59,6 +61,13 @@ export const DataProvider = ({ children }) => {
     });
   }, []);
 
+  useEffect(() => {
+    database.ref("category/").on("value", (snapshot) => {
+      setCategoryList(snapshot.val());
+      setLoading(false);
+    });
+  }, []);
+
   const value = {
     customerList,
     riderList,
@@ -66,6 +75,8 @@ export const DataProvider = ({ children }) => {
     orderList,
     unitList,
     deliveryLocList,
+    categoryList,
+    setLoading,
   };
 
   return (

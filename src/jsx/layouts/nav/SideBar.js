@@ -62,7 +62,7 @@ class SideBar extends Component {
 
     /// Active menu
     let dashboard = ["", "dashboard"];
-    let customers = ["customers", "customer-form"];
+    let customers = ["customers"];
     let riders = ["riders"];
     let products = ["products"];
     let orders = ["orders, customer-order"];
@@ -78,26 +78,6 @@ class SideBar extends Component {
                 <span className="nav-text">Dashboard</span>
               </Link>
             </li>
-            <li className={`${customers.includes(path) ? "mm-active" : ""}`}>
-              <Link className="has-arrow ai-icon" to="/customers">
-                <i className="flaticon-381-user-9"></i>
-                <span className="nav-text">Customers</span>
-              </Link>
-            </li>
-
-            <li className={`${riders.includes(path) ? "mm-active" : ""}`}>
-              <Link className="has-arrow ai-icon" to="/riders">
-                <i className="las la-biking scale5"></i>
-                <span className="nav-text">Riders</span>
-              </Link>
-            </li>
-
-            <li className={`${products.includes(path) ? "mm-active" : ""}`}>
-              <Link className="has-arrow ai-icon" to="/products">
-                <i className="las la-carrot scale5"></i>
-                <span className="nav-text">Products</span>
-              </Link>
-            </li>
 
             <li className={`${orders.includes(path) ? "mm-active" : ""}`}>
               <Link className="has-arrow ai-icon" to="/orders">
@@ -105,7 +85,24 @@ class SideBar extends Component {
                 <span className="nav-text">Orders</span>
               </Link>
             </li>
-
+            <li className={`${customers.includes(path) ? "mm-active" : ""}`}>
+              <Link className="has-arrow ai-icon" to="/customers">
+                <i className="flaticon-381-user-9"></i>
+                <span className="nav-text">Customers</span>
+              </Link>
+            </li>
+            <li className={`${riders.includes(path) ? "mm-active" : ""}`}>
+              <Link className="has-arrow ai-icon" to="/riders">
+                <i className="las la-biking scale5"></i>
+                <span className="nav-text">Riders</span>
+              </Link>
+            </li>
+            <li className={`${products.includes(path) ? "mm-active" : ""}`}>
+              <Link className="has-arrow ai-icon" to="/products">
+                <i className="las la-carrot scale5"></i>
+                <span className="nav-text">Products</span>
+              </Link>
+            </li>
             <li className={`${settings.includes(path) ? "mm-active" : ""}`}>
               <Link className="has-arrow ai-icon" to="/settings">
                 <i className="las la-cog scale5"></i>

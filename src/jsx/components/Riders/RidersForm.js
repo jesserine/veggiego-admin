@@ -31,10 +31,10 @@ const RidersForm = (props) => {
     } else {
       setViewMode(true);
       setValues({
-        ...props.riders[props.currentId],
+        ...props.riderList[props.currentId],
       });
     }
-  }, [props.currentId, props.riders]);
+  }, [props.currentId, props.riderList]);
 
   const handleInputChange = (e) => {
     var { name, value } = e.target;

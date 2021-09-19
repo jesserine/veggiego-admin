@@ -19,7 +19,6 @@ import ProductsForm from "./ProductsForm";
 const ProductsList = () => {
   /// Get product list from context provider
   const { productList } = useDataContext();
-  const [products, setProducts] = useState(productList);
 
   var [currentId, setCurrentId] = useState("");
   var [searchTerm, setSearchTerm] = useState("");
@@ -71,93 +70,95 @@ const ProductsList = () => {
 
   return (
     <Fragment>
-      <div className="row">
-        <div className="col-xl-4 col-lg-4">
-          <ProductsForm {...{ addOrEdit, currentId, products }} />
-        </div>
-        <div className="col-xl-8 col-lg-8">
-          <Row>
-            <Col lg={12}>
-              <Card>
-                <Card.Header>
-                  <Card.Title>My Products</Card.Title>
-                  <Button
-                    variant="primary btn-rounded"
-                    onClick={() => {
-                      setCurrentId("");
-                    }}
-                  >
-                    <span className="btn-icon-left text-primary">
-                      <i className="fa fa-plus" />
-                    </span>
-                    Add
-                  </Button>
-                </Card.Header>
-                <Card.Body>
-                  <div className="search_bar dropdown show mb-3">
-                    <div className="dropdown-menushow">
-                      <form onSubmit={(e) => e.preventDefault()}>
-                        <input
-                          className="form-control"
-                          type="search"
-                          placeholder="Search Product name"
-                          aria-label="Search"
-                          onChange={(event) =>
-                            setSearchTerm(event.target.value)
-                          }
-                        />
-                      </form>
+      {productList && (
+        <div className="row">
+          <div className="col-xl-4 col-lg-4">
+            <ProductsForm {...{ addOrEdit, currentId, productList }} />
+          </div>
+          <div className="col-xl-8 col-lg-8">
+            <Row>
+              <Col lg={12}>
+                <Card>
+                  <Card.Header>
+                    <Card.Title>My Products</Card.Title>
+                    <Button
+                      variant="primary btn-rounded"
+                      onClick={() => {
+                        setCurrentId("");
+                      }}
+                    >
+                      <span className="btn-icon-left text-primary">
+                        <i className="fa fa-plus" />
+                      </span>
+                      Add
+                    </Button>
+                  </Card.Header>
+                  <Card.Body>
+                    <div className="search_bar dropdown show mb-3">
+                      <div className="dropdown-menushow">
+                        <form onSubmit={(e) => e.preventDefault()}>
+                          <input
+                            className="form-control"
+                            type="search"
+                            placeholder="Search Product name"
+                            aria-label="Search"
+                            onChange={(event) =>
+                              setSearchTerm(event.target.value)
+                            }
+                          />
+                        </form>
+                      </div>
                     </div>
-                  </div>
-                  <Table responsive hover>
-                    <thead>
-                      <tr>
-                        <th>
-                          <strong>PRODUCT NAME</strong>
-                        </th>
-                        <th>
-                          <strong>CATEGORY</strong>
-                        </th>
-                        <th>
-                          <strong>UNIT</strong>
-                        </th>
-                        <th>
-                          <strong>PRICE</strong>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.keys(products).map((id) => {
-                        return (
-                          <tr
-                            key={id}
-                            onClick={() => {
-                              setCurrentId(id);
-                            }}
-                          >
-                            <td>
-                              <img
-                                src={products[id].productImage}
-                                className="rounded-lg mr-2"
-                                width="24"
-                                alt=""
-                              />
-                              <span>{products[id].productName}</span>
-                            </td>
-                            <td>{products[id].category}</td>
-                            <td>{products[id].unit}</td>
-                            <td>{products[id].price}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </Table>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+                    <Table responsive hover>
+                      <thead>
+                        <tr>
+                          <th>
+                            <strong>PRODUCT NAME</strong>
+                          </th>
+                          <th>
+                            <strong>CATEGORY</strong>
+                          </th>
+                          <th>
+                            <strong>UNIT</strong>
+                          </th>
+                          <th>
+                            <strong>PRICE</strong>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.keys(productList).map((id) => {
+                          return (
+                            <tr
+                              key={id}
+                              onClick={() => {
+                                setCurrentId(id);
+                              }}
+                            >
+                              <td>
+                                <img
+                                  src={productList[id].productImage}
+                                  className="rounded-lg mr-2"
+                                  width="24"
+                                  alt=""
+                                />
+                                <span>{productList[id].productName}</span>
+                              </td>
+                              <td>{productList[id].category}</td>
+                              <td>{productList[id].unit}</td>
+                              <td>{productList[id].price}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </div>
         </div>
-      </div>
+      )}
     </Fragment>
   );
 };
