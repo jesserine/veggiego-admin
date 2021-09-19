@@ -10,8 +10,7 @@ import AddressModal from "./AddressModal";
 
 const CustomerList = () => {
   /// Get customer list from context provider
-  const { customerList } = useDataContext();
-  const [customers, setCustomers] = useState(customerList);
+  const { customerList, setCustomerList } = useDataContext();
 
   const [addressList, setAddressList] = useState([]);
   var [currentId, setCurrentId] = useState("");
@@ -27,11 +26,36 @@ const CustomerList = () => {
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
-      swal("Nice!", "A new customer profile is added!", "success");
-      firebaseDb.ref("customer/").push(obj, (err) => {
-        if (err) console.log(err);
-        else setCurrentId("");
-      });
+      firebaseDb
+        .ref("customer/")
+        .push(obj)
+        .then(
+          toast.success("Added a new customer profile", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        )
+        .catch((err) => {
+          toast.error("An error has occurred " + err, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        });
+      // Update context state
+      setCustomerList((prev) => ({
+        ...prev,
+        obj,
+      }));
     } else {
       swal("Nice!", "This customer profile is updated!", "success");
       firebaseDb.ref(`customer/${currentId}`).set(obj, (err) => {
@@ -74,7 +98,7 @@ const CustomerList = () => {
       <div className="row">
         <div className="col-xl-4 col-lg-6">
           <CustomerForm
-            {...{ addOrEdit, currentId, customers }}
+            {...{ addOrEdit, currentId, customerList }}
             toggleModal={handleAddressModalState}
           />
         </div>
@@ -147,34 +171,39 @@ const CustomerList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.keys(customers).map((id) => {
-                        return (
-                          <tr
-                            key={id}
-                            onClick={() => {
-                              setCurrentId(id);
-                              toast.success(
-                                "Viewing customer '" + customers[id].name + "'",
-                                {
-                                  position: "bottom-left",
-                                  autoClose: 3000,
-                                  hideProgressBar: false,
-                                  closeOnClick: true,
-                                  pauseOnHover: true,
-                                  draggable: true,
-                                  progress: undefined,
-                                }
-                              );
-                            }}
-                          >
-                            <td>{customers[id].name}</td>
-                            <td>{customers[id].contactNumber}</td>
-                            <td>{customers[id].address}</td>
-                            <td>{customers[id].landmark}</td>
-                            {/* <td>{id}</td> */}
-                          </tr>
-                        );
-                      })}
+                      {Object.keys(customerList)
+                        .slice(0)
+                        .reverse()
+                        .map((id) => {
+                          return (
+                            <tr
+                              key={id}
+                              onClick={() => {
+                                setCurrentId(id);
+                                toast.success(
+                                  "Viewing customer '" +
+                                    customerList[id].name +
+                                    "'",
+                                  {
+                                    position: "bottom-left",
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                  }
+                                );
+                              }}
+                            >
+                              <td>{customerList[id].name}</td>
+                              <td>{customerList[id].contactNumber}</td>
+                              <td>{customerList[id].address}</td>
+                              <td>{customerList[id].landmark}</td>
+                              {/* <td>{id}</td> */}
+                            </tr>
+                          );
+                        })}
                     </tbody>
                   </Table>
                 </Card.Body>

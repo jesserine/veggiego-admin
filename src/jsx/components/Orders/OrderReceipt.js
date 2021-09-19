@@ -12,10 +12,7 @@ import { toast } from "react-toastify";
 const OrderReceipt = (props) => {
   const { riderList } = useDataContext();
 
-  var [riderValues, setRiderValues] = useState(riderList);
-
   const [showUpdateButton, setShowUpdateButton] = useState(false);
-  const [viewMode, setViewMode] = useState(false);
 
   // prepares rider data for combobox
   const [selectedRiderOption, setSelectedRiderOption] = useState({
@@ -24,41 +21,109 @@ const OrderReceipt = (props) => {
     rider: "Not Assigned",
   });
   const riderOptions = [];
-  Object.keys(riderValues).map((id) => {
+  Object.keys(riderList).map((id) => {
     return riderOptions.push({
-      value: riderValues[id].riderName,
+      value: riderList[id].riderName,
       label: (
         <div>
           <img
-            src={riderValues[id].riderImage}
+            src={riderList[id].riderImage}
             height="30px"
             width="30px"
-            alt={riderValues[id].riderName}
+            alt={riderList[id].riderName}
           />
-          {riderValues[id].riderName}
+          {riderList[id].riderName}
         </div>
       ),
-      rider: riderValues[id],
+      rider: riderList[id],
     });
   });
 
-  const [editStatusMode, setEditStatusMode] = useState(false);
+  // Order and Payment Status edit mode handler
+  const [editOrderStatusMode, setEditOrderStatusMode] = useState(false);
   const orderStatusChangeHandler = () => {
-    setEditStatusMode(!editStatusMode);
+    setEditOrderStatusMode(!editOrderStatusMode);
+
+    // Save selected order status to firebase
+    if (editOrderStatusMode) {
+      firebaseDb
+        .ref(`orders/${props.currentId}`)
+        .update({ status: selectedOrderStatus })
+        .then(() => {
+          toast.success("Order status updated as " + selectedOrderStatus, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          props.setCurrentOrder((prev) => ({
+            ...prev,
+            status: selectedOrderStatus,
+          }));
+        })
+        .catch((err) =>
+          toast.error("Something went wrong" + err, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        );
+    }
+  };
+  const [editPaymentStatusMode, setEditPaymentStatusMode] = useState(false);
+  const paymentStatusChangeHandler = () => {
+    setEditPaymentStatusMode(!editPaymentStatusMode);
+
+    // Save selected payment status to firebase
+    if (editPaymentStatusMode) {
+      firebaseDb
+        .ref(`orders/${props.currentId}`)
+        .update({ paymentStatus: selectedPaymentStatus })
+        .then(() => {
+          toast.success("Payment status updated as " + selectedPaymentStatus, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          props.setCurrentOrder((prev) => ({
+            ...prev,
+            paymentStatus: selectedPaymentStatus,
+          }));
+        })
+        .catch((err) =>
+          toast.error("Something went wrong" + err, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        );
+    }
   };
 
-  const [orderStatus, setOrderStatus] = useState("ACTIVE");
+  const [selectedOrderStatus, setSelectedOrderStatus] = useState();
   const handleOrderStatus = (status) => {
-    setOrderStatus(status);
+    setSelectedOrderStatus(status);
   };
 
-  const [paymentStatus, setPaymentStatus] = useState(" NOT PAID");
+  const [selectedPaymentStatus, setSelectedPaymentStatus] = useState();
   const handlePaymentStatus = (status) => {
-    setPaymentStatus(status);
+    setSelectedPaymentStatus(status);
   };
-
-  // updates rider info on the order
-  useEffect(() => {}, [selectedRiderOption]);
 
   const assignRiderToOrder = async () => {
     if (selectedRiderOption !== null) {
@@ -117,6 +182,14 @@ const OrderReceipt = (props) => {
           ? props.currentOrder.rider
           : "Not Assigned",
       });
+
+      // reset status edit mode
+      setEditOrderStatusMode(false);
+      setEditPaymentStatusMode(false);
+
+      // reset status values
+      setSelectedOrderStatus(props.currentOrder.status);
+      setSelectedPaymentStatus(props.currentOrder.paymentStatus);
     }
   }, [props.currentOrder]);
 
@@ -137,24 +210,6 @@ const OrderReceipt = (props) => {
       return { ...provided, opacity, transition };
     },
   };
-
-  // useEffect(() => {
-  //   if (props.currentId === "") {
-  //     setViewMode(false);
-  //     setShowUpdateButton(false);
-  //     setValues({
-  //       ...initialOrderFieldValues,
-  //     });
-  //   } else {
-  //     setViewMode(true);
-  //     setShowUpdateButton(true);
-  //     setValues({
-  //       ...props.orderValues[props.currentId],
-  //     });
-  //     setEditStatusMode(false);
-  //     setSelectedRiderOption(null);
-  //   }
-  // }, [props.currentId]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -228,7 +283,6 @@ const OrderReceipt = (props) => {
                   <div className="row">
                     <div className="col-xl-8 col-sm-8">
                       <h6>Rider:</h6>
-                      {console.log("selectedRiderOption", selectedRiderOption)}
                       <Select
                         className={"form-control"}
                         value={selectedRiderOption}
@@ -256,11 +310,11 @@ const OrderReceipt = (props) => {
                     <div className="col-xl-4 col-sm-4">
                       <h6>Order Status:</h6>
                       <span>
-                        {editStatusMode ? (
+                        {editOrderStatusMode ? (
                           <div>
                             <Dropdown>
                               <Dropdown.Toggle variant="" size="s">
-                                {props.statusBadge(orderStatus)}
+                                {props.statusBadge(selectedOrderStatus)}
                               </Dropdown.Toggle>
                               <Dropdown.Menu>
                                 <Dropdown.Item
@@ -336,21 +390,21 @@ const OrderReceipt = (props) => {
                       </span>
                       <h6 className="mt-3">Payment Status:</h6>
                       <span>
-                        {editStatusMode ? (
+                        {editPaymentStatusMode ? (
                           <div>
                             <Dropdown>
                               <Dropdown.Toggle variant="" size="s">
-                                {props.statusBadge(paymentStatus)}
+                                {props.statusBadge(selectedPaymentStatus)}
                               </Dropdown.Toggle>
                               <Dropdown.Menu>
                                 <Dropdown.Item
-                                  onSelect={() => handlePaymentStatus("ACTIVE")}
+                                  onSelect={() => handlePaymentStatus("PAID")}
                                 >
                                   {props.statusBadge("PAID")}
                                 </Dropdown.Item>{" "}
                                 <Dropdown.Item
                                   onSelect={() =>
-                                    handlePaymentStatus("PREORDER")
+                                    handlePaymentStatus("NOT PAID")
                                   }
                                 >
                                   {props.statusBadge("NOT PAID")}
@@ -358,7 +412,7 @@ const OrderReceipt = (props) => {
                               </Dropdown.Menu>
                               <span>
                                 <Button
-                                  onClick={orderStatusChangeHandler}
+                                  onClick={paymentStatusChangeHandler}
                                   className="btn btn-primary shadow btn-xs sharp"
                                   style={{ marginLeft: -15 }}
                                 >
@@ -369,10 +423,12 @@ const OrderReceipt = (props) => {
                           </div>
                         ) : (
                           <div style={{ marginTop: 20, marginLeft: 20 }}>
-                            {props.statusBadge(props.currentOrder.status)}
+                            {props.statusBadge(
+                              props.currentOrder.paymentStatus
+                            )}
                             <span>
                               <Button
-                                onClick={orderStatusChangeHandler}
+                                onClick={paymentStatusChangeHandler}
                                 className="btn btn-warning shadow btn-xs sharp ml-1"
                               >
                                 <i className="fa fa-pencil"></i>
@@ -467,7 +523,24 @@ const OrderReceipt = (props) => {
           </div>
         </div>
       ) : (
-        <p>No current Order</p>
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="card">
+              <div className="card-header">
+                <h4>
+                  <strong>Delivery Receipt</strong>
+                </h4>
+              </div>
+              <div className="card-body">
+                <form onSubmit={handleFormSubmit}>
+                  <div className="row">
+                    <h2>Please select an order</h2>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </Fragment>
   );

@@ -29,6 +29,7 @@ const OrdersForm = (props) => {
     customerId: props.currentCustomerId,
     dateAdded: new Date().toLocaleString(),
     status: "ACTIVE",
+    paymentStatus: "NOT PAID",
   };
 
   const initialProductValues = {
@@ -44,9 +45,6 @@ const OrdersForm = (props) => {
   const { productList, unitList, deliveryLocList } = useDataContext();
 
   var [values, setValues] = useState(initialFieldValues);
-  const [unitObjects, setUnitObjects] = useState(unitList);
-  const [deliveryObjects, setDeliveryObjects] = useState(deliveryLocList);
-  const [productNameObjects, setProductNameObjects] = useState(productList);
   var [productValues, setProductValues] = useState(initialProductValues);
   var [result, setResult] = useState([]);
   var [currentProductId, setCurrentProductId] = useState("");
@@ -66,28 +64,28 @@ const OrdersForm = (props) => {
       });
     else
       setValues({
-        ...props.unitObjects[props.currentId],
+        ...props.unitList[props.currentId],
       });
-  }, [props.currentId, props.unitObjects]);
+  }, [props.currentId, props.unitList]);
 
   // prepares products data for combobox
   const [selectedOption, setSelectedOption] = useState(null);
   const options = [];
-  Object.keys(productNameObjects).map((id) => {
+  Object.keys(productList).map((id) => {
     return options.push({
-      value: productNameObjects[id].productName,
+      value: productList[id].productName,
       label: (
         <div>
           <img
-            src={productNameObjects[id].productImage}
+            src={productList[id].productImage}
             height="30px"
             width="30px"
-            alt={productNameObjects[id].productName}
+            alt={productList[id].productName}
           />{" "}
-          {productNameObjects[id].productName}
+          {productList[id].productName}
         </div>
       ),
-      product: productNameObjects[id],
+      product: productList[id],
     });
   });
 
@@ -135,11 +133,11 @@ const OrdersForm = (props) => {
 
   // prepares delivery data for combobox
   const deliveryOptions = [];
-  Object.keys(deliveryObjects).map((id) => {
+  Object.keys(deliveryLocList).map((id) => {
     return deliveryOptions.push({
-      value: deliveryObjects[id].location,
-      label: deliveryObjects[id].location,
-      delivery: deliveryObjects[id],
+      value: deliveryLocList[id].location,
+      label: deliveryLocList[id].location,
+      delivery: deliveryLocList[id],
     });
   });
 
@@ -494,12 +492,12 @@ const OrdersForm = (props) => {
                             ? selectedOption.product.unit
                             : "Unit "}
                         </option>
-                        {Object.keys(unitObjects).map((id) => {
+                        {Object.keys(unitList).map((id) => {
                           return (
                             <React.Fragment key={id}>
-                              {unitObjects[id].isActive === "true" ? (
-                                <option value={unitObjects[id].unitName}>
-                                  {unitObjects[id].unitName}
+                              {unitList[id].isActive === "true" ? (
+                                <option value={unitList[id].unitName}>
+                                  {unitList[id].unitName}
                                 </option>
                               ) : (
                                 ""

@@ -70,6 +70,7 @@ const OrdersList = () => {
 
   const statusBadge = (status) => {
     switch (status) {
+      // Order Status
       case "PREORDER":
         return <Badge variant="info light">{status.toUpperCase()}</Badge>;
       case "ACTIVE":
@@ -84,6 +85,7 @@ const OrdersList = () => {
         return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
       case "CANCELLED":
         return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
+      // Payment Status
       case "PAID":
         return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
       case "NOT PAID":
@@ -108,9 +110,10 @@ const OrdersList = () => {
     }
   }, [orderValues]);
 
+  console.log("orderList", orderList);
   return (
     <Fragment>
-      {orderValues && (
+      {orderList && (
         <div className="row">
           <div className="col-xl-6 col-lg-6">
             <OrderReceipt
@@ -195,7 +198,10 @@ const OrdersList = () => {
                       <thead>
                         <tr>
                           <th>
-                            <strong>STATUS</strong>
+                            <strong>ORDER STATUS</strong>
+                          </th>
+                          <th>
+                            <strong>PAYMENT</strong>
                           </th>
                           <th>
                             <strong>CUSTOMER NAME</strong>
@@ -215,24 +221,25 @@ const OrdersList = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.keys(orderValues).map((orderId) => {
+                        {Object.keys(orderList).map((orderId) => {
                           return (
                             <tr
                               key={orderId}
                               onClick={() => {
                                 setCurrentId(orderId);
-                                setCurrentOrder({ ...orderValues[orderId] });
+                                setCurrentOrder({ ...orderList[orderId] });
                               }}
                             >
+                              <td>{statusBadge(orderList[orderId].status)}</td>
                               <td>
-                                {statusBadge(orderValues[orderId].status)}
+                                {statusBadge(orderList[orderId].paymentStatus)}
                               </td>
-                              <td>{orderValues[orderId].customer.name}</td>
+                              <td>{orderList[orderId].customer.name}</td>
                               <td>
-                                {orderValues[orderId].customer.contactNumber}
+                                {orderList[orderId].customer.contactNumber}
                               </td>
-                              <td>₱{orderValues[orderId].grandTotal}</td>
-                              <td>{orderValues[orderId].dateOfDelivery}</td>
+                              <td>₱{orderList[orderId].grandTotal}</td>
+                              <td>{orderList[orderId].dateOfDelivery}</td>
                               {/* <td>
                               {orderValues[orderId].rider
                                 ? orderValues[orderId].rider.riderName

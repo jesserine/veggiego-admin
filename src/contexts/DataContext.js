@@ -18,6 +18,7 @@ export const DataProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
 
+  /// Get all customers from firebase
   useEffect(() => {
     database.ref("customer/").once("value", (snapshot) => {
       setCustomerList(snapshot.val());
@@ -28,7 +29,6 @@ export const DataProvider = ({ children }) => {
   useEffect(() => {
     database.ref("riders/").once("value", (snapshot) => {
       setRiderList(snapshot.val());
-      console.log("getting riders list...", snapshot.val());
       setLoading(false);
     });
   }, []);
@@ -70,6 +70,7 @@ export const DataProvider = ({ children }) => {
 
   const value = {
     customerList,
+    setCustomerList,
     riderList,
     productList,
     orderList,

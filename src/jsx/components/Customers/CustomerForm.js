@@ -22,19 +22,9 @@ const CustomerForm = (props) => {
     dateJoined: new Date().toLocaleDateString(),
   };
 
-  const initialOrderValues = {
-    products: [],
-    notes: "",
-    total: "",
-    rider: "",
-    dateAdded: new Date().toLocaleDateString(),
-  };
   var [values, setValues] = useState(initialFieldValues);
-  var [orderValues, setOrderValues] = useState(initialOrderValues);
 
   var [currentId, setCurrentId] = useState("");
-
-  const selectedId = props.currentId;
 
   useEffect(() => {
     if (props.currentId === "") {
@@ -45,10 +35,10 @@ const CustomerForm = (props) => {
     } else {
       setViewMode(true);
       setValues({
-        ...props.customers[props.currentId],
+        ...props.customerList[props.currentId],
       });
     }
-  }, [props.currentId, props.customers]);
+  }, [props.currentId, props.customerList]);
 
   const handleInputChange = (e) => {
     var { name, value } = e.target;
@@ -76,13 +66,12 @@ const CustomerForm = (props) => {
     values.housePicture = imageUrl;
   }
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
     props.addOrEdit(values);
-    window.location.reload(false);
+    // window.location.reload(false);
   };
 
-  const enabled = values.address != null;
   return (
     <Fragment>
       <div className="row">
