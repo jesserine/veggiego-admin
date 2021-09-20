@@ -9,10 +9,10 @@ import OrderReceipt from "./OrderReceipt";
 import { Link, useLocation } from "react-router-dom";
 
 const OrdersList = () => {
-  const { orderList } = useDataContext();
+  const { orderList, setOrderList } = useDataContext();
   var [orderValues, setOrderValues] = useState(orderList);
   var [currentId, setCurrentId] = useState("");
-  const [filterStatus, setFilterStatus] = useState("ACTIVE");
+  const [filterStatus, setFilterStatus] = useState("ALL");
 
   const location = useLocation();
 
@@ -36,14 +36,7 @@ const OrdersList = () => {
   }, []);
 
   /// filter order list based on status
-  useEffect(() => {
-    if (orderList) {
-      var filteredOrders = Object.keys(orderList)
-        .filter((orderId) => orderList[orderId].status === filterStatus)
-        .reduce((res, key) => ((res[key] = orderList[key]), res), {});
-      setOrderValues(filteredOrders);
-    }
-  }, [filterStatus]);
+  useEffect(() => {}, [filterStatus]);
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
@@ -66,36 +59,56 @@ const OrdersList = () => {
   const handleFilterStatus = (status) => {
     setFilterStatus(status);
     setCurrentId("");
-  };
-
-  const statusBadge = (status) => {
-    switch (status) {
-      // Order Status
-      case "PREORDER":
-        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
-      case "ACTIVE":
-        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
-      case "PROCESSING":
-        return <Badge variant="secondary light">{status.toUpperCase()}</Badge>;
-      case "FOR DELIVERY":
-        return <Badge variant="warning light">{status.toUpperCase()}</Badge>;
-      case "IN TRANSIT":
-        return <Badge variant="success light">{status.toUpperCase()}</Badge>;
-      case "DELIVERED":
-        return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
-      case "CANCELLED":
-        return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
-      // Payment Status
-      case "PAID":
-        return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
-      case "NOT PAID":
-        return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
-      default:
-        return <Badge variant="dark light">{status.toUpperCase()}</Badge>;
+    if (orderList) {
+      var filteredOrders = Object.keys(orderList)
+        .filter((orderId) => orderList[orderId].status === status)
+        .reduce((res, key) => ((res[key] = orderList[key]), res), {});
+      console.log("filteredOrders", filteredOrders);
+      setOrderValues(filteredOrders);
     }
   };
 
-  // Triggers every order status filter change
+  const statusBadge = (status) => {
+    if (status) {
+      switch (status) {
+        // Order Status
+        case "PREORDER":
+          return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+        case "ACTIVE":
+          return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+        case "PROCESSING":
+          return (
+            <Badge variant="secondary light">{status.toUpperCase()}</Badge>
+          );
+        case "FOR DELIVERY":
+          return <Badge variant="warning light">{status.toUpperCase()}</Badge>;
+        case "IN TRANSIT":
+          return <Badge variant="success light">{status.toUpperCase()}</Badge>;
+        case "DELIVERED":
+          return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
+        case "CANCELLED":
+          return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
+        // Payment Status
+        case "PAID":
+          return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
+        case "NOT PAID":
+          return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
+        default:
+          return <Badge variant="dark light">{status.toUpperCase()}</Badge>;
+      }
+    }
+  };
+
+  const filteredOrders = (orderList, status) => {
+    if (status === "ALL") {
+      return orderList;
+    }
+    return Object.keys(orderList)
+      .filter((orderId) => orderList[orderId].status === status)
+      .reduce((res, key) => ((res[key] = orderList[key]), res), {});
+  };
+
+  // View delivery receipt - Triggers every order status filter change
   useEffect(() => {
     if (orderValues) {
       if (Object.keys(orderValues).length > 0) {
@@ -110,7 +123,6 @@ const OrdersList = () => {
     }
   }, [orderValues]);
 
-  console.log("orderList", orderList);
   return (
     <Fragment>
       {orderList && (
@@ -139,6 +151,11 @@ const OrdersList = () => {
                           {statusBadge(filterStatus)}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
+                          <Dropdown.Item
+                            onSelect={() => handleFilterStatus("ALL")}
+                          >
+                            {statusBadge("ALL")}
+                          </Dropdown.Item>{" "}
                           <Dropdown.Item
                             onSelect={() => handleFilterStatus("ACTIVE")}
                           >
@@ -221,7 +238,9 @@ const OrdersList = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.keys(orderList).map((orderId) => {
+                        {Object.keys(
+                          filteredOrders(orderList, filterStatus)
+                        ).map((orderId) => {
                           return (
                             <tr
                               key={orderId}

@@ -213,8 +213,19 @@ const OrderReceipt = (props) => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // props.addOrEdit(values);
     window.location.reload(false);
+  };
+
+  const showAssignRiderButton = () => {
+    var showButton = true;
+    if (selectedRiderOption.value === "Not Assigned") {
+      showButton = false;
+    } else if (
+      selectedRiderOption.value === props.currentOrder.rider.riderName
+    ) {
+      showButton = false;
+    }
+    return showButton;
   };
 
   return (
@@ -295,7 +306,7 @@ const OrderReceipt = (props) => {
                           IndicatorSeparator: () => null,
                         }}
                       />
-                      {selectedRiderOption.value !== "Not Assigned" && (
+                      {showAssignRiderButton() && (
                         <span>
                           <Button
                             className="mt-2 pull-right"
