@@ -75,19 +75,6 @@ const ProductsList = () => {
     });
   };
 
-  const filteredProduct = (productList, searchTerm) => {
-    if (!searchTerm) {
-      return productList;
-    }
-    return Object.keys(productList)
-      .filter((productId) =>
-        productList[productId].productName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      )
-      .reduce((res, key) => ((res[key] = productList[key]), res), {});
-  };
-
   return (
     <Fragment>
       {productList && (
