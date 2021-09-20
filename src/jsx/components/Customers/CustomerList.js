@@ -93,6 +93,19 @@ const CustomerList = () => {
     setAddressModal(e);
   };
 
+  const filteredCustomers = (customerList, searchTerm) => {
+    if (!searchTerm) {
+      return customerList;
+    }
+    return Object.keys(customerList)
+      .filter((customerId) =>
+        customerList[customerId].name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      )
+      .reduce((res, key) => ((res[key] = customerList[key]), res), {});
+  };
+
   return (
     <Fragment>
       <div className="row">
@@ -128,7 +141,9 @@ const CustomerList = () => {
                           type="search"
                           placeholder="Search Customer"
                           aria-label="Search"
-                          // onChange ={(event) => setSearchTerm(event.target.value)}
+                          onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                          }
                         />
                       </form>
                     </div>
@@ -171,7 +186,7 @@ const CustomerList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.keys(customerList)
+                      {Object.keys(filteredCustomers(customerList, searchTerm))
                         .slice(0)
                         .reverse()
                         .map((id) => {
