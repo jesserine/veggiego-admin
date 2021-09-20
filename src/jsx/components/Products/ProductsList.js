@@ -23,11 +23,18 @@ const ProductsList = () => {
   var [currentId, setCurrentId] = useState("");
   var [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    if (searchTerm.length > 0) {
-      //rewrite search function
+  const filteredProduct = (productList, searchTerm) => {
+    if (!searchTerm) {
+      return productList;
     }
-  }, [searchTerm]);
+    return Object.keys(productList)
+      .filter((productId) =>
+        productList[productId].productName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      )
+      .reduce((res, key) => ((res[key] = productList[key]), res), {});
+  };
 
   const addOrEdit = (obj) => {
     console.log("inside addOrEdit");
@@ -127,7 +134,9 @@ const ProductsList = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.keys(productList).map((id) => {
+                        {Object.keys(
+                          filteredProduct(productList, searchTerm)
+                        ).map((id) => {
                           return (
                             <tr
                               key={id}
