@@ -18,7 +18,7 @@ import RidersForm from "./RidersForm";
 
 const RidersList = () => {
   /// Get rider list from context provider
-  const { riderList, setLoading } = useDataContext();
+  const { riderList } = useDataContext();
   var [currentId, setCurrentId] = useState("");
   var [searchTerm, setSearchTerm] = useState("");
 

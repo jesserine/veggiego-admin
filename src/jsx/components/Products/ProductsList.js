@@ -68,6 +68,19 @@ const ProductsList = () => {
     });
   };
 
+  const filteredProduct = (productList, searchTerm) => {
+    if (!searchTerm) {
+      return productList;
+    }
+    return Object.keys(productList)
+      .filter((productId) =>
+        productList[productId].productName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      )
+      .reduce((res, key) => ((res[key] = productList[key]), res), {});
+  };
+
   return (
     <Fragment>
       {productList && (
@@ -127,7 +140,9 @@ const ProductsList = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.keys(productList).map((id) => {
+                        {Object.keys(
+                          filteredProduct(productList, searchTerm)
+                        ).map((id) => {
                           return (
                             <tr
                               key={id}
