@@ -19,17 +19,8 @@ import RidersForm from "./RidersForm";
 const RidersList = () => {
   /// Get rider list from context provider
   const { riderList, setLoading } = useDataContext();
-  const [riders, setRiders] = useState(riderList);
   var [currentId, setCurrentId] = useState("");
   var [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    if (searchTerm.length > 0) {
-      //redo logic
-    } else {
-      // redo logi
-    }
-  }, [searchTerm]);
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
@@ -67,6 +58,19 @@ const RidersList = () => {
         swal("Your rider profile is safe!");
       }
     });
+  };
+
+  const filteredRider = (riderList, searchTerm) => {
+    if (!searchTerm) {
+      return riderList;
+    }
+    return Object.keys(riderList)
+      .filter((riderId) =>
+        riderList[riderId].riderName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      )
+      .reduce((res, key) => ((res[key] = riderList[key]), res), {});
   };
 
   return (
@@ -130,30 +134,32 @@ const RidersList = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.keys(riderList).map((id) => {
-                          return (
-                            <tr
-                              key={id}
-                              onClick={() => {
-                                setCurrentId(id);
-                              }}
-                            >
-                              <td>
-                                <img
-                                  src={riderList[id].riderImage}
-                                  className="rounded-lg mr-2"
-                                  width="24"
-                                  alt=""
-                                />
-                                <span>{riderList[id].riderName}</span>
-                              </td>
-                              <td>{riderList[id].riderContactNum}</td>
-                              <td>{riderList[id].riderAddress}</td>
-                              <td>{riderList[id].vehicleType}</td>
-                              <td>{riderList[id].vehiclePlateNum}</td>
-                            </tr>
-                          );
-                        })}
+                        {Object.keys(filteredRider(riderList, searchTerm)).map(
+                          (id) => {
+                            return (
+                              <tr
+                                key={id}
+                                onClick={() => {
+                                  setCurrentId(id);
+                                }}
+                              >
+                                <td>
+                                  <img
+                                    src={riderList[id].riderImage}
+                                    className="rounded-lg mr-2"
+                                    width="24"
+                                    alt=""
+                                  />
+                                  <span>{riderList[id].riderName}</span>
+                                </td>
+                                <td>{riderList[id].riderContactNum}</td>
+                                <td>{riderList[id].riderAddress}</td>
+                                <td>{riderList[id].vehicleType}</td>
+                                <td>{riderList[id].vehiclePlateNum}</td>
+                              </tr>
+                            );
+                          }
+                        )}
                       </tbody>
                     </Table>
                   </Card.Body>
