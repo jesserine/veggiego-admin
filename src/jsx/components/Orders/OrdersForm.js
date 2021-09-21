@@ -621,9 +621,10 @@ const OrdersForm = (props) => {
                                 onClick={() => {
                                   editProductFromCart(product, index);
                                 }}
-                                className="btn btn-primary shadow btn-xs sharp mr-1"
+                                className="btn btn-primary btn-xs  mr-1"
                               >
-                                <i className="fa fa-pencil"></i>
+                                {/* <i className="fa fa-pencil"></i> */}
+                                Edit
                               </Button>
                             </td>
                             <td>
@@ -643,9 +644,10 @@ const OrdersForm = (props) => {
                             <td>
                               <Button
                                 onClick={() => removeFromCart(product)}
-                                className="btn btn-danger shadow btn-xs sharp"
+                                className="btn btn-danger btn-xs"
                               >
-                                <i className="fa fa-trash"></i>
+                                {/* <i className="fa fa-trash"></i> */}
+                                Remove
                               </Button>
                             </td>
                           </tr>

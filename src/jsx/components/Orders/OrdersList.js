@@ -232,9 +232,9 @@ const OrdersList = () => {
                           <th>
                             <strong>DATE OF DELIVERY</strong>
                           </th>
-                          {/* <th>
-                          <strong>RIDER NAME</strong>
-                        </th> */}
+                          <th>
+                            <strong>RIDER</strong>
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -259,11 +259,7 @@ const OrdersList = () => {
                               </td>
                               <td>₱{orderList[orderId].grandTotal}</td>
                               <td>{orderList[orderId].dateOfDelivery}</td>
-                              {/* <td>
-                              {orderValues[orderId].rider
-                                ? orderValues[orderId].rider.riderName
-                                : "Not Assigned"}
-                            </td> */}
+                              <td>{orderList[orderId].rider.riderName}</td>
                             </tr>
                           );
                         })}
