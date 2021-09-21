@@ -25,6 +25,8 @@ const AddressModal = (props) => {
     });
   };
 
+  console.log(regionData);
+
   const province = (e) => {
     setRegionAddr(e.target.selectedOptions[0].text);
     provinces(e.target.value).then((response) => {
@@ -87,9 +89,15 @@ const AddressModal = (props) => {
                     onChange={province}
                     onSelect={region}
                   >
-                    <option value="option" disabled>
-                      Select Region...
-                    </option>
+                    {regionData[8] && (
+                      <option
+                        value={regionData[8].region_code}
+                        key={regionData[8].region_code}
+                      >
+                        {regionData[8].region_name}
+                      </option>
+                    )}
+
                     {regionData &&
                       regionData.length > 0 &&
                       regionData.map((item) => (
@@ -164,13 +172,18 @@ const AddressModal = (props) => {
                 </div>
                 <div className="form-group col-md-12">
                   <label>Street Name, Building, House No.</label>
-                  <input type="text" className="form-control" placeholder="" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={streetAddr}
+                    onChange={(event) => setStreetAddr(event.target.value)}
+                  />
                 </div>
               </div>
             </form>
           </div>
-          <p>Address</p>
-          {barangayAddr}, {cityAddr}, {provinceAddr}, {regionAddr}
+          <p>Full Address</p>
+          {streetAddr}, {barangayAddr}, {cityAddr}, {provinceAddr}, {regionAddr}
         </Modal.Body>
         <Modal.Footer>
           <Button

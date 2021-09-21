@@ -265,6 +265,7 @@ const OrdersForm = (props) => {
     });
 
     setIsEditingProduct(false);
+    clearProductValues(false);
   };
 
   // remove product from cart
