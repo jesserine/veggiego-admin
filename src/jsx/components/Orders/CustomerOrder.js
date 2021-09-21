@@ -103,9 +103,10 @@ const CustomerOrder = (props) => {
                     onClick={() => {
                       setCurrentCustomer(null);
                     }}
-                    className="btn btn-warning shadow btn-xs sharp mr-1"
+                    className="btn btn-warning btn-xs mr-1"
                   >
-                    <i className="fa fa-pencil"></i>
+                    {/* <i className="fa fa-pencil"></i> */}
+                    Change Customer
                   </Button>
                 </span>
               </div>
