@@ -126,32 +126,44 @@ const OrderReceipt = (props) => {
   };
 
   const assignRiderToOrder = async () => {
-    if (selectedRiderOption !== null) {
-      firebaseDb
-        .ref(`orders/${props.currentId}`)
-        .update({ rider: selectedRiderOption.rider })
-        .then(
-          toast.success("A rider has been assigned!", {
-            position: "bottom-left",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          })
-        )
-        .catch((err) =>
-          toast.error("Something went wrong" + err, {
-            position: "bottom-left",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          })
-        );
+    if (props.currentId) {
+      if (selectedRiderOption !== null) {
+        firebaseDb
+          .ref(`orders/${props.currentId}`)
+          .update({ rider: selectedRiderOption.rider })
+          .then(
+            toast.success("A rider has been assigned!", {
+              position: "bottom-left",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            })
+          )
+          .catch((err) =>
+            toast.error("Something went wrong" + err, {
+              position: "bottom-left",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            })
+          );
+      }
+    } else {
+      toast.error("Something went wrong", {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
