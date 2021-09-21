@@ -551,7 +551,8 @@ const OrdersForm = (props) => {
                           variant="primary btn-square"
                           onClick={updateCart}
                         >
-                          <i className="fa fa-check" />
+                          {/* <i className="fa fa-check" /> */}
+                          Update
                         </Button>
                       )}
                       {!isEditingProduct && (
@@ -560,7 +561,8 @@ const OrdersForm = (props) => {
                           variant="primary light btn-square"
                           onClick={addToCart}
                         >
-                          <i className="fa fa-plus" />
+                          {/* <i className="fa fa-plus" /> */}
+                          Add
                         </Button>
                       )}
                       {selectedOption && (
@@ -569,7 +571,8 @@ const OrdersForm = (props) => {
                           variant="warning light btn-square"
                           onClick={clearProductValues}
                         >
-                          <i className="fa fa-times" />
+                          {/* <i className="fa fa-times" /> */}
+                          Clear
                         </Button>
                       )}
                     </div>
