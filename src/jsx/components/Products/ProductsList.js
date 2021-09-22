@@ -22,11 +22,13 @@ const ProductsList = () => {
 
   var [currentId, setCurrentId] = useState("");
   var [searchTerm, setSearchTerm] = useState("");
+  const [filterCategory, setFilterCategory] = useState("ALL");
 
   const filteredProduct = (productList, searchTerm) => {
     if (!searchTerm) {
       return productList;
     }
+
     return Object.keys(productList)
       .filter((productId) =>
         productList[productId].productName
@@ -75,6 +77,64 @@ const ProductsList = () => {
     });
   };
 
+  /// filter product list based on category
+  useEffect(() => {}, [filterCategory]);
+
+  const handleFilterCategory = (category) => {
+    setFilterCategory(category);
+    setCurrentId("");
+    if (productList) {
+      var filteredProduct = Object.keys(productList)
+        .filter(
+          (productId) =>
+            productList[productId].category.toUpperCase() === category
+        )
+        .reduce((res, key) => ((res[key] = productList[key]), res), {});
+    }
+  };
+
+  const filteredProductByCategory = (productList, category) => {
+    if (category === "ALL") {
+      return productList;
+    }
+    return Object.keys(productList)
+      .filter(
+        (productId) =>
+          productList[productId].category.toUpperCase() === category
+      )
+      .reduce((res, key) => ((res[key] = productList[key]), res), {});
+    console.log("filteredProductByCategory", productList);
+  };
+
+  const categoryBadge = (category) => {
+    if (category) {
+      switch (category) {
+        // Product category
+        case "BEST SELLER":
+          return <Badge variant="info light">{category.toUpperCase()}</Badge>;
+        case "FRUITS":
+          return (
+            <Badge variant="secondary light">{category.toUpperCase()}</Badge>
+          );
+        case "CONDIMENTS":
+          return (
+            <Badge variant="warning light">{category.toUpperCase()}</Badge>
+          );
+        case "ASSORTED":
+          return (
+            <Badge variant="success light">{category.toUpperCase()}</Badge>
+          );
+        case "SWEETENER":
+          return (
+            <Badge variant="primary light">{category.toUpperCase()}</Badge>
+          );
+        case "VEGETABLES":
+          return <Badge variant="danger light">{category.toUpperCase()}</Badge>;
+        default:
+          return <Badge variant="dark light">{category.toUpperCase()}</Badge>;
+      }
+    }
+  };
   return (
     <Fragment>
       {productList && (
@@ -87,7 +147,51 @@ const ProductsList = () => {
               <Col lg={12}>
                 <Card>
                   <Card.Header>
-                    <Card.Title>My Products</Card.Title>
+                    <Card.Title>
+                      My Products
+                      <Dropdown>
+                        <Dropdown.Toggle variant="" size="m" className="mt-1">
+                          {categoryBadge(filterCategory)}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item
+                            onSelect={() => handleFilterCategory("ALL")}
+                          >
+                            {categoryBadge("ALL")}
+                          </Dropdown.Item>{" "}
+                          <Dropdown.Item
+                            onSelect={() => handleFilterCategory("BEST SELLER")}
+                          >
+                            {categoryBadge("BEST SELLER")}
+                          </Dropdown.Item>{" "}
+                          <Dropdown.Item
+                            onSelect={() => handleFilterCategory("FRUITS")}
+                          >
+                            {categoryBadge("FRUITS")}
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onSelect={() => handleFilterCategory("CONDIMENTS")}
+                          >
+                            {categoryBadge("CONDIMENTS")}
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onSelect={() => handleFilterCategory("ASSORTED")}
+                          >
+                            {categoryBadge("ASSORTED")}
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onSelect={() => handleFilterCategory("SWEETENER")}
+                          >
+                            {categoryBadge("SWEETENER")}
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onSelect={() => handleFilterCategory("VEGETABLES")}
+                          >
+                            {categoryBadge("VEGETABLES")}
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </Card.Title>
                     <Button
                       variant="primary btn-rounded"
                       onClick={() => {
@@ -135,7 +239,8 @@ const ProductsList = () => {
                       </thead>
                       <tbody>
                         {Object.keys(
-                          filteredProduct(productList, searchTerm)
+                          filteredProduct(productList, searchTerm),
+                          filteredProductByCategory(productList, filterCategory)
                         ).map((id) => {
                           return (
                             <tr
