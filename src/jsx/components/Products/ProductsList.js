@@ -24,20 +24,6 @@ const ProductsList = () => {
   var [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("ALL");
 
-  const filteredProduct = (productList, searchTerm) => {
-    if (!searchTerm) {
-      return productList;
-    }
-
-    return Object.keys(productList)
-      .filter((productId) =>
-        productList[productId].productName
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      )
-      .reduce((res, key) => ((res[key] = productList[key]), res), {});
-  };
-
   const addOrEdit = (obj) => {
     console.log("inside addOrEdit");
     if (currentId === "") {
@@ -83,32 +69,32 @@ const ProductsList = () => {
   const handleFilterCategory = (category) => {
     setFilterCategory(category);
     setCurrentId("");
-    if (productList) {
-      var filteredProduct = Object.keys(productList)
-        .filter(
-          (productId) =>
-            productList[productId].category.toUpperCase() === category
-        )
-        .reduce((res, key) => ((res[key] = productList[key]), res), {});
-    }
   };
 
-  const filteredProductByCategory = (productList, category) => {
+  const filteredProducts = (productList, category) => {
     if (category === "ALL") {
-      return productList;
+      return Object.keys(productList)
+        .filter((productId) =>
+          productList[productId].productName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+        .reduce((res, key) => ((res[key] = productList[key]), res), {});
     }
     return Object.keys(productList)
       .filter(
         (productId) =>
-          productList[productId].category.toUpperCase() === category
+          productList[productId].category.toUpperCase() === category &&
+          productList[productId].productName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
       )
       .reduce((res, key) => ((res[key] = productList[key]), res), {});
-    console.log("filteredProductByCategory", productList);
   };
 
   const categoryBadge = (category) => {
     if (category) {
-      switch (category) {
+      switch (category.toUpperCase()) {
         // Product category
         case "BEST SELLER":
           return <Badge variant="info light">{category.toUpperCase()}</Badge>;
@@ -239,8 +225,7 @@ const ProductsList = () => {
                       </thead>
                       <tbody>
                         {Object.keys(
-                          filteredProduct(productList, searchTerm),
-                          filteredProductByCategory(productList, filterCategory)
+                          filteredProducts(productList, filterCategory)
                         ).map((id) => {
                           return (
                             <tr
@@ -258,7 +243,7 @@ const ProductsList = () => {
                                 />
                                 <span>{productList[id].productName}</span>
                               </td>
-                              <td>{productList[id].category}</td>
+                              <td>{categoryBadge(productList[id].category)}</td>
                               <td>{productList[id].unit}</td>
                               <td>{productList[id].price}</td>
                             </tr>
