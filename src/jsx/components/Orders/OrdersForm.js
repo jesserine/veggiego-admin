@@ -4,8 +4,10 @@ import { useHistory } from "react-router-dom";
 import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { RangeDatePicker, DatePicker } from "@y0c/react-datepicker";
+// import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+// import { RangeDatePicker, DatePicker } from "@y0c/react-datepicker";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
@@ -456,7 +458,30 @@ const OrdersForm = (props) => {
                     </div>
                     <div className="form-group col-md-4">
                       <label>Date of Delivery</label>
-                      <DatePicker onChange={setSelectedDate} />
+                      {/* <DatePicker onChange={setSelectedDate} /> */}
+                      <DatePicker
+                        className="form-control"
+                        selected={selectedDate}
+                        onChange={(date) => setSelectedDate(date)}
+                        minDate={new Date()}
+                      />
+                      <span className="pull-right">
+                        <Button
+                          className="btn-xs mt-2 ml-1"
+                          variant="primary light btn-square"
+                          onClick={() => {
+                            const today = new Date();
+                            const tomorrow = new Date(today);
+                            setSelectedDate(
+                              tomorrow.setDate(tomorrow.getDate() + 1)
+                            );
+                          }}
+                        >
+                          {/* <i className="fa fa-plus" /> */}
+                          Deliver Tomorrow
+                        </Button>
+                      </span>
+
                       {/* <div className="card">
                         <div className="card-header">
                           <h4 className="card-title">Pick-Date picker</h4>
