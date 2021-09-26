@@ -172,7 +172,10 @@ const OrdersForm = (props) => {
     if (selectedOption) {
       setValues((prev) => ({
         ...prev,
-        deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
+        deliveryFee:
+          selectedDeliveryOption.value === "Custom"
+            ? values.deliveryFee
+            : selectedDeliveryOption.delivery.deliveryFee,
         deliveryLocation: selectedDeliveryOption.delivery.location,
         total: Number(values.total) + Number(productValues.subtotal),
         grandTotal: Number(values.total) + Number(values.deliveryFee),
@@ -254,7 +257,10 @@ const OrdersForm = (props) => {
 
     setValues((prev) => ({
       ...prev,
-      deliveryFee: selectedDeliveryOption.delivery.deliveryFee,
+      deliveryFee:
+        selectedDeliveryOption.value === "Custom"
+          ? values.deliveryFee
+          : selectedDeliveryOption.delivery.deliveryFee,
       deliveryLocation: selectedDeliveryOption.delivery.location,
       total: newTotal,
       grandTotal: Number(values.total) + Number(values.deliveryFee),
@@ -292,7 +298,7 @@ const OrdersForm = (props) => {
   useEffect(() => {
     setValues((prev) => ({
       ...prev,
-      dateOfDelivery: selectedDate.toLocaleString(),
+      dateOfDelivery: selectedDate.toString(),
     }));
   }, [selectedDate]);
 
@@ -331,10 +337,11 @@ const OrdersForm = (props) => {
   };
 
   const handleCustomDeliveryFee = (e) => {
-    var { name, value } = e.target;
+    var { value } = e.target;
     setValues((prev) => ({
       ...prev,
       deliveryFee: value,
+      grandTotal: Number(values.total) + Number(value),
     }));
   };
 
