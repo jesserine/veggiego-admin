@@ -339,6 +339,25 @@ const OrdersForm = (props) => {
     }));
   };
 
+  const handlePreorder = () => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    setSelectedDate(tomorrow.setDate(tomorrow.getDate() + 1));
+    setValues((prev) => ({
+      ...prev,
+      status: "PREORDER",
+    }));
+    toast.success("Order status set as PREORDER", {
+      position: "bottom-left",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
     /// form validations...
@@ -356,7 +375,7 @@ const OrdersForm = (props) => {
       isValidForm = false;
     }
 
-    if (!values.products) {
+    if (!values.products || !productValues) {
       toast.error("Please add a product", {
         position: "bottom-right",
         autoClose: 3000,
@@ -495,19 +514,8 @@ const OrdersForm = (props) => {
                         <Button
                           className="btn-xs mt-2 ml-1"
                           variant="primary light btn-square"
-                          onClick={() => {
-                            const today = new Date();
-                            const tomorrow = new Date(today);
-                            setSelectedDate(
-                              tomorrow.setDate(tomorrow.getDate() + 1)
-                            );
-                            setValues((prev) => ({
-                              ...prev,
-                              status: "PREORDER",
-                            }));
-                          }}
+                          onClick={handlePreorder}
                         >
-                          {/* <i className="fa fa-plus" /> */}
                           Deliver Tomorrow
                         </Button>
                       </span>
