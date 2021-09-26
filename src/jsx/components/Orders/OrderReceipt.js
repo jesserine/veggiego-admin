@@ -481,7 +481,7 @@ const OrderReceipt = (props) => {
                       <tbody>
                         {props.currentOrder.products &&
                           props.currentOrder.products.map((product, index) => (
-                            <tr>
+                            <tr key={index}>
                               <td className="center">
                                 {Number(index) + Number(1)}
                               </td>

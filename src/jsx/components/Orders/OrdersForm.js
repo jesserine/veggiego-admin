@@ -2,16 +2,10 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useDataContext } from "../../../contexts/DataContext";
 import { useHistory } from "react-router-dom";
 import firebaseDb from "../../../firebase";
-import { storage } from "../../../firebase";
-import { v4 as uuid } from "uuid";
-// import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-// import { RangeDatePicker, DatePicker } from "@y0c/react-datepicker";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { createMuiTheme } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/styles";
-import DateFnsUtils from "@date-io/date-fns";
 import { toast } from "react-toastify";
 
 import { Button, Table } from "react-bootstrap";
@@ -52,7 +46,6 @@ const OrdersForm = (props) => {
   var [productValues, setProductValues] = useState(initialProductValues);
   var [result, setResult] = useState([]);
   var [currentProductId, setCurrentProductId] = useState("");
-  var [currentId, setCurrentId] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isEditingProduct, setIsEditingProduct] = useState(false);
 
@@ -62,11 +55,7 @@ const OrdersForm = (props) => {
 
   //initialize values state
   useEffect(() => {
-    if (props.currentId === "")
-      setValues({
-        ...initialFieldValues,
-      });
-    else
+    if (props.currentId)
       setValues({
         ...props.unitList[props.currentId],
       });
@@ -437,20 +426,15 @@ const OrdersForm = (props) => {
     },
   };
 
-  // styles for datepicker
-  const materialTheme = createMuiTheme({
-    palette: {
-      primary: {
-        main: "#52b141",
-      },
-    },
-  });
-
   const numberWithCommas = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   if (!productList) {
+    return <p>Loading...</p>;
+  }
+
+  if (!unitList) {
     return <p>Loading...</p>;
   }
 
