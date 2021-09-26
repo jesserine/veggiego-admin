@@ -41,7 +41,7 @@ const OrderReceipt = (props) => {
 
   // Order and Payment Status edit mode handler
   const [editOrderStatusMode, setEditOrderStatusMode] = useState(false);
-  const orderStatusChangeHandler = () => {
+  const orderStatusChangeHandler = (selectedOrderStatus) => {
     setEditOrderStatusMode(!editOrderStatusMode);
 
     // Save selected order status to firebase
@@ -78,7 +78,7 @@ const OrderReceipt = (props) => {
     }
   };
   const [editPaymentStatusMode, setEditPaymentStatusMode] = useState(false);
-  const paymentStatusChangeHandler = () => {
+  const paymentStatusChangeHandler = (selectedPaymentStatus) => {
     setEditPaymentStatusMode(!editPaymentStatusMode);
 
     // Save selected payment status to firebase
@@ -118,15 +118,17 @@ const OrderReceipt = (props) => {
   const [selectedOrderStatus, setSelectedOrderStatus] = useState();
   const handleOrderStatus = (status) => {
     setSelectedOrderStatus(status);
+    orderStatusChangeHandler(status);
   };
 
   const [selectedPaymentStatus, setSelectedPaymentStatus] = useState();
   const handlePaymentStatus = (status) => {
     setSelectedPaymentStatus(status);
+    paymentStatusChangeHandler(status);
   };
 
   const assignRiderToOrder = async () => {
-    if (props.currentId) {
+    if (props.currentId !== null) {
       if (selectedRiderOption !== null) {
         firebaseDb
           .ref(`orders/${props.currentId}`)
@@ -242,7 +244,7 @@ const OrderReceipt = (props) => {
 
   return (
     <Fragment>
-      {props.currentOrder && props.currentOrder !== {} ? (
+      {props.currentOrder && props.currentId ? (
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
@@ -386,7 +388,7 @@ const OrderReceipt = (props) => {
                                   {props.statusBadge("CANCELLED")}
                                 </Dropdown.Item>
                               </Dropdown.Menu>{" "}
-                              <span>
+                              {/* <span>
                                 <Button
                                   onClick={orderStatusChangeHandler}
                                   className="btn btn-primary shadow btn-xs sharp"
@@ -394,7 +396,7 @@ const OrderReceipt = (props) => {
                                 >
                                   <i className="fa fa-check"></i>
                                 </Button>
-                              </span>
+                              </span> */}
                             </Dropdown>
                           </div>
                         ) : (
@@ -433,7 +435,7 @@ const OrderReceipt = (props) => {
                                   {props.statusBadge("NOT PAID")}
                                 </Dropdown.Item>
                               </Dropdown.Menu>
-                              <span>
+                              {/* <span>
                                 <Button
                                   onClick={paymentStatusChangeHandler}
                                   className="btn btn-primary shadow btn-xs sharp"
@@ -441,7 +443,7 @@ const OrderReceipt = (props) => {
                                 >
                                   <i className="fa fa-check"></i>
                                 </Button>
-                              </span>
+                              </span> */}
                             </Dropdown>
                           </div>
                         ) : (

@@ -14,7 +14,6 @@ import OrdersForm from "./OrdersForm";
 const CustomerOrder = (props) => {
   /// Get customer list from context provider
   const { customerList } = useDataContext();
-  const [customers, setCustomers] = useState(customerList);
 
   var [currentId, setCurrentId] = useState("");
   const location = useLocation();
@@ -24,20 +23,22 @@ const CustomerOrder = (props) => {
 
   const [selectedOption, setSelectedOption] = useState(null);
   const options = [];
-  Object.keys(customers).map((id) => {
-    return options.push({
-      value: customers[id].name,
-      label: (
-        <div>
-          <p>
-            {customers[id].name} | {customers[id].address}
-          </p>
-        </div>
-      ),
-      customer: customers[id],
-      customerId: id,
+  if (customerList) {
+    Object.keys(customerList).map((id) => {
+      return options.push({
+        value: customerList[id].name,
+        label: (
+          <div>
+            <p>
+              {customerList[id].name} | {customerList[id].address}
+            </p>
+          </div>
+        ),
+        customer: customerList[id],
+        customerId: id,
+      });
     });
-  });
+  }
 
   useEffect(() => {
     if (selectedOption) {
@@ -85,6 +86,10 @@ const CustomerOrder = (props) => {
       return { ...provided, opacity, transition };
     },
   };
+
+  if (!customerList) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <Fragment>

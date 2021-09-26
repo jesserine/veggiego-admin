@@ -9,7 +9,7 @@ import OrderReceipt from "./OrderReceipt";
 import { Link, useLocation } from "react-router-dom";
 
 const OrdersList = () => {
-  const { orderList, setOrderList } = useDataContext();
+  const { orderList } = useDataContext();
   var [orderValues, setOrderValues] = useState(orderList);
   var [currentId, setCurrentId] = useState("");
   const [filterStatus, setFilterStatus] = useState("ALL");
@@ -42,14 +42,32 @@ const OrdersList = () => {
     if (currentId === "") {
       swal("Nice!", "A new order is added!", "success");
       firebaseDb.ref("orders/").push(obj, (err) => {
-        if (err) console.log(err);
-        else setCurrentId("");
+        if (err) {
+          toast.error("An error has occured!" + err, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        } else setCurrentId("");
       });
     } else {
       swal("Nice!", "This order is updated!", "success");
       firebaseDb.ref(`orders/${currentId}`).set(obj, (err) => {
-        if (err) console.log(err);
-        else setCurrentId("");
+        if (err) {
+          toast.error("An error has occured!" + err, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        } else setCurrentId("");
       });
     }
   };
@@ -59,42 +77,30 @@ const OrdersList = () => {
   const handleFilterStatus = (status) => {
     setFilterStatus(status);
     setCurrentId("");
-    if (orderList) {
-      var filteredOrders = Object.keys(orderList)
-        .filter((orderId) => orderList[orderId].status === status)
-        .reduce((res, key) => ((res[key] = orderList[key]), res), {});
-      console.log("filteredOrders", filteredOrders);
-      setOrderValues(filteredOrders);
-    }
   };
 
   const statusBadge = (status) => {
     if (status) {
-      switch (status) {
-        // Order Status
-        case "PREORDER":
-          return <Badge variant="info light">{status.toUpperCase()}</Badge>;
-        case "ACTIVE":
-          return <Badge variant="info light">{status.toUpperCase()}</Badge>;
-        case "PROCESSING":
-          return (
-            <Badge variant="secondary light">{status.toUpperCase()}</Badge>
-          );
-        case "FOR DELIVERY":
-          return <Badge variant="warning light">{status.toUpperCase()}</Badge>;
-        case "IN TRANSIT":
-          return <Badge variant="success light">{status.toUpperCase()}</Badge>;
-        case "DELIVERED":
-          return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
-        case "CANCELLED":
-          return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
-        // Payment Status
-        case "PAID":
-          return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
-        case "NOT PAID":
-          return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
-        default:
-          return <Badge variant="dark light">{status.toUpperCase()}</Badge>;
+      if (status.includes("PREORDER")) {
+        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+      } else if (status.includes("ACTIVE")) {
+        return <Badge variant="info light">{status.toUpperCase()}</Badge>;
+      } else if (status.includes("PROCESSING")) {
+        return <Badge variant="secondary light">{status.toUpperCase()}</Badge>;
+      } else if (status.includes("FOR DELIVERY")) {
+        return <Badge variant="warning light">{status.toUpperCase()}</Badge>;
+      } else if (status.includes("IN TRANSIT")) {
+        return <Badge variant="success light">{status.toUpperCase()}</Badge>;
+      } else if (status.includes("DELIVERED")) {
+        return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
+      } else if (status.includes("CANCELLED")) {
+        return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
+      } else if (status.includes("NOT PAID")) {
+        return <Badge variant="danger light">{status.toUpperCase()}</Badge>;
+      } else if (status.includes("PAID")) {
+        return <Badge variant="primary light">{status.toUpperCase()}</Badge>;
+      } else {
+        return <Badge variant="dark light">{status.toUpperCase()}</Badge>;
       }
     }
   };
@@ -102,10 +108,12 @@ const OrdersList = () => {
   const filteredOrders = (orderList, status) => {
     if (status === "ALL") {
       return orderList;
+    } else {
+      var filteredOrders = Object.keys(orderList)
+        .filter((orderId) => orderList[orderId].status === status)
+        .reduce((res, key) => ((res[key] = orderList[key]), res), {});
+      return filteredOrders;
     }
-    return Object.keys(orderList)
-      .filter((orderId) => orderList[orderId].status === status)
-      .reduce((res, key) => ((res[key] = orderList[key]), res), {});
   };
 
   // View delivery receipt - Triggers every order status filter change
@@ -148,7 +156,14 @@ const OrdersList = () => {
                       Customer Orders
                       <Dropdown>
                         <Dropdown.Toggle variant="" size="m" className="mt-1">
-                          {statusBadge(filterStatus)}
+                          {statusBadge(
+                            filterStatus +
+                              " (" +
+                              Object.keys(
+                                filteredOrders(orderList, filterStatus)
+                              ).length +
+                              ")"
+                          )}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <Dropdown.Item
@@ -221,7 +236,7 @@ const OrdersList = () => {
                             <strong>PAYMENT</strong>
                           </th>
                           <th>
-                            <strong>CUSTOMER NAME</strong>
+                            <strong>CUSTOMER</strong>
                           </th>
                           <th>
                             <strong>CONTACT NUMBER</strong>

@@ -5,6 +5,8 @@ import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { RangeDatePicker, DatePicker } from "@y0c/react-datepicker";
+
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import DateFnsUtils from "@date-io/date-fns";
@@ -69,25 +71,27 @@ const OrdersForm = (props) => {
   }, [props.currentId, props.unitList]);
 
   // prepares products data for combobox
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState();
   const options = [];
-  Object.keys(productList).map((id) => {
-    return options.push({
-      value: productList[id].productName,
-      label: (
-        <div>
-          <img
-            src={productList[id].productImage}
-            height="30px"
-            width="30px"
-            alt={productList[id].productName}
-          />{" "}
-          {productList[id].productName}
-        </div>
-      ),
-      product: productList[id],
+  if (productList) {
+    Object.keys(productList).map((id) => {
+      return options.push({
+        value: productList[id].productName,
+        label: (
+          <div>
+            <img
+              src={productList[id].productImage}
+              height="30px"
+              width="30px"
+              alt={productList[id].productName}
+            />{" "}
+            {productList[id].productName}
+          </div>
+        ),
+        product: productList[id],
+      });
     });
-  });
+  }
 
   // sets values of quantity, price and unit once a product is selected
   useEffect(() => {
@@ -133,13 +137,15 @@ const OrdersForm = (props) => {
 
   // prepares delivery data for combobox
   const deliveryOptions = [];
-  Object.keys(deliveryLocList).map((id) => {
-    return deliveryOptions.push({
-      value: deliveryLocList[id].location,
-      label: deliveryLocList[id].location,
-      delivery: deliveryLocList[id],
+  if (deliveryLocList) {
+    Object.keys(deliveryLocList).map((id) => {
+      return deliveryOptions.push({
+        value: deliveryLocList[id].location,
+        label: deliveryLocList[id].location,
+        delivery: deliveryLocList[id],
+      });
     });
-  });
+  }
 
   // updates delivery data on combobox selection
   const [selectedDeliveryOption, setSelectedDeliveryOption] = useState({
@@ -198,7 +204,7 @@ const OrdersForm = (props) => {
 
   // reset product values form
   const clearProductValues = (showToast) => {
-    setSelectedOption(null);
+    setSelectedOption("");
     setIsEditingProduct(false);
 
     setProductValues({
@@ -322,9 +328,16 @@ const OrdersForm = (props) => {
     });
   };
 
+  const handleCustomDeliveryFee = (e) => {
+    var { name, value } = e.target;
+    setValues((prev) => ({
+      ...prev,
+      deliveryFee: value,
+    }));
+  };
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log("values", values);
     firebaseDb
       .ref("orders/")
       .push(values)
@@ -393,6 +406,10 @@ const OrdersForm = (props) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  if (!productList) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <Fragment>
       <div className="row">
@@ -418,17 +435,37 @@ const OrdersForm = (props) => {
                     </div>
                     <div className="form-group col-md-2">
                       <label>Delivery Fee</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="0"
-                        value={values.deliveryFee}
-                        onChange={handleOrderInputChange}
-                        disabled={selectedDeliveryOption.value !== "Custom"}
-                      />
+                      {selectedDeliveryOption.value !== "Custom" ? (
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="0"
+                          value={values.deliveryFee}
+                          onChange={handleOrderInputChange}
+                          disabled
+                        />
+                      ) : (
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="0"
+                          value={values.deliveryFee}
+                          onChange={handleCustomDeliveryFee}
+                        />
+                      )}
                     </div>
                     <div className="form-group col-md-4">
                       <label>Date of Delivery</label>
+                      <DatePicker onChange={setSelectedDate} />
+                      {/* <div className="card">
+                        <div className="card-header">
+                          <h4 className="card-title">Pick-Date picker</h4>
+                        </div>
+                        <div className="card-body">
+                          <p className="mb-1">Default picker</p>
+                          <DatePicker />
+                        </div>
+                      </div>
                       <ThemeProvider theme={materialTheme}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <DateTimePicker
@@ -438,7 +475,7 @@ const OrdersForm = (props) => {
                             onChange={setSelectedDate}
                           />
                         </MuiPickersUtilsProvider>
-                      </ThemeProvider>
+                      </ThemeProvider> */}
                     </div>
                   </div>
                   <div className="form-row ">
@@ -488,11 +525,12 @@ const OrdersForm = (props) => {
                         onChange={handleInputChange}
                         required
                       >
-                        <option value="Unit">
-                          {selectedOption
-                            ? selectedOption.product.unit
-                            : "Unit "}
-                        </option>
+                        {selectedOption && (
+                          <option value="Unit">
+                            {selectedOption.product.unit}
+                          </option>
+                        )}
+
                         {Object.keys(unitList).map((id) => {
                           return (
                             <React.Fragment key={id}>
