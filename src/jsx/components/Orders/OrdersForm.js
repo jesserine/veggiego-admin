@@ -352,28 +352,58 @@ const OrdersForm = (props) => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    firebaseDb
-      .ref("orders/")
-      .push(values)
-      .then(() => {
-        history.push({
-          pathname: "/orders",
-          state: {
-            isAdded: true,
-          },
-        });
-      })
-      .catch((error) => {
-        toast.error("An error has occured: " + error, {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+    /// form validations...
+    var isValidForm = true;
+    if (!values.customer) {
+      toast.error("Please select a customer", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
       });
+      isValidForm = false;
+    }
+
+    if (!values.products) {
+      toast.error("Please add a product", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      isValidForm = false;
+    }
+
+    if (isValidForm) {
+      firebaseDb
+        .ref("orders/")
+        .push(values)
+        .then(() => {
+          history.push({
+            pathname: "/orders",
+            state: {
+              isAdded: true,
+            },
+          });
+        })
+        .catch((error) => {
+          toast.error("An error has occured: " + error, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        });
+    }
   };
 
   /// update customer data on select to values state
