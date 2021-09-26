@@ -298,7 +298,12 @@ const OrdersForm = (props) => {
   useEffect(() => {
     setValues((prev) => ({
       ...prev,
-      dateOfDelivery: selectedDate.toString(),
+      dateOfDelivery: new Date(selectedDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
     }));
   }, [selectedDate]);
 
@@ -482,6 +487,10 @@ const OrdersForm = (props) => {
                             setSelectedDate(
                               tomorrow.setDate(tomorrow.getDate() + 1)
                             );
+                            setValues((prev) => ({
+                              ...prev,
+                              status: "PREORDER",
+                            }));
                           }}
                         >
                           {/* <i className="fa fa-plus" /> */}
