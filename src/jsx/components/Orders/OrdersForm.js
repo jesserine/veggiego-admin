@@ -14,7 +14,7 @@ import Select from "react-select";
 const OrdersForm = (props) => {
   const history = useHistory();
 
-  const initialFieldValues = {
+  var initialFieldValues = {
     products: [],
     notes: "",
     total: 0,
@@ -52,6 +52,27 @@ const OrdersForm = (props) => {
   /*********************************
   --- DATA MANIPULATION FUNCTIONS ---
   ***********************************/
+
+  // Prepare data for edit
+  useEffect(() => {
+    if (props.order) {
+      setValues({
+        products: props.order.products,
+        notes: props.order.notes,
+        total: props.order.total,
+        grandTotal: props.order.grandTotal,
+        rider: props.order.rider,
+        deliveryLocation: props.order.deliveryLocation,
+        deliveryFee: props.order.deliveryFee,
+        dateOfDelivery: props.order.dateOfDelivery,
+        customer: props.order.customer,
+        customerId: props.userId,
+        dateAdded: props.order.dateAdded,
+        status: props.order.status,
+        paymentStatus: props.order.paymentStatus,
+      });
+    }
+  }, []);
 
   //initialize values state
   useEffect(() => {
@@ -358,6 +379,25 @@ const OrdersForm = (props) => {
     });
   };
 
+  const handleActiveOrder = () => {
+    const today = new Date();
+
+    setSelectedDate(today);
+    setValues((prev) => ({
+      ...prev,
+      status: "ACTIVE",
+    }));
+    toast.success("Order status set as ACTIVE", {
+      position: "bottom-left",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
     /// form validations...
@@ -389,28 +429,67 @@ const OrdersForm = (props) => {
     }
 
     if (isValidForm) {
-      firebaseDb
-        .ref("orders/")
-        .push(values)
-        .then(() => {
-          history.push({
-            pathname: "/orders",
-            state: {
-              isAdded: true,
-            },
+      if (props.order) {
+        firebaseDb
+          .ref(`orders/${props.orderId}`)
+          .update({
+            products: values.products,
+            notes: values.notes,
+            total: values.total,
+            grandTotal: values.grandTotal,
+            rider: values.rider,
+            deliveryLocation: values.deliveryLocation,
+            deliveryFee: values.deliveryFee,
+            dateOfDelivery: values.dateOfDelivery,
+            customer: values.customer,
+            customerId: props.userId,
+            dateAdded: values.dateAdded,
+            status: values.status,
+            paymentStatus: values.paymentStatus,
+          })
+          .then(() => {
+            history.push({
+              pathname: "/orders",
+              state: {
+                isAdded: true,
+              },
+            });
+          })
+          .catch((error) => {
+            toast.error("An error has occured: " + error, {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           });
-        })
-        .catch((error) => {
-          toast.error("An error has occured: " + error, {
-            position: "bottom-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
+      } else {
+        firebaseDb
+          .ref("orders/")
+          .push(values)
+          .then(() => {
+            history.push({
+              pathname: "/orders",
+              state: {
+                isAdded: true,
+              },
+            });
+          })
+          .catch((error) => {
+            toast.error("An error has occured: " + error, {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           });
-        });
+      }
     }
   };
 
@@ -485,6 +564,7 @@ const OrdersForm = (props) => {
                       {selectedDeliveryOption.value !== "Custom" ? (
                         <input
                           type="number"
+                          min={0}
                           className="form-control"
                           placeholder="0"
                           value={values.deliveryFee}
@@ -494,8 +574,9 @@ const OrdersForm = (props) => {
                       ) : (
                         <input
                           type="number"
+                          min={0}
                           className="form-control"
-                          placeholder="0"
+                          onFocus={(event) => event.target.select()}
                           value={values.deliveryFee}
                           onChange={handleCustomDeliveryFee}
                         />
@@ -514,31 +595,18 @@ const OrdersForm = (props) => {
                         <Button
                           className="btn-xs mt-2 ml-1"
                           variant="primary light btn-square"
+                          onClick={handleActiveOrder}
+                        >
+                          Deliver Today
+                        </Button>
+                        <Button
+                          className="btn-xs mt-2 ml-1"
+                          variant="primary light btn-square"
                           onClick={handlePreorder}
                         >
                           Deliver Tomorrow
                         </Button>
                       </span>
-
-                      {/* <div className="card">
-                        <div className="card-header">
-                          <h4 className="card-title">Pick-Date picker</h4>
-                        </div>
-                        <div className="card-body">
-                          <p className="mb-1">Default picker</p>
-                          <DatePicker />
-                        </div>
-                      </div>
-                      <ThemeProvider theme={materialTheme}>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                          <DateTimePicker
-                            label=""
-                            inputVariant="outlined"
-                            value={selectedDate}
-                            onChange={setSelectedDate}
-                          />
-                        </MuiPickersUtilsProvider>
-                      </ThemeProvider> */}
                     </div>
                   </div>
                   <div className="form-row ">
@@ -569,6 +637,8 @@ const OrdersForm = (props) => {
                       <label>Quantity</label>
                       <input
                         type="number"
+                        min={0}
+                        onFocus={(event) => event.target.select()}
                         className="form-control"
                         placeholder="0"
                         name="productQty"
@@ -613,6 +683,8 @@ const OrdersForm = (props) => {
                       <label>Price</label>
                       <input
                         type="number"
+                        min={0}
+                        onFocus={(event) => event.target.select()}
                         className="form-control"
                         placeholder="0"
                         name="productPrice"
@@ -625,6 +697,8 @@ const OrdersForm = (props) => {
                       <label>Discount %</label>
                       <input
                         type="number"
+                        min={0}
+                        onFocus={(event) => event.target.select()}
                         className="form-control"
                         placeholder="0"
                         name="discount"
@@ -788,7 +862,7 @@ const OrdersForm = (props) => {
                 <div className="form-row"></div>
                 <div className="form-group col-md-4">
                   <Button className="mt-4" variant="primary" type="submit">
-                    Save Order
+                    {props.order ? "Update " : "Save"}Order
                   </Button>
                 </div>
               </div>

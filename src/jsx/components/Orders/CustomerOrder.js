@@ -17,9 +17,10 @@ const CustomerOrder = (props) => {
 
   var [currentId, setCurrentId] = useState("");
   const location = useLocation();
-  const { user, userId } = location.state;
+  const { user, userId, orderId, order } = location.state;
+  console.log(location.state);
   const [currentCustomer, setCurrentCustomer] = useState(user);
-  const [currentCustomerId, setCurrentCustomerId] = useState(userId);
+  const [currentCustomerId, setCurrentCustomerId] = useState();
 
   const [selectedOption, setSelectedOption] = useState(null);
   const options = [];
@@ -103,17 +104,19 @@ const CustomerOrder = (props) => {
               >
                 <h3 className="mt-3 mb-1 text-white">{currentCustomer.name}</h3>
                 <p className="text-white mb-0">Customer</p>
-                <span className="float-right">
-                  <Button
-                    onClick={() => {
-                      setCurrentCustomer(null);
-                    }}
-                    className="btn btn-warning btn-xs mr-1"
-                  >
-                    {/* <i className="fa fa-pencil"></i> */}
-                    Change Customer
-                  </Button>
-                </span>
+                {!location.state.user && (
+                  <span className="float-right">
+                    <Button
+                      onClick={() => {
+                        setCurrentCustomer(null);
+                      }}
+                      className="btn btn-warning btn-xs mr-1"
+                    >
+                      {/* <i className="fa fa-pencil"></i> */}
+                      Change Customer
+                    </Button>
+                  </span>
+                )}
               </div>
               <ul className="list-group list-group-flush">
                 <li className="list-group-item d-flex justify-content-between">
@@ -169,7 +172,15 @@ const CustomerOrder = (props) => {
 
         <div className="col-xl-8 col-xxl-8 col-lg-12 col-sm-12">
           <OrdersForm
-            {...{ addOrEdit, currentId, currentCustomer, currentCustomerId }}
+            {...{
+              addOrEdit,
+              currentId,
+              currentCustomer,
+              currentCustomerId,
+              userId,
+              order,
+              orderId,
+            }}
           />
         </div>
       </div>

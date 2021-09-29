@@ -179,7 +179,6 @@ const OrderReceipt = (props) => {
                 src={props.currentOrder.rider.riderImage}
                 height="30px"
                 width="30px"
-                marginRight="5px"
                 alt={props.currentOrder.rider.riderName}
               />
             )}
@@ -250,26 +249,26 @@ const OrderReceipt = (props) => {
             <div className="card">
               <div className="card-header">
                 <h4>
-                  <strong>Delivery Receipt</strong>
-                  {props.currentId.substr(props.currentId.length - 5)}
-                  <span>
-                    {showUpdateButton && (
-                      <Link
-                        to={{
-                          pathname: "/customer-order",
-                          state: {
-                            order: props.currentOrder,
-                            user: props.currentOrder.customer,
-                            userId: props.currentOrder.customerId,
-                          },
-                        }}
-                        className="btn btn-warning shadow btn-xs sharp ml-1"
-                      >
-                        <i className="fa fa-pencil"></i>
-                      </Link>
-                    )}
-                  </span>
+                  <strong>Delivery Receipt</strong>{" "}
+                  {/* {props.currentId.substr(props.currentId.length - 5)} */}
+                  {props.currentId}
                 </h4>
+                <div className="pull-right">
+                  <Link
+                    to={{
+                      pathname: "/customer-order",
+                      state: {
+                        order: props.currentOrder,
+                        user: props.currentOrder.customer,
+                        userId: props.currentOrder.customerId,
+                        orderId: props.currentId,
+                      },
+                    }}
+                    className="btn btn-warning btn-xs ml-1 pull-right"
+                  >
+                    Update Order
+                  </Link>
+                </div>
               </div>
               <div className="card-body">
                 <form onSubmit={handleFormSubmit}>
