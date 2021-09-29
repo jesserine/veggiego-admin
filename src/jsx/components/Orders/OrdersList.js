@@ -18,10 +18,21 @@ const OrdersList = () => {
 
   useEffect(() => {
     if (location.state) {
-      const { isAdded } = location.state;
+      const { isAdded, isUpdated } = location.state;
+      console.log(location.state);
       setTimeout(async () => {
         if (isAdded) {
           toast.success("Order successfully placed!", {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        } else if (isUpdated) {
+          toast.success("Order successfully updated!", {
             position: "bottom-left",
             autoClose: 3000,
             hideProgressBar: false,

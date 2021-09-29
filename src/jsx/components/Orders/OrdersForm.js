@@ -429,7 +429,7 @@ const OrdersForm = (props) => {
     }
 
     if (isValidForm) {
-      if (props.order) {
+      if (props.orderId) {
         firebaseDb
           .ref(`orders/${props.orderId}`)
           .update({
@@ -451,7 +451,8 @@ const OrdersForm = (props) => {
             history.push({
               pathname: "/orders",
               state: {
-                isAdded: true,
+                isAdded: false,
+                isUpdated: true,
               },
             });
           })
@@ -469,12 +470,27 @@ const OrdersForm = (props) => {
       } else {
         firebaseDb
           .ref("orders/")
-          .push(values)
+          .push({
+            products: values.products,
+            notes: values.notes,
+            total: values.total,
+            grandTotal: values.grandTotal,
+            rider: values.rider,
+            deliveryLocation: values.deliveryLocation,
+            deliveryFee: values.deliveryFee,
+            dateOfDelivery: values.dateOfDelivery,
+            customer: values.customer,
+            customerId: props.userId,
+            dateAdded: values.dateAdded,
+            status: values.status,
+            paymentStatus: values.paymentStatus,
+          })
           .then(() => {
             history.push({
               pathname: "/orders",
               state: {
                 isAdded: true,
+                isUpdated: false,
               },
             });
           })
@@ -862,7 +878,7 @@ const OrdersForm = (props) => {
                 <div className="form-row"></div>
                 <div className="form-group col-md-4">
                   <Button className="mt-4" variant="primary" type="submit">
-                    {props.order ? "Update " : "Save"}Order
+                    {props.order ? "Update " : "Save "}Order
                   </Button>
                 </div>
               </div>
