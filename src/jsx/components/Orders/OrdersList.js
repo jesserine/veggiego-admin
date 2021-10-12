@@ -233,15 +233,6 @@ const OrdersList = () => {
                         </Dropdown.Menu>
                       </Dropdown>
                     </Card.Title>
-                    <span className="float-left">
-                      <input
-                        className="form-control"
-                        type="search"
-                        placeholder="Search Customer"
-                        aria-label="Search"
-                        onChange={(event) => setSearchTerm(event.target.value)}
-                      />
-                    </span>
                     <span className="float-right">
                       <Link
                         to={{
@@ -258,6 +249,15 @@ const OrdersList = () => {
                     </span>
                   </Card.Header>
                   <Card.Body>
+                    <form onSubmit={(e) => e.preventDefault()}>
+                      <input
+                        className="form-control"
+                        type="search"
+                        placeholder="Search Customer Name"
+                        aria-label="Search"
+                        onChange={(event) => setSearchTerm(event.target.value)}
+                      />
+                    </form>
                     <Table responsive hover>
                       <thead>
                         <tr>
