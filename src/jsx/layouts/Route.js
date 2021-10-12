@@ -62,22 +62,22 @@ import BootstrapTable from "../components/table/BootstrapTable";
 import ApexChart from "../components/charts/apexcharts";
 
 /// Customers
-import CustomerList from '../components/Customers/CustomerList';
+import CustomerList from "../components/Customers/CustomerList";
 import CustomerForm from "../components/Customers/CustomerForm";
 
 /// Riders
-import RidersList from '../components/Riders/RidersList';
+import RidersList from "../components/Riders/RidersList";
 
 /// Profile
-import Profile from '../components/Profile/Profile';
+import Profile from "../components/Profile/Profile";
 
 /// Orders
-import OrdersList from '../components/Orders/OrdersList';
+import OrdersList from "../components/Orders/OrdersList";
 import DeliveryFeeList from "../components/Orders/DeliveryFeeList";
 import CustomerOrder from "../components/Orders/CustomerOrder";
 
 /// Products
-import ProductsList from '../components/Products/ProductsList';
+import ProductsList from "../components/Products/ProductsList";
 import CategoryList from "../components/Products/CategoryList";
 import UnitList from "../components/Products/UnitList";
 
@@ -101,116 +101,117 @@ import JqvMap from "../components/PluginsMenu/Jqv Map/JqvMap";
 import RechartJs from "../components/charts/rechart";
 
 const Routes = () => {
-   const routes = [
-      /// Dashboard
-      { url: "", component: Home },
-      { url: "application", component: Application },
-      { url: "profile", component: Profile },
-      { url: "companies", component: Companies },
-      { url: "search-job", component: SearchJobs },
-      { url: "statistics", component: Statistics },
-      /// Bootstrap
-      { url: "ui-alert", component: UiAlert },
-      { url: "ui-badge", component: UiBadge },
-      { url: "ui-button", component: UiButton },
-      { url: "ui-modal", component: UiModal },
-      { url: "ui-button-group", component: UiButtonGroup },
-      { url: "ui-accordion", component: UiAccordion },
-      { url: "ui-list-group", component: UiListGroup },
-      { url: "ui-media-object", component: UiMediaObject },
-      { url: "ui-card", component: UiCards },
-      { url: "ui-carousel", component: UiCarousel },
-      { url: "ui-dropdown", component: UiDropDown },
-      { url: "ui-popover", component: UiPopOver },
-      { url: "ui-progressbar", component: UiProgressBar },
-      { url: "ui-tab", component: UiTab },
-      { url: "ui-pagination", component: UiPagination },
-      { url: "ui-typography", component: UiTypography },
-      { url: "ui-grid", component: UiGrid },
-      /// Apps
-      { url: "app-profile", component: AppProfile },
-      { url: "email-compose", component: Compose },
-      { url: "email-inbox", component: Inbox },
-      { url: "email-read", component: Read },
-      { url: "app-calender", component: Calendar },
-      /// Shop
-      { url: "ecom-product-grid", component: ProductGrid },
-      { url: "ecom-product-list", component: ProductList },
-      { url: "ecom-product-detail", component: ProductDetail },
-      { url: "ecom-product-order", component: ProductOrder },
-      { url: "ecom-checkout", component: Checkout },
-      { url: "ecom-invoice", component: Invoice },
-      { url: "ecom-product-detail", component: ProductDetail },
-      { url: "ecom-customers", component: Customers },
+  const routes = [
+    /// Dashboard
+    { url: "", component: Home },
+    { url: "dashboard", component: Home },
+    { url: "application", component: Application },
+    { url: "profile", component: Profile },
+    { url: "companies", component: Companies },
+    { url: "search-job", component: SearchJobs },
+    { url: "statistics", component: Statistics },
+    /// Bootstrap
+    { url: "ui-alert", component: UiAlert },
+    { url: "ui-badge", component: UiBadge },
+    { url: "ui-button", component: UiButton },
+    { url: "ui-modal", component: UiModal },
+    { url: "ui-button-group", component: UiButtonGroup },
+    { url: "ui-accordion", component: UiAccordion },
+    { url: "ui-list-group", component: UiListGroup },
+    { url: "ui-media-object", component: UiMediaObject },
+    { url: "ui-card", component: UiCards },
+    { url: "ui-carousel", component: UiCarousel },
+    { url: "ui-dropdown", component: UiDropDown },
+    { url: "ui-popover", component: UiPopOver },
+    { url: "ui-progressbar", component: UiProgressBar },
+    { url: "ui-tab", component: UiTab },
+    { url: "ui-pagination", component: UiPagination },
+    { url: "ui-typography", component: UiTypography },
+    { url: "ui-grid", component: UiGrid },
+    /// Apps
+    { url: "app-profile", component: AppProfile },
+    { url: "email-compose", component: Compose },
+    { url: "email-inbox", component: Inbox },
+    { url: "email-read", component: Read },
+    { url: "app-calender", component: Calendar },
+    /// Shop
+    { url: "ecom-product-grid", component: ProductGrid },
+    { url: "ecom-product-list", component: ProductList },
+    { url: "ecom-product-detail", component: ProductDetail },
+    { url: "ecom-product-order", component: ProductOrder },
+    { url: "ecom-checkout", component: Checkout },
+    { url: "ecom-invoice", component: Invoice },
+    { url: "ecom-product-detail", component: ProductDetail },
+    { url: "ecom-customers", component: Customers },
 
-      /// Chart
-      { url: "chart-flot", component: ChartChartist },
-      { url: "chart-sparkline", component: SparklineChart },
-      { url: "chart-chartjs", component: ChartJs },
-      { url: "chart-chartist", component: Chartist },
-      { url: "chart-btc", component: BtcChart },
-      { url: "chart-apexchart", component: ApexChart },
-      { url: "chart-rechart", component: RechartJs },
+    /// Chart
+    { url: "chart-flot", component: ChartChartist },
+    { url: "chart-sparkline", component: SparklineChart },
+    { url: "chart-chartjs", component: ChartJs },
+    { url: "chart-chartist", component: Chartist },
+    { url: "chart-btc", component: BtcChart },
+    { url: "chart-apexchart", component: ApexChart },
+    { url: "chart-rechart", component: RechartJs },
 
-      /// table
-      { url: "table-datatable-basic", component: DataTable },
-      { url: "table-bootstrap-basic", component: BootstrapTable },
-      
-      // Customer
-      { url: "customers", component: CustomerList },
-      { url: "customer-form", component: CustomerForm },
+    /// table
+    { url: "table-datatable-basic", component: DataTable },
+    { url: "table-bootstrap-basic", component: BootstrapTable },
 
-      /// Riders
-      { url: "riders", component: RidersList },
-  
-      /// Orders
-      { url: "orders", component: OrdersList },
-      { url: "orders-deliveryfee", component: DeliveryFeeList},
-      { url: "customer-order", component: CustomerOrder},
+    // Customer
+    { url: "customers", component: CustomerList },
+    { url: "customer-form", component: CustomerForm },
 
-      /// Products 
-      { url: "products", component: ProductsList },
-      { url: "products-category", component: CategoryList },
-      { url: "products-unit", component: UnitList },
+    /// Riders
+    { url: "riders", component: RidersList },
 
-      /// Widget
-      { url: "widget-basic", component: Widget },
+    /// Orders
+    { url: "orders", component: OrdersList },
+    { url: "orders-deliveryfee", component: DeliveryFeeList },
+    { url: "customer-order", component: CustomerOrder },
 
-      /// Form
-      { url: "form-element", component: Element },
-      { url: "form-wizard", component: Wizard },
-      { url: "form-wizard", component: Wizard },
-      { url: "form-editor-summernote", component: SummerNote },
-      { url: "form-pickers", component: Pickers },
-      { url: "form-pickers", component: jQueryValidation },
-      { url: "form-validation-jquery", component: Pickers },
+    /// Products
+    { url: "products", component: ProductsList },
+    { url: "products-category", component: CategoryList },
+    { url: "products-unit", component: UnitList },
 
-      /// Plugin
+    /// Widget
+    { url: "widget-basic", component: Widget },
 
-      { url: "uc-select2", component: Select2 },
-      { url: "uc-nestable", component: Nestable },
-      { url: "uc-noui-slider", component: MainNouiSlider },
-      { url: "uc-sweetalert", component: MainSweetAlert },
-      { url: "uc-toastr", component: Toastr },
-      { url: "map-jqvmap", component: JqvMap },
-   ];
+    /// Form
+    { url: "form-element", component: Element },
+    { url: "form-wizard", component: Wizard },
+    { url: "form-wizard", component: Wizard },
+    { url: "form-editor-summernote", component: SummerNote },
+    { url: "form-pickers", component: Pickers },
+    { url: "form-pickers", component: jQueryValidation },
+    { url: "form-validation-jquery", component: Pickers },
 
-   return (
-      <Fragment>
-         <Switch>
-            {routes.map((data, i) => (
-               <Route
-                  key={i}
-                  exact
-                  path={`/${data.url}`}
-                  component={data.component}
-               />
-            ))}
-         </Switch>
+    /// Plugin
 
-         {/* <Footer /> */}
-      </Fragment>
-   );
+    { url: "uc-select2", component: Select2 },
+    { url: "uc-nestable", component: Nestable },
+    { url: "uc-noui-slider", component: MainNouiSlider },
+    { url: "uc-sweetalert", component: MainSweetAlert },
+    { url: "uc-toastr", component: Toastr },
+    { url: "map-jqvmap", component: JqvMap },
+  ];
+
+  return (
+    <Fragment>
+      <Switch>
+        {routes.map((data, i) => (
+          <Route
+            key={i}
+            exact
+            path={`/${data.url}`}
+            component={data.component}
+          />
+        ))}
+      </Switch>
+
+      {/* <Footer /> */}
+    </Fragment>
+  );
 };
 
 export default Routes;

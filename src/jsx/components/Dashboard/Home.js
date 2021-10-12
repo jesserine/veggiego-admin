@@ -29,20 +29,6 @@ const Home = () => {
     pMinDelay(import("../charts/Chartjs/line7"), 0)
   );
 
-  const initialOrderValues = {
-    products: "",
-    notes: "",
-    total: 0,
-    grandTotal: 0,
-    rider: "",
-    deliveryLocation: "",
-    deliveryFee: 0,
-    dateOfDelivery: new Date().toLocaleString(),
-    customer: "",
-    customerId: "",
-    dateAdded: new Date().toLocaleString(),
-    status: "ACTIVE",
-  };
   const { orderList, productList } = useDataContext();
 
   const [orderValues, setOrderValues] = useState(orderList);
@@ -111,15 +97,15 @@ const Home = () => {
   var current = new Date();
   const dateTomorrow = new Date(current.getTime() + 86400000);
   dateTomorrow.toLocaleDateString();
-  console.log("Date Tomorrow", dateTomorrow.toLocaleDateString());
+  // console.log("Date Tomorrow", dateTomorrow.toLocaleDateString());
   useEffect(() => {
     if (orderValues) {
-      console.log("orderValues - preorder, ", orderValues);
       Object.keys(orderValues).map((id) => {
         if (
           new Date(dateTomorrow).toLocaleDateString() ===
           new Date(orderValues[id].dateOfDelivery).toLocaleDateString()
         ) {
+          console.log("orderValues - preorder, ", orderValues);
           orderValues[id].products.map((value, index) => {
             setPreorderProducts((prev) => [...prev, value]);
             console.log("orderValues - product ", preorderProducts);
@@ -274,7 +260,9 @@ const Home = () => {
             </Col>
           </div>
         </div>
-        <div className="col-lg-6 col-xxl-12">
+
+        {/* My Sales PART */}
+        {/* <div className="col-lg-6 col-xxl-6">
           <div className="card" id="user-activity">
             <Tab.Container defaultActiveKey="monthly">
               <div className="card-header pb-0 d-block d-sm-flex border-0">
@@ -323,7 +311,7 @@ const Home = () => {
               </div>
             </Tab.Container>
           </div>
-        </div>
+        </div> */}
         <div className="col-lg-6 col-xxl-12">
           <div className="row">
             <div className="col-lg-12 col-md-12">
@@ -377,14 +365,18 @@ const Home = () => {
                       </span>
                     </div>
                     <div className="fs-14 mb-4">
-                      {/* {Object.keys(preorderProducts).map((id) => {
-                        <ul className="d-flex justify-content-between pb-2">
+                      {Object.keys(preorderProducts).map((value, index) => {
+                        <ul
+                          className="d-flex justify-content-between pb-2"
+                          key={index}
+                        >
                           <li className="font-w500 text-dark">
-                            {preorderProducts[id].productName}
+                            {value.productName}
                           </li>
-                          <li>3 kg</li>
+                          <li>{value.productQty}</li>
+                          <li>{value.productUnit}</li>
                         </ul>;
-                      })} */}
+                      })}
                     </div>
                   </div>
                 </div>
