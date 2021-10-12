@@ -13,6 +13,7 @@ const OrdersList = () => {
   var [orderValues, setOrderValues] = useState(orderList);
   var [currentId, setCurrentId] = useState("");
   const [filterStatus, setFilterStatus] = useState("ALL");
+  var [searchTerm, setSearchTerm] = useState("");
 
   const location = useLocation();
 
@@ -118,10 +119,22 @@ const OrdersList = () => {
 
   const filteredOrders = (orderList, status) => {
     if (status === "ALL") {
-      return orderList;
+      return Object.keys(orderList)
+        .filter((orderId) =>
+          orderList[orderId].customer.name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+        .reduce((res, key) => ((res[key] = orderList[key]), res), {});
     } else {
       var filteredOrders = Object.keys(orderList)
-        .filter((orderId) => orderList[orderId].status === status)
+        .filter(
+          (orderId) =>
+            orderList[orderId].status === status &&
+            orderList[orderId].customer.name
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
+        )
         .reduce((res, key) => ((res[key] = orderList[key]), res), {});
       return filteredOrders;
     }
@@ -220,7 +233,15 @@ const OrdersList = () => {
                         </Dropdown.Menu>
                       </Dropdown>
                     </Card.Title>
-
+                    <span className="float-left">
+                      <input
+                        className="form-control"
+                        type="search"
+                        placeholder="Search Customer"
+                        aria-label="Search"
+                        onChange={(event) => setSearchTerm(event.target.value)}
+                      />
+                    </span>
                     <span className="float-right">
                       <Link
                         to={{
