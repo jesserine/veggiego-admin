@@ -59,14 +59,14 @@ const Header = ({
               <div className=" d-lg-flex ">
                 <span>
                   <div className="text-left">
-                    <h3 className="fs-20 text-black mb-0">
+                    <h2 className="fs-20 text-black mb-0">
                       {" "}
                       {dateState.toLocaleString("en-US", {
                         hour: "numeric",
                         minute: "numeric",
                       })}
-                    </h3>
-                    <span className="fs-14">
+                    </h2>
+                    <h3 className="fs-14 text-black">
                       {" "}
                       {dateState.toLocaleDateString("en-GB", {
                         weekday: "long",
@@ -77,7 +77,7 @@ const Header = ({
                         month: "long",
                         year: "numeric",
                       })}
-                    </span>
+                    </h3>
                   </div>
                 </span>
               </div>
