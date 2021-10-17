@@ -72,6 +72,29 @@ const CustomerForm = (props) => {
     // window.location.reload(false);
   };
 
+  const [addressModal, setAddressModal] = useState(false);
+
+  const handleAddressModalState = (e) => {
+    setAddressModal(e);
+  };
+  const [customerAddress, setCustomerAddress] = useState({
+    address: [],
+  });
+
+  const handleMultipleCustomerAddress = (address) => {
+    setCustomerAddress({
+      address: [...customerAddress.address, address],
+    });
+
+    setValues((prev) => ({
+      ...prev,
+      address: [...customerAddress.address, address],
+    }));
+  };
+
+  console.log("customerAddress", customerAddress.address);
+  console.log("values", values);
+
   return (
     <Fragment>
       <div className="row">
@@ -143,7 +166,7 @@ const CustomerForm = (props) => {
                       <li className="list-group-item d-flex justify-content-between">
                         <span className="mb-0">Address</span>
                         <strong className="text-muted" align="right">
-                          {values.address}
+                          {JSON.stringify(values.address)}
                         </strong>
                       </li>
                       <li className="list-group-item d-flex justify-content-between">
@@ -219,7 +242,9 @@ const CustomerForm = (props) => {
                     <div className="form-group row">
                       <label className="col-sm-3 col-form-label">Address</label>
                       <div className="col-sm-9">
-                        <input
+                        {JSON.stringify(values.address)}
+
+                        {/* <input
                           type="text"
                           className="form-control"
                           name="address"
@@ -227,13 +252,13 @@ const CustomerForm = (props) => {
                           onChange={handleInputChange}
                           required
                           disabled={viewMode}
-                        />
+                        /> */}
                         <Button
                           className="btn btn-primary btn-sm pull-right mt-2"
                           bsStyle="danger"
                           bsSize="small"
                           onClick={() => {
-                            props.toggleModal(true);
+                            handleAddressModalState(true);
                           }}
                         >
                           Add Address
@@ -333,6 +358,13 @@ const CustomerForm = (props) => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="col-xl-12">
+          <AddressModal
+            isOpen={addressModal}
+            toggleModal={handleAddressModalState}
+            handleMultipleCustomerAddress={handleMultipleCustomerAddress}
+          />
         </div>
       </div>
     </Fragment>

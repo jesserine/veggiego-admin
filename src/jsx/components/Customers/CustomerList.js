@@ -12,7 +12,6 @@ const CustomerList = () => {
   /// Get customer list from context provider
   const { customerList, setCustomerList } = useDataContext();
 
-  const [addressList, setAddressList] = useState([]);
   var [currentId, setCurrentId] = useState("");
   var [searchTerm, setSearchTerm] = useState("");
 
@@ -79,12 +78,6 @@ const CustomerList = () => {
     });
   };
 
-  const [addressModal, setAddressModal] = useState(false);
-
-  const handleAddressModalState = (e) => {
-    setAddressModal(e);
-  };
-
   const filteredCustomers = (customerList, searchTerm) => {
     if (!searchTerm) {
       return customerList;
@@ -102,10 +95,7 @@ const CustomerList = () => {
     <Fragment>
       <div className="row">
         <div className="col-xl-4 col-lg-6">
-          <CustomerForm
-            {...{ addOrEdit, currentId, customerList }}
-            toggleModal={handleAddressModalState}
-          />
+          <CustomerForm {...{ addOrEdit, currentId, customerList }} />
         </div>
         <div className="col-xl-8 col-lg-6">
           <Row>
@@ -185,7 +175,9 @@ const CustomerList = () => {
                             >
                               <td>{customerList[id].name}</td>
                               <td>{customerList[id].contactNumber}</td>
-                              <td>{customerList[id].address}</td>
+                              <td>
+                                {JSON.stringify(customerList[id].address)}
+                              </td>
                               <td>{customerList[id].landmark}</td>
                             </tr>
                           );
@@ -196,13 +188,6 @@ const CustomerList = () => {
               </Card>
             </Col>
           </Row>
-        </div>
-
-        <div className="col-xl-12">
-          <AddressModal
-            isOpen={addressModal}
-            toggleModal={handleAddressModalState}
-          />
         </div>
       </div>
     </Fragment>

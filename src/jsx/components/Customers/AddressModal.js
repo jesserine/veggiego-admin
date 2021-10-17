@@ -21,12 +21,10 @@ const AddressModal = (props) => {
 
   const region = () => {
     regions().then((response) => {
+      console.log("response", response);
       setRegion(response);
     });
   };
-
-  console.log(regionData);
-
   const province = (e) => {
     setRegionAddr(e.target.selectedOptions[0].text);
     provinces(e.target.value).then((response) => {
@@ -57,6 +55,16 @@ const AddressModal = (props) => {
   useEffect(() => {
     region();
   }, []);
+
+  const saveAddress = () => {
+    props.handleMultipleCustomerAddress({
+      region: regionAddr,
+      province: provinceAddr,
+      city: cityAddr,
+      barangay: barangayAddr,
+      street: streetAddr,
+    });
+  };
 
   return (
     <div className="bootstrap-modal">
@@ -192,7 +200,12 @@ const AddressModal = (props) => {
           >
             Close
           </Button>
-          <Button variant="" type="button" className="btn btn-primary">
+          <Button
+            variant=""
+            type="button"
+            className="btn btn-primary"
+            onClick={saveAddress}
+          >
             Save changes
           </Button>
         </Modal.Footer>
