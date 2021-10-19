@@ -249,7 +249,10 @@ const OrdersList = () => {
                     </span>
                   </Card.Header>
                   <Card.Body>
-                    <form onSubmit={(e) => e.preventDefault()}>
+                    <form
+                      onSubmit={(e) => e.preventDefault()}
+                      style={{ marginBottom: 10 }}
+                    >
                       <input
                         className="form-control"
                         type="search"

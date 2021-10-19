@@ -13,85 +13,41 @@ import {
   Nav,
   Tab,
 } from "react-bootstrap";
-import firebaseDb from "../../../firebase";
-
-import loadable from "@loadable/component";
-import pMinDelay from "p-min-delay";
 
 const Home = () => {
-  const ApexNagetivePosative3 = loadable(() =>
-    pMinDelay(import("../charts/apexcharts/NagetivePositive3"), 500)
-  );
-  const ApexRedialBar2 = loadable(() =>
-    pMinDelay(import("../charts/apexcharts/RadialBar2"), 500)
-  );
-  const LineChart7 = loadable(() =>
-    pMinDelay(import("../charts/Chartjs/line7"), 0)
-  );
-
   const { orderList, productList } = useDataContext();
 
-  const [orderValues, setOrderValues] = useState(orderList);
   const [todaysOrder, setTodaysOrder] = useState([]);
-  const [productValues, setProductValues] = useState(productList);
   const [preorderProducts, setPreorderProducts] = useState([]);
 
-  // Sets the count of active, processing, in transit, and delivered orders
-  const [activeOrder, setActiveOrder] = useState(0);
-  const [processingOrder, setProcessingOrder] = useState(0);
-  const [inTransitOrder, setInTransitOrder] = useState(0);
-  const [deliveredOrder, setDeliveredOrder] = useState(0);
-
-  useEffect(() => {
-    if (orderValues) {
-      var activeCount = 0;
-      var processingCount = 0;
-      var inTransitCount = 0;
-      var deliveredCount = 0;
-      Object.keys(orderValues).map((orderId) => {
-        switch (orderValues[orderId].status) {
-          case "ACTIVE":
-            activeCount++;
-            break;
-          case "PROCESSING":
-            processingCount++;
-            break;
-          case "IN TRANSIT":
-            inTransitCount++;
-            break;
-          case "DELIVERED":
-            deliveredCount++;
-            break;
-        }
-      });
-      setActiveOrder(activeCount);
-      setProcessingOrder(processingCount);
-      setInTransitOrder(inTransitCount);
-      setDeliveredOrder(deliveredCount);
-    }
-  }, [orderValues]);
+  // counts active, processing, in transit, and delivered orders
+  const countByStatus = (orderList, status) => {
+    return Object.keys(orderList).filter(
+      (orderId) => orderList[orderId].status === status
+    ).length;
+  };
 
   //Sets the values for today's orders
   const dateToday = new Date().toLocaleDateString();
-  console.log("date today", dateToday);
+  // console.log("date today", dateToday);
   useEffect(() => {
-    if (orderValues) {
-      Object.keys(orderValues).map((id) => {
+    if (orderList) {
+      Object.keys(orderList).map((id) => {
         if (
           new Date(dateToday).toLocaleDateString() ===
-          new Date(orderValues[id].dateOfDelivery).toLocaleDateString()
+          new Date(orderList[id].dateOfDelivery).toLocaleDateString()
         ) {
           console.log(
             "orderValues - delivery date, ",
-            new Date(orderValues[id].dateOfDelivery).toLocaleDateString()
+            new Date(orderList[id].dateOfDelivery).toLocaleDateString()
           );
-          setTodaysOrder((prev) => [...prev, orderValues[id]]);
+          setTodaysOrder((prev) => [...prev, orderList[id]]);
           // setTodaysOrder((prev) => [...prev, orderValues[id]]);
           console.log("todays orders: ", todaysOrder);
         }
       });
     }
-  }, [orderValues]);
+  }, [orderList]);
 
   //Sets the values for pre-ordered products
   var current = new Date();
@@ -99,21 +55,21 @@ const Home = () => {
   dateTomorrow.toLocaleDateString();
   // console.log("Date Tomorrow", dateTomorrow.toLocaleDateString());
   useEffect(() => {
-    if (orderValues) {
-      Object.keys(orderValues).map((id) => {
+    if (orderList) {
+      Object.keys(orderList).map((id) => {
         if (
           new Date(dateTomorrow).toLocaleDateString() ===
-          new Date(orderValues[id].dateOfDelivery).toLocaleDateString()
+          new Date(orderList[id].dateOfDelivery).toLocaleDateString()
         ) {
-          console.log("orderValues - preorder, ", orderValues);
-          orderValues[id].products.map((value, index) => {
+          console.log("orderValues - preorder, ", orderList);
+          orderList[id].products.map((value, index) => {
             setPreorderProducts((prev) => [...prev, value]);
             console.log("orderValues - product ", preorderProducts);
           });
         }
       });
     }
-  }, [orderValues]);
+  }, [orderList]);
 
   //Sets the status Badge
   const statusBadge = (status) => {
@@ -137,132 +93,135 @@ const Home = () => {
     }
   };
 
-  return (
-    <>
-      <div className="form-head d-flex mb-0 mb-lg-4 align-items-start">
-        <div className="mr-auto d-none d-lg-block">
-          <h2 className="text-black font-w600 mb-1">Dashboard</h2>
-          <p className="mb-0">Welcome to Veggie Go Admin Dashboard</p>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-lg-12 col-xxl-12">
-          <div className="row">
-            <div className="col-lg-3 col-sm-12 col-md-6 ">
-              <div className="card widget-stat ">
-                <div className="card-body p-4">
-                  <div className="media align-items-center">
-                    <div className="media-body">
-                      <p className="fs-18 mb-2 wspace-no">Active Orders</p>
-                      <h1 className="fs-36 font-w600 text-black mb-0">
-                        {activeOrder}
-                      </h1>
-                    </div>
-                    <span className="ml-3 bg-primary text-white">
-                      <i className="flaticon-381-promotion" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-sm-12 col-md-6 ">
-              <div className="card widget-stat">
-                <div className="card-body p-4">
-                  <div className="media align-items-center">
-                    <div className="media-body">
-                      <p className="fs-18 mb-2 wspace-no">Processing</p>
-                      <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
-                        {processingOrder}
-                      </h1>
-                    </div>
-                    <span className="ml-3 bg-warning text-white">
-                      <i className="las la-sync scale4" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-sm-12 col-md-6 ">
-              <div className="card widget-stat">
-                <div className="card-body p-4">
-                  <div className="media align-items-center">
-                    <div className="media-body">
-                      <p className="fs-18 mb-2 wspace-no">In Transit</p>
-                      <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
-                        {inTransitOrder}
-                      </h1>
-                    </div>
-                    <span className="ml-3 bg-warning text-white">
-                      <i className="las la-biking scale4" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-sm-12 col-md-6 ">
-              <div className="card widget-stat">
-                <div className="card-body p-4">
-                  <div className="media align-items-center">
-                    <div className="media-body">
-                      <p className="fs-18 mb-2 wspace-no">Delivered</p>
-                      <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
-                        {deliveredOrder}
-                      </h1>
-                    </div>
-                    <span className="ml-3 bg-primary text-white">
-                      <i className="las la-box scale4" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Col lg={12}>
-              <Card>
-                <Card.Header>
-                  <Card.Title>Today's Orders</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                  <Table
-                    responsive
-                    hover
-                    className="header-border verticle-middle"
-                  >
-                    <thead>
-                      <tr>
-                        <th scope="col">CUSTOMER NAME</th>
-                        <th scope="col">TOTAL PRICE</th>
-                        <th scope="col">TIME OF DELIVERY</th>
-                        <th scope="col">ASSIGNED RIDER</th>
-                        <th scope="col">STATUS</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.keys(todaysOrder).map((orderId) => {
-                        return (
-                          <tr key={orderId}>
-                            <td>{todaysOrder[orderId].customer.name}</td>
-                            <td>{todaysOrder[orderId].grandTotal}</td>
-                            <td>{todaysOrder[orderId].dateOfDelivery}</td>
-                            <td>
-                              {todaysOrder[orderId].rider
-                                ? todaysOrder[orderId].rider.riderName
-                                : "Not Assigned"}
-                            </td>
-                            <td>{statusBadge(todaysOrder[orderId].status)}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </Table>
-                </Card.Body>
-              </Card>
-            </Col>
+  if (orderList !== null) {
+    return (
+      <>
+        <div className="form-head d-flex mb-0 mb-lg-4 align-items-start">
+          <div className="mr-auto d-none d-lg-block">
+            <h2 className="text-black font-w600 mb-1">Dashboard</h2>
+            <p className="mb-0">Welcome to Veggie Go Admin Dashboard</p>
           </div>
         </div>
+        <div className="row">
+          <div className="col-lg-12 col-xxl-12">
+            <div className="row">
+              <div className="col-lg-3 col-sm-12 col-md-6 ">
+                <div className="card widget-stat ">
+                  <div className="card-body p-4">
+                    <div className="media align-items-center">
+                      <div className="media-body">
+                        <p className="fs-18 mb-2 wspace-no">Active Orders</p>
+                        <h1 className="fs-36 font-w600 text-black mb-0">
+                          {countByStatus(orderList, "ACTIVE")}
+                        </h1>
+                      </div>
+                      <span className="ml-3 bg-primary text-white">
+                        <i className="flaticon-381-promotion" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-3 col-sm-12 col-md-6 ">
+                <div className="card widget-stat">
+                  <div className="card-body p-4">
+                    <div className="media align-items-center">
+                      <div className="media-body">
+                        <p className="fs-18 mb-2 wspace-no">Processing</p>
+                        <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
+                          {countByStatus(orderList, "PROCESSING")}
+                        </h1>
+                      </div>
+                      <span className="ml-3 bg-warning text-white">
+                        <i className="las la-sync scale4" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-3 col-sm-12 col-md-6 ">
+                <div className="card widget-stat">
+                  <div className="card-body p-4">
+                    <div className="media align-items-center">
+                      <div className="media-body">
+                        <p className="fs-18 mb-2 wspace-no">In Transit</p>
+                        <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
+                          {countByStatus(orderList, "IN TRANSIT")}
+                        </h1>
+                      </div>
+                      <span className="ml-3 bg-warning text-white">
+                        <i className="las la-biking scale4" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-3 col-sm-12 col-md-6 ">
+                <div className="card widget-stat">
+                  <div className="card-body p-4">
+                    <div className="media align-items-center">
+                      <div className="media-body">
+                        <p className="fs-18 mb-2 wspace-no">Delivered</p>
+                        <h1 className="fs-36 font-w600 d-flex align-items-center text-black mb-0">
+                          {countByStatus(orderList, "DELIVERED")}
+                        </h1>
+                      </div>
+                      <span className="ml-3 bg-primary text-white">
+                        <i className="las la-box scale4" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        {/* My Sales PART */}
-        {/* <div className="col-lg-6 col-xxl-6">
+              <Col lg={12}>
+                <Card>
+                  <Card.Header>
+                    <Card.Title>Today's Orders</Card.Title>
+                  </Card.Header>
+                  <Card.Body>
+                    <Table
+                      responsive
+                      hover
+                      className="header-border verticle-middle"
+                    >
+                      <thead>
+                        <tr>
+                          <th scope="col">CUSTOMER NAME</th>
+                          <th scope="col">TOTAL PRICE</th>
+                          <th scope="col">TIME OF DELIVERY</th>
+                          <th scope="col">ASSIGNED RIDER</th>
+                          <th scope="col">STATUS</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.keys(todaysOrder).map((orderId) => {
+                          return (
+                            <tr key={orderId}>
+                              <td>{todaysOrder[orderId].customer.name}</td>
+                              <td>{todaysOrder[orderId].grandTotal}</td>
+                              <td>{todaysOrder[orderId].dateOfDelivery}</td>
+                              <td>
+                                {todaysOrder[orderId].rider
+                                  ? todaysOrder[orderId].rider.riderName
+                                  : "Not Assigned"}
+                              </td>
+                              <td>
+                                {statusBadge(todaysOrder[orderId].status)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </div>
+          </div>
+
+          {/* My Sales PART */}
+          {/* <div className="col-lg-6 col-xxl-6">
           <div className="card" id="user-activity">
             <Tab.Container defaultActiveKey="monthly">
               <div className="card-header pb-0 d-block d-sm-flex border-0">
@@ -312,86 +271,92 @@ const Home = () => {
             </Tab.Container>
           </div>
         </div> */}
-        <div className="col-lg-6 col-xxl-12">
-          <div className="row">
-            <div className="col-lg-12 col-md-12">
-              <div className="card">
-                <div className="card-header border-0  pb-0">
-                  <h3 className="fs-20 text-black mb-0">Preorder Summary</h3>
-                  <Dropdown className="dropdown ml-auto">
-                    <Dropdown.Toggle
-                      variant=""
-                      className="btn-link icon-false p-0"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlnsXlink="http://www.w3.org/1999/xlink"
-                        width="24px"
-                        height="24px"
-                        viewBox="0 0 24 24"
-                        version="1.1"
+          <div className="col-lg-6 col-xxl-12">
+            <div className="row">
+              <div className="col-lg-12 col-md-12">
+                <div className="card">
+                  <div className="card-header border-0  pb-0">
+                    <h3 className="fs-20 text-black mb-0">Preorder Summary</h3>
+                    <Dropdown className="dropdown ml-auto">
+                      <Dropdown.Toggle
+                        variant=""
+                        className="btn-link icon-false p-0"
                       >
-                        <g
-                          stroke="none"
-                          strokeWidth={1}
-                          fill="none"
-                          fillRule="evenodd"
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          xmlnsXlink="http://www.w3.org/1999/xlink"
+                          width="24px"
+                          height="24px"
+                          viewBox="0 0 24 24"
+                          version="1.1"
                         >
-                          <rect x={0} y={0} width={24} height={24} />
-                          <circle fill="#000000" cx={12} cy={5} r={2} />
-                          <circle fill="#000000" cx={12} cy={12} r={2} />
-                          <circle fill="#000000" cx={12} cy={19} r={2} />
-                        </g>
-                      </svg>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className="dropdown-menu-right">
-                      {/* {Object.keys(productValues && productValues).map((id) => {
+                          <g
+                            stroke="none"
+                            strokeWidth={1}
+                            fill="none"
+                            fillRule="evenodd"
+                          >
+                            <rect x={0} y={0} width={24} height={24} />
+                            <circle fill="#000000" cx={12} cy={5} r={2} />
+                            <circle fill="#000000" cx={12} cy={12} r={2} />
+                            <circle fill="#000000" cx={12} cy={19} r={2} />
+                          </g>
+                        </svg>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu className="dropdown-menu-right">
+                        {/* {Object.keys(productValues && productValues).map((id) => {
                         return (
                           <Dropdown.Item className="text-black" to="/">
                             {productValues[id].productName}
                           </Dropdown.Item>
                         );
                       })} */}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
-                <div className="card-body">
-                  <div>
-                    <div className="d-flex align-items-center pb-3 mb-3 border-bottom">
-                      <i className="las la-carrot gs-icon bgl-primary text-primary mr-3" />
-                      <span className="text-black fs-15 font-w400">
-                        Prepare the following products tomorrow (
-                        {dateTomorrow.toLocaleDateString()})
-                      </span>
-                    </div>
-                    <div className="fs-14 mb-4">
-                      {Object.keys(preorderProducts).map((value, index) => {
-                        <ul
-                          className="d-flex justify-content-between pb-2"
-                          key={index}
-                        >
-                          <li className="font-w500 text-dark">
-                            {value.productName}
-                          </li>
-                          <li>{value.productQty}</li>
-                          <li>{value.productUnit}</li>
-                        </ul>;
-                      })}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                  <div className="card-body">
+                    <div>
+                      <div className="d-flex align-items-center pb-3 mb-3 border-bottom">
+                        <i className="las la-carrot gs-icon bgl-primary text-primary mr-3" />
+                        <span className="text-black fs-15 font-w400">
+                          Prepare the following products tomorrow (
+                          {dateTomorrow.toLocaleDateString()})
+                        </span>
+                      </div>
+                      <div className="fs-14 mb-4">
+                        {Object.keys(preorderProducts).map((value, index) => {
+                          <ul
+                            className="d-flex justify-content-between pb-2"
+                            key={index}
+                          >
+                            <li className="font-w500 text-dark">
+                              {value.productName}
+                            </li>
+                            <li>{value.productQty}</li>
+                            <li>{value.productUnit}</li>
+                          </ul>;
+                        })}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="card-footer pt-0 border-0 text-center">
-                  <Link to="/social-network-campaign" className="text-primary">
-                    See all Next Day Orders
-                  </Link>
+                  <div className="card-footer pt-0 border-0 text-center">
+                    <Link
+                      to="/social-network-campaign"
+                      className="text-primary"
+                    >
+                      See all Next Day Orders
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  } else {
+    return <h1>Loading...</h1>;
+  }
 };
 
 export default Home;
