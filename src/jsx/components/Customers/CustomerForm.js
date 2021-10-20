@@ -235,6 +235,7 @@ const CustomerForm = (props) => {
                           onChange={handleInputChange}
                           required
                           disabled={viewMode}
+                          maxLength={11}
                         />
                       </div>
                     </div>

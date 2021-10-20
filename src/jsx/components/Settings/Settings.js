@@ -1,58 +1,67 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import firebaseDb from "../../../firebase";
-import PageTitle from "../../layouts/PageTitle";
-import swal from "sweetalert";
-import swalMessage from "@sweetalert/with-react";
-import PerfectScrollbar from "react-perfect-scrollbar";
 
-import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Button,
-  Badge,
-  Dropdown,
-  ProgressBar,
-} from "react-bootstrap";
-
-
+import { Button } from "react-bootstrap";
+import CategoryList from "../Products/CategoryList";
+import UnitList from "../Products/UnitList";
+import DeliveryFeeList from "../Orders/DeliveryFeeList";
 
 const Settings = () => {
+  const [selectedCategorySettings, setSelectedCategorySettings] =
+    useState(true);
+  const [selectedUnitSettings, setSelectedUnitSettings] = useState(false);
+  const [selectedDeliveryLocationSettings, setDeliveryLocationSettings] =
+    useState(false);
+
+  const SettingsArea = () => {
+    if (selectedCategorySettings) {
+      return <CategoryList />;
+    } else if (selectedUnitSettings) {
+      return <UnitList />;
+    } else if (selectedDeliveryLocationSettings) {
+      return <DeliveryFeeList />;
+    }
+  };
+
+  const toggleAllButtons = (toggle) => {
+    setSelectedCategorySettings(toggle);
+    setSelectedUnitSettings(toggle);
+    setDeliveryLocationSettings(toggle);
+  };
 
   return (
     <Fragment>
-      <div className="form-row col-md-12" >
-        <div className="form-group col-md-3 mt-4 mt-6">
-          <Link
-            to={{
-              pathname: "/products-category",
+      <div className="row">
+        <div className="col-xl-3 col-lg-3">
+          <Button
+            onClick={() => {
+              toggleAllButtons();
+              setSelectedCategorySettings(true);
             }}
-            className="btn btn-secondary btn-block"
+            className="btn btn-primary light btn-block"
           >
-            Category
-          </Link>
-        </div>
-        <div className="form-group col-md-3 mt-4 mt-6">
-          <Link
-            to={{
-              pathname: "/products-unit",
+            Product Category
+          </Button>
+          <Button
+            onClick={() => {
+              toggleAllButtons();
+              setSelectedUnitSettings(true);
             }}
-            className="btn btn-info btn-block"
+            className="btn btn-primary light btn-block"
           >
-            Unit
-          </Link>
-        </div>
-        <div className="form-group col-md-3 mt-4 mt-6">
-          <Link
-            to={{
-              pathname: "/orders-deliveryfee",
+            Product Unit
+          </Button>
+          <Button
+            onClick={() => {
+              toggleAllButtons();
+              setDeliveryLocationSettings(true);
             }}
-            className="btn btn-warning btn-block"
+            className="btn btn-primary light btn-block"
           >
             Delivery Fee
-          </Link>
+          </Button>
+        </div>
+        <div className="col-xl-9 col-lg-9">
+          <SettingsArea />
         </div>
       </div>
     </Fragment>
