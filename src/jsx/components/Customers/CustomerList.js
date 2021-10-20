@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useDataContext } from "../../../contexts/DataContext";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
@@ -93,6 +94,15 @@ const CustomerList = () => {
 
   return (
     <Fragment>
+      <Helmet>
+        <title>Veggie Go | Customers</title>
+      </Helmet>
+      <div className="form-head d-flex mb-0 mb-lg-4 align-items-start">
+        <div className="mr-auto d-none d-lg-block">
+          <h2 className="text-black font-w600 mb-1">Customers</h2>
+          <p className="mb-0">Keep track of your customers here</p>
+        </div>
+      </div>
       <div className="row">
         <div className="col-xl-4 col-lg-6">
           <CustomerForm {...{ addOrEdit, currentId, customerList }} />
@@ -102,7 +112,7 @@ const CustomerList = () => {
             <Col lg={12}>
               <Card>
                 <Card.Header>
-                  <Card.Title>My Customers</Card.Title>
+                  <Card.Title></Card.Title>
                   <span className="float-right">
                     <Button
                       className="btn-sm btn-primary btn-block"

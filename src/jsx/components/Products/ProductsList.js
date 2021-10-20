@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import firebaseDb from "../../../firebase";
 import { useDataContext } from "../../../contexts/DataContext";
 import swal from "sweetalert";
-import swalMessage from "@sweetalert/with-react";
 import {
   Row,
   Col,
@@ -124,139 +124,166 @@ const ProductsList = () => {
   return (
     <Fragment>
       {productList && (
-        <div className="row">
-          <div className="col-xl-4 col-lg-4">
-            <ProductsForm {...{ addOrEdit, currentId, productList }} />
+        <>
+          <Helmet>
+            <title>Veggie Go | Products </title>
+          </Helmet>
+          <div className="form-head d-flex mb-0 mb-lg-4 align-items-start">
+            <div className="mr-auto d-none d-lg-block">
+              <h2 className="text-black font-w600 mb-1">Products</h2>
+              <p className="mb-0">Keep track of your product listings here</p>
+            </div>
           </div>
-          <div className="col-xl-8 col-lg-8">
-            <Row>
-              <Col lg={12}>
-                <Card>
-                  <Card.Header>
-                    <Card.Title>
-                      My Products
-                      <Dropdown>
-                        <Dropdown.Toggle variant="" size="m" className="mt-1">
-                          {categoryBadge(filterCategory)}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterCategory("ALL")}
-                          >
-                            {categoryBadge("ALL")}
-                          </Dropdown.Item>{" "}
-                          <Dropdown.Item
-                            onSelect={() => handleFilterCategory("BEST SELLER")}
-                          >
-                            {categoryBadge("BEST SELLER")}
-                          </Dropdown.Item>{" "}
-                          <Dropdown.Item
-                            onSelect={() => handleFilterCategory("FRUITS")}
-                          >
-                            {categoryBadge("FRUITS")}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterCategory("CONDIMENTS")}
-                          >
-                            {categoryBadge("CONDIMENTS")}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterCategory("ASSORTED")}
-                          >
-                            {categoryBadge("ASSORTED")}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterCategory("SWEETENER")}
-                          >
-                            {categoryBadge("SWEETENER")}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterCategory("VEGETABLES")}
-                          >
-                            {categoryBadge("VEGETABLES")}
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </Card.Title>
-                    <Button
-                      variant="primary btn-rounded"
-                      onClick={() => {
-                        setCurrentId("");
-                      }}
-                    >
-                      <span className="btn-icon-left text-primary">
-                        <i className="fa fa-plus" />
-                      </span>
-                      Add
-                    </Button>
-                  </Card.Header>
-                  <Card.Body>
-                    <div className="search_bar dropdown show mb-3">
-                      <div className="dropdown-menushow">
-                        <form onSubmit={(e) => e.preventDefault()}>
-                          <input
-                            className="form-control"
-                            type="search"
-                            placeholder="Search Product name"
-                            aria-label="Search"
-                            onChange={(event) =>
-                              setSearchTerm(event.target.value)
-                            }
-                          />
-                        </form>
-                      </div>
-                    </div>
-                    <Table responsive hover>
-                      <thead>
-                        <tr>
-                          <th>
-                            <strong>PRODUCT NAME</strong>
-                          </th>
-                          <th>
-                            <strong>CATEGORY</strong>
-                          </th>
-                          <th>
-                            <strong>UNIT</strong>
-                          </th>
-                          <th>
-                            <strong>PRICE</strong>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.keys(
-                          filteredProducts(productList, filterCategory)
-                        ).map((id) => {
-                          return (
-                            <tr
-                              key={id}
-                              onClick={() => {
-                                setCurrentId(id);
-                              }}
+          <div className="row">
+            <div className="col-xl-4 col-lg-4">
+              <ProductsForm {...{ addOrEdit, currentId, productList }} />
+            </div>
+            <div className="col-xl-8 col-lg-8">
+              <Row>
+                <Col lg={12}>
+                  <Card>
+                    <Card.Header>
+                      <Card.Title>
+                        My Products
+                        <Dropdown>
+                          <Dropdown.Toggle variant="" size="m" className="mt-1">
+                            {categoryBadge(filterCategory)}
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item
+                              onSelect={() => handleFilterCategory("ALL")}
                             >
-                              <td>
-                                <img
-                                  src={productList[id].productImage}
-                                  className="rounded-lg mr-2"
-                                  width="24"
-                                  alt=""
-                                />
-                                <span>{productList[id].productName}</span>
-                              </td>
-                              <td>{categoryBadge(productList[id].category)}</td>
-                              <td>{productList[id].unit}</td>
-                              <td>{productList[id].price}</td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </Table>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
+                              {categoryBadge("ALL")}
+                            </Dropdown.Item>{" "}
+                            <Dropdown.Item
+                              onSelect={() =>
+                                handleFilterCategory("BEST SELLER")
+                              }
+                            >
+                              {categoryBadge("BEST SELLER")}
+                            </Dropdown.Item>{" "}
+                            <Dropdown.Item
+                              onSelect={() => handleFilterCategory("FRUITS")}
+                            >
+                              {categoryBadge("FRUITS")}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onSelect={() =>
+                                handleFilterCategory("CONDIMENTS")
+                              }
+                            >
+                              {categoryBadge("CONDIMENTS")}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onSelect={() => handleFilterCategory("ASSORTED")}
+                            >
+                              {categoryBadge("ASSORTED")}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onSelect={() => handleFilterCategory("SWEETENER")}
+                            >
+                              {categoryBadge("SWEETENER")}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onSelect={() =>
+                                handleFilterCategory("VEGETABLES")
+                              }
+                            >
+                              {categoryBadge("VEGETABLES")}
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </Card.Title>
+                      {/* <Button
+                        variant="primary btn-rounded"
+                        onClick={() => {
+                          setCurrentId("");
+                        }}
+                      >
+                        <span className="btn-icon-left text-primary">
+                          <i className="fa fa-plus" />
+                        </span>
+                        Add
+                      </Button> */}
+                      <Button
+                        className="btn-sm btn-primary "
+                        onClick={() => {
+                          setCurrentId("");
+                        }}
+                      >
+                        Add new product
+                      </Button>
+                    </Card.Header>
+                    <Card.Body>
+                      <div className="search_bar dropdown show mb-3">
+                        <div className="dropdown-menushow">
+                          <form onSubmit={(e) => e.preventDefault()}>
+                            <input
+                              className="form-control"
+                              type="search"
+                              placeholder="Search Product name"
+                              aria-label="Search"
+                              onChange={(event) =>
+                                setSearchTerm(event.target.value)
+                              }
+                            />
+                          </form>
+                        </div>
+                      </div>
+                      <Table responsive hover>
+                        <thead>
+                          <tr>
+                            <th>
+                              <strong>PRODUCT NAME</strong>
+                            </th>
+                            <th>
+                              <strong>CATEGORY</strong>
+                            </th>
+                            <th>
+                              <strong>UNIT</strong>
+                            </th>
+                            <th>
+                              <strong>PRICE</strong>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.keys(
+                            filteredProducts(productList, filterCategory)
+                          ).map((id) => {
+                            return (
+                              <tr
+                                key={id}
+                                onClick={() => {
+                                  setCurrentId(id);
+                                }}
+                              >
+                                <td>
+                                  <img
+                                    src={productList[id].productImage}
+                                    className="rounded-lg mr-2"
+                                    width="24"
+                                    alt=""
+                                  />
+                                  <span>{productList[id].productName}</span>
+                                </td>
+                                <td>
+                                  {categoryBadge(productList[id].category)}
+                                </td>
+                                <td>{productList[id].unit}</td>
+                                <td>{productList[id].price}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </Fragment>
   );

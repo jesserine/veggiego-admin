@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useDataContext } from "../../../contexts/DataContext";
 
 import { Link } from "react-router-dom";
@@ -96,6 +97,9 @@ const Home = () => {
   if (orderList !== null) {
     return (
       <>
+        <Helmet>
+          <title>Veggie Go | Dashboard</title>
+        </Helmet>
         <div className="form-head d-flex mb-0 mb-lg-4 align-items-start">
           <div className="mr-auto d-none d-lg-block">
             <h2 className="text-black font-w600 mb-1">Dashboard</h2>

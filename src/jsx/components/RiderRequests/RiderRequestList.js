@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import firebaseDb from "../../../firebase";
 import { useDataContext } from "../../../contexts/DataContext";
 import swal from "sweetalert";
@@ -75,19 +76,31 @@ const RiderRequestList = () => {
   return (
     <Fragment>
       {riderList && (
-        <div className="row">
-          <div className="col-xl-4 col-lg-4">
-            <RidersForm {...{ addOrEdit, currentId, riderList }} />
+        <>
+          <Helmet>
+            <title>Veggie Go | Rider Requests</title>
+          </Helmet>
+          <div className="form-head d-flex mb-0 mb-lg-4 align-items-start">
+            <div className="mr-auto d-none d-lg-block">
+              <h2 className="text-black font-w600 mb-1">Rider Requests</h2>
+              <p className="mb-0">
+                A list of customer change requests from your rider
+              </p>
+            </div>
           </div>
-          <div className="col-xl-8 col-lg-8">
-            <Row>
-              <Col lg={12}>
-                <Card>
-                  <Card.Header>
-                    <Card.Title>Rider Requests</Card.Title>
-                  </Card.Header>
-                  <Card.Body>
-                    {/* <div className="search_bar dropdown show mb-3">
+          <div className="row">
+            <div className="col-xl-4 col-lg-4">
+              <RidersForm {...{ addOrEdit, currentId, riderList }} />
+            </div>
+            <div className="col-xl-8 col-lg-8">
+              <Row>
+                <Col lg={12}>
+                  <Card>
+                    <Card.Header>
+                      <Card.Title>Rider Requests</Card.Title>
+                    </Card.Header>
+                    <Card.Body>
+                      {/* <div className="search_bar dropdown show mb-3">
                       <div className="dropdown-menushow">
                         <form onSubmit={(e) => e.preventDefault()}>
                           <input
@@ -102,29 +115,30 @@ const RiderRequestList = () => {
                         </form>
                       </div>
                     </div> */}
-                    <Table responsive hover>
-                      <thead>
-                        <tr>
-                          <th>
-                            <strong>REQUESTED BY</strong>
-                          </th>
-                          <th>
-                            <strong>CONTACT #</strong>
-                          </th>
-                          <th>
-                            <strong>ADDRESS</strong>
-                          </th>
-                          <th>
-                            <strong>VEHICLE TYPE</strong>
-                          </th>
-                          <th>
-                            <strong>VEHICLE PLATE #</strong>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.keys(filteredRider(riderList, searchTerm)).map(
-                          (id) => {
+                      <Table responsive hover>
+                        <thead>
+                          <tr>
+                            <th>
+                              <strong>REQUESTED BY</strong>
+                            </th>
+                            <th>
+                              <strong>CONTACT #</strong>
+                            </th>
+                            <th>
+                              <strong>ADDRESS</strong>
+                            </th>
+                            <th>
+                              <strong>VEHICLE TYPE</strong>
+                            </th>
+                            <th>
+                              <strong>VEHICLE PLATE #</strong>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.keys(
+                            filteredRider(riderList, searchTerm)
+                          ).map((id) => {
                             return (
                               <tr
                                 key={id}
@@ -147,16 +161,16 @@ const RiderRequestList = () => {
                                 <td>{riderList[id].vehiclePlateNum}</td>
                               </tr>
                             );
-                          }
-                        )}
-                      </tbody>
-                    </Table>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
+                          })}
+                        </tbody>
+                      </Table>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </Fragment>
   );

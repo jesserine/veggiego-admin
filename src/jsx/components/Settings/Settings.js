@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-
+import { Helmet } from "react-helmet";
 import { Button } from "react-bootstrap";
 import CategoryList from "../Products/CategoryList";
 import UnitList from "../Products/UnitList";
@@ -30,6 +30,9 @@ const Settings = () => {
 
   return (
     <Fragment>
+      <Helmet>
+        <title>Veggie Go | Settings </title>
+      </Helmet>
       <div className="row">
         <div className="col-xl-3 col-lg-3">
           <Button

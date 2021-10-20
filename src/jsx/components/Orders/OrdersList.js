@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useDataContext } from "../../../contexts/DataContext";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
@@ -158,169 +159,188 @@ const OrdersList = () => {
   return (
     <Fragment>
       {orderList && (
-        <div className="row">
-          <div className="col-xl-6 col-lg-6">
-            <OrderReceipt
-              {...{
-                addOrEdit,
-                currentId,
-                orderValues,
-                statusBadge,
-                currentOrder,
-                setCurrentOrder,
-              }}
-            />
+        <>
+          <Helmet>
+            <title>Veggie Go | Orders</title>
+          </Helmet>
+          <div className="form-head d-flex mb-0 mb-lg-4 align-items-start">
+            <div className="mr-auto d-none d-lg-block">
+              <h2 className="text-black font-w600 mb-1">Orders</h2>
+              <p className="mb-0">Keep track of your orders here</p>
+            </div>
           </div>
-          <div className="col-xl-6 col-lg-6">
-            <Row>
-              <Col lg={12}>
-                <Card>
-                  <Card.Header>
-                    <Card.Title>
-                      Customer Orders
-                      <Dropdown>
-                        <Dropdown.Toggle variant="" size="m" className="mt-1">
-                          {statusBadge(
-                            filterStatus +
-                              " (" +
-                              Object.keys(
-                                filteredOrders(orderList, filterStatus)
-                              ).length +
-                              ")"
-                          )}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterStatus("ALL")}
-                          >
-                            {statusBadge("ALL")}
-                          </Dropdown.Item>{" "}
-                          <Dropdown.Item
-                            onSelect={() => handleFilterStatus("ACTIVE")}
-                          >
-                            {statusBadge("ACTIVE")}
-                          </Dropdown.Item>{" "}
-                          <Dropdown.Item
-                            onSelect={() => handleFilterStatus("PREORDER")}
-                          >
-                            {statusBadge("PREORDER")}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterStatus("PROCESSING")}
-                          >
-                            {statusBadge("PROCESSING")}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterStatus("FOR DELIVERY")}
-                          >
-                            {statusBadge("FOR DELIVERY")}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterStatus("IN TRANSIT")}
-                          >
-                            {statusBadge("IN TRANSIT")}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterStatus("DELIVERED")}
-                          >
-                            {statusBadge("DELIVERED")}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onSelect={() => handleFilterStatus("CANCELLED")}
-                          >
-                            {statusBadge("CANCELLED")}
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </Card.Title>
-                    <span className="float-right">
-                      <Link
-                        to={{
-                          pathname: "/customer-order",
-                          state: {
-                            user: null,
-                            userId: null,
-                          },
-                        }}
-                        className="btn-sm btn-primary btn-block"
-                      >
-                        Add new order
-                      </Link>
-                    </span>
-                  </Card.Header>
-                  <Card.Body>
-                    <form
-                      onSubmit={(e) => e.preventDefault()}
-                      style={{ marginBottom: 10 }}
-                    >
-                      <input
-                        className="form-control"
-                        type="search"
-                        placeholder="Search Customer Name"
-                        aria-label="Search"
-                        onChange={(event) => setSearchTerm(event.target.value)}
-                      />
-                    </form>
-                    <Table responsive hover>
-                      <thead>
-                        <tr>
-                          <th>
-                            <strong>ORDER STATUS</strong>
-                          </th>
-                          <th>
-                            <strong>PAYMENT</strong>
-                          </th>
-                          <th>
-                            <strong>CUSTOMER</strong>
-                          </th>
-                          <th>
-                            <strong>CONTACT NUMBER</strong>
-                          </th>
-                          <th>
-                            <strong>GRAND TOTAL</strong>
-                          </th>
-                          <th>
-                            <strong>DATE OF DELIVERY</strong>
-                          </th>
-                          <th>
-                            <strong>RIDER</strong>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.keys(
-                          filteredOrders(orderList, filterStatus)
-                        ).map((orderId) => {
-                          return (
-                            <tr
-                              key={orderId}
-                              onClick={() => {
-                                setCurrentId(orderId);
-                                setCurrentOrder({ ...orderList[orderId] });
-                              }}
+          <div className="row">
+            <div className="col-xl-6 col-lg-6">
+              <OrderReceipt
+                {...{
+                  addOrEdit,
+                  currentId,
+                  orderValues,
+                  statusBadge,
+                  currentOrder,
+                  setCurrentOrder,
+                }}
+              />
+            </div>
+            <div className="col-xl-6 col-lg-6">
+              <Row>
+                <Col lg={12}>
+                  <Card>
+                    <Card.Header>
+                      <Card.Title>
+                        Customer Orders
+                        <Dropdown>
+                          <Dropdown.Toggle variant="" size="m" className="mt-1">
+                            {statusBadge(
+                              filterStatus +
+                                " (" +
+                                Object.keys(
+                                  filteredOrders(orderList, filterStatus)
+                                ).length +
+                                ")"
+                            )}
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item
+                              onSelect={() => handleFilterStatus("ALL")}
                             >
-                              <td>{statusBadge(orderList[orderId].status)}</td>
-                              <td>
-                                {statusBadge(orderList[orderId].paymentStatus)}
-                              </td>
-                              <td>{orderList[orderId].customer.name}</td>
-                              <td>
-                                {orderList[orderId].customer.contactNumber}
-                              </td>
-                              <td>₱{orderList[orderId].grandTotal}</td>
-                              <td>{orderList[orderId].dateOfDelivery}</td>
-                              <td>{orderList[orderId].rider.riderName}</td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </Table>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
+                              {statusBadge("ALL")}
+                            </Dropdown.Item>{" "}
+                            <Dropdown.Item
+                              onSelect={() => handleFilterStatus("ACTIVE")}
+                            >
+                              {statusBadge("ACTIVE")}
+                            </Dropdown.Item>{" "}
+                            <Dropdown.Item
+                              onSelect={() => handleFilterStatus("PREORDER")}
+                            >
+                              {statusBadge("PREORDER")}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onSelect={() => handleFilterStatus("PROCESSING")}
+                            >
+                              {statusBadge("PROCESSING")}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onSelect={() =>
+                                handleFilterStatus("FOR DELIVERY")
+                              }
+                            >
+                              {statusBadge("FOR DELIVERY")}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onSelect={() => handleFilterStatus("IN TRANSIT")}
+                            >
+                              {statusBadge("IN TRANSIT")}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onSelect={() => handleFilterStatus("DELIVERED")}
+                            >
+                              {statusBadge("DELIVERED")}
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onSelect={() => handleFilterStatus("CANCELLED")}
+                            >
+                              {statusBadge("CANCELLED")}
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </Card.Title>
+                      <span className="float-right">
+                        <Link
+                          to={{
+                            pathname: "/customer-order",
+                            state: {
+                              user: null,
+                              userId: null,
+                            },
+                          }}
+                          className="btn-sm btn-primary "
+                        >
+                          Add new order
+                        </Link>
+                      </span>
+                    </Card.Header>
+                    <Card.Body>
+                      <form
+                        onSubmit={(e) => e.preventDefault()}
+                        style={{ marginBottom: 10 }}
+                      >
+                        <input
+                          className="form-control"
+                          type="search"
+                          placeholder="Search Customer Name"
+                          aria-label="Search"
+                          onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                          }
+                        />
+                      </form>
+                      <Table responsive hover>
+                        <thead>
+                          <tr>
+                            <th>
+                              <strong>ORDER STATUS</strong>
+                            </th>
+                            <th>
+                              <strong>PAYMENT</strong>
+                            </th>
+                            <th>
+                              <strong>CUSTOMER</strong>
+                            </th>
+                            <th>
+                              <strong>CONTACT NUMBER</strong>
+                            </th>
+                            <th>
+                              <strong>GRAND TOTAL</strong>
+                            </th>
+                            <th>
+                              <strong>DATE OF DELIVERY</strong>
+                            </th>
+                            <th>
+                              <strong>RIDER</strong>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.keys(
+                            filteredOrders(orderList, filterStatus)
+                          ).map((orderId) => {
+                            return (
+                              <tr
+                                key={orderId}
+                                onClick={() => {
+                                  setCurrentId(orderId);
+                                  setCurrentOrder({ ...orderList[orderId] });
+                                }}
+                              >
+                                <td>
+                                  {statusBadge(orderList[orderId].status)}
+                                </td>
+                                <td>
+                                  {statusBadge(
+                                    orderList[orderId].paymentStatus
+                                  )}
+                                </td>
+                                <td>{orderList[orderId].customer.name}</td>
+                                <td>
+                                  {orderList[orderId].customer.contactNumber}
+                                </td>
+                                <td>₱{orderList[orderId].grandTotal}</td>
+                                <td>{orderList[orderId].dateOfDelivery}</td>
+                                <td>{orderList[orderId].rider.riderName}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </Fragment>
   );
