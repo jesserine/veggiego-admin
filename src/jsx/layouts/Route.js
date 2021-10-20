@@ -68,6 +68,9 @@ import CustomerForm from "../components/Customers/CustomerForm";
 /// Riders
 import RidersList from "../components/Riders/RidersList";
 
+/// Rider Request
+import RiderRequestList from "../components/RiderRequests/RiderRequestList";
+
 /// Profile
 import Profile from "../components/Profile/Profile";
 
@@ -163,6 +166,9 @@ const Routes = () => {
 
     /// Riders
     { url: "riders", component: RidersList },
+
+    /// Riders
+    { url: "rider-requests", component: RiderRequestList },
 
     /// Orders
     { url: "orders", component: OrdersList },

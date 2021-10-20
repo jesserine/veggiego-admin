@@ -65,8 +65,9 @@ class SideBar extends Component {
     let customers = ["customers"];
     let riders = ["riders"];
     let products = ["products"];
-    let orders = ["orders, customer-order"];
+    let customerOrders = ["orders", "customer-order"];
     let settings = ["settings"];
+    let riderRequests = ["rider-requests"];
 
     return (
       <div className="deznav">
@@ -79,12 +80,15 @@ class SideBar extends Component {
               </Link>
             </li>
 
-            <li className={`${orders.includes(path) ? "mm-active" : ""}`}>
+            <li
+              className={`${customerOrders.includes(path) ? "mm-active" : ""}`}
+            >
               <Link className="has-arrow ai-icon" to="/orders">
                 <i className="la la-shopping-cart scale5"></i>
                 <span className="nav-text">Orders</span>
               </Link>
             </li>
+
             <li className={`${customers.includes(path) ? "mm-active" : ""}`}>
               <Link className="has-arrow ai-icon" to="/customers">
                 <i className="flaticon-381-user-9"></i>
@@ -95,6 +99,14 @@ class SideBar extends Component {
               <Link className="has-arrow ai-icon" to="/riders">
                 <i className="las la-biking scale5"></i>
                 <span className="nav-text">Riders</span>
+              </Link>
+            </li>
+            <li
+              className={`${riderRequests.includes(path) ? "mm-active" : ""}`}
+            >
+              <Link className="has-arrow ai-icon" to="/rider-requests">
+                <i className="las la-exclamation scale5"></i>
+                <span className="nav-text">Rider Requests</span>
               </Link>
             </li>
             <li className={`${products.includes(path) ? "mm-active" : ""}`}>

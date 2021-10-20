@@ -124,6 +124,7 @@ import Lightgallery from "./components/PluginsMenu/Lightgallery/Lightgallery";
 import PrivateRoute from "./layouts/PrivateRoute";
 import AuthRoute from "./layouts/AuthRoute";
 import Settings from "./components/Settings/Settings";
+import RiderRequestList from "./components/RiderRequests/RiderRequestList";
 
 const Markup = ({ showProfileSideBar }) => {
   const [showProfile, setShowProfile] = useState(false);
@@ -144,6 +145,9 @@ const Markup = ({ showProfileSideBar }) => {
 
     // Riders
     { url: "riders", component: RidersList },
+
+    // Riders
+    { url: "rider-requests", component: RiderRequestList },
 
     // Orders
     { url: "orders", component: OrdersList },
