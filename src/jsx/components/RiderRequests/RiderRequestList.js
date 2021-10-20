@@ -3,18 +3,9 @@ import { Helmet } from "react-helmet";
 import firebaseDb from "../../../firebase";
 import { useDataContext } from "../../../contexts/DataContext";
 import swal from "sweetalert";
-import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Button,
-  Badge,
-  Dropdown,
-  ProgressBar,
-} from "react-bootstrap";
+import { Row, Col, Card, Table } from "react-bootstrap";
 
-import RidersForm from "./RidersForm";
+import RiderRequestForm from "./RiderRequestForm";
 
 const RiderRequestList = () => {
   /// Get rider list from context provider
@@ -90,7 +81,7 @@ const RiderRequestList = () => {
           </div>
           <div className="row">
             <div className="col-xl-4 col-lg-4">
-              <RidersForm {...{ addOrEdit, currentId, riderList }} />
+              <RiderRequestForm {...{ addOrEdit, currentId, riderList }} />
             </div>
             <div className="col-xl-8 col-lg-8">
               <Row>
