@@ -76,13 +76,13 @@ import Profile from "../components/Profile/Profile";
 
 /// Orders
 import OrdersList from "../components/Orders/OrdersList";
-import DeliveryFeeList from "../components/Orders/DeliveryFeeList";
+import DeliveryFeeList from "../components/Settings/DeliveryFeeList";
 import CustomerOrder from "../components/Orders/CustomerOrder";
 
 /// Products
 import ProductsList from "../components/Products/ProductsList";
-import CategoryList from "../components/Products/CategoryList";
-import UnitList from "../components/Products/UnitList";
+import CategoryList from "../components/Settings/CategoryList";
+import UnitList from "../components/Settings/UnitList";
 
 /// Widget
 import Widget from "../pages/Widget";

@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Button } from "react-bootstrap";
-import CategoryList from "../Products/CategoryList";
-import UnitList from "../Products/UnitList";
-import DeliveryFeeList from "../Orders/DeliveryFeeList";
+import CategoryList from "./CategoryList";
+import UnitList from "./UnitList";
+import DeliveryFeeList from "./DeliveryFeeList";
+import DeliveryLocationList from "./DeliveryLocationList";
 
 const Settings = () => {
   const [selectedCategorySettings, setSelectedCategorySettings] =
@@ -11,6 +12,10 @@ const Settings = () => {
   const [selectedUnitSettings, setSelectedUnitSettings] = useState(false);
   const [selectedDeliveryLocationSettings, setDeliveryLocationSettings] =
     useState(false);
+  const [
+    selectedSupportedDeliveryLocations,
+    setSelectedSupportedDeliveryLocations,
+  ] = useState(false);
 
   const SettingsArea = () => {
     if (selectedCategorySettings) {
@@ -19,6 +24,8 @@ const Settings = () => {
       return <UnitList />;
     } else if (selectedDeliveryLocationSettings) {
       return <DeliveryFeeList />;
+    } else if (selectedSupportedDeliveryLocations) {
+      return <DeliveryLocationList />;
     }
   };
 
@@ -26,6 +33,7 @@ const Settings = () => {
     setSelectedCategorySettings(toggle);
     setSelectedUnitSettings(toggle);
     setDeliveryLocationSettings(toggle);
+    setSelectedSupportedDeliveryLocations(toggle);
   };
 
   return (
@@ -37,7 +45,7 @@ const Settings = () => {
         <div className="col-xl-3 col-lg-3">
           <Button
             onClick={() => {
-              toggleAllButtons();
+              toggleAllButtons(false);
               setSelectedCategorySettings(true);
             }}
             className="btn btn-primary light btn-block"
@@ -46,7 +54,7 @@ const Settings = () => {
           </Button>
           <Button
             onClick={() => {
-              toggleAllButtons();
+              toggleAllButtons(false);
               setSelectedUnitSettings(true);
             }}
             className="btn btn-primary light btn-block"
@@ -55,12 +63,21 @@ const Settings = () => {
           </Button>
           <Button
             onClick={() => {
-              toggleAllButtons();
+              toggleAllButtons(false);
               setDeliveryLocationSettings(true);
             }}
             className="btn btn-primary light btn-block"
           >
             Delivery Fee
+          </Button>
+          <Button
+            onClick={() => {
+              toggleAllButtons(false);
+              setSelectedSupportedDeliveryLocations(true);
+            }}
+            className="btn btn-primary light btn-block"
+          >
+            Supported Delivery Locations
           </Button>
         </div>
         <div className="col-xl-9 col-lg-9">

@@ -16,7 +16,6 @@ import {
 } from "react-bootstrap";
 
 import { Link } from "react-router-dom";
-import CategoryForm from "./CategoryForm";
 import UnitForm from "./UnitForm";
 
 const UnitList = () => {

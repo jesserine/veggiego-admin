@@ -1,7 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
 import firebaseDb from "../../../firebase";
-import { storage } from "../../../firebase";
-import { v4 as uuid } from "uuid";
 const CategoryForm = (props) => {
   const initialFieldValues = {
     categoryName: "",

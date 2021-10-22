@@ -19,6 +19,10 @@ const AddressModal = (props) => {
   const [barangayAddr, setBarangayAddr] = useState("");
   const [streetAddr, setStreetAddr] = useState("");
 
+  const [regionList, setRegionList] = useState([
+    "Region VIII (Eastern Visayas)",
+  ]);
+
   const region = () => {
     regions().then((response) => {
       console.log("response", response);
@@ -188,6 +192,7 @@ const AddressModal = (props) => {
                   />
                 </div>
               </div>
+              {/* end */}
             </form>
           </div>
           <p>Full Address</p>
