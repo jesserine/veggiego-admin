@@ -1,19 +1,9 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { Helmet } from "react-helmet";
 import firebaseDb from "../../../firebase";
 import { useDataContext } from "../../../contexts/DataContext";
 import swal from "sweetalert";
-import swalMessage from "@sweetalert/with-react";
-import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Button,
-  Badge,
-  Dropdown,
-  ProgressBar,
-} from "react-bootstrap";
+import { Row, Col, Card, Table, Button } from "react-bootstrap";
 
 import RidersForm from "./RidersForm";
 

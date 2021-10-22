@@ -116,9 +116,9 @@ const DeliveryFeeList = () => {
                             <td>{deliveryFeeObjects[id].dateAdded}</td>
                             <td>
                               {deliveryFeeObjects[id].isActive === "false" ? (
-                                <Badge variant="danger light"> Inactive </Badge>
+                                <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
-                                <Badge variant="success light"> Active </Badge>
+                                <Badge variant="success light"> ACTIVE </Badge>
                               )}
                             </td>
                           </tr>
