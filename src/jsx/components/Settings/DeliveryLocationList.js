@@ -7,30 +7,31 @@ import { Link } from "react-router-dom";
 import DeliveryLocationForm from "./DeliveryLocationForm";
 
 const DeliveryLocationList = () => {
-  var [deliveryFeeObjects, setDeliveryFeeObjects] = useState({});
+  var [deliveryLocationObjects, setDeliveryLocationObjects] = useState({});
   var [currentId, setCurrentId] = useState("");
 
   useEffect(() => {
-    firebaseDb.ref("delivery/").on("value", (snapshot) => {
+    firebaseDb.ref("deliveryLocations/").on("value", (snapshot) => {
       if (snapshot.val() != null)
-        setDeliveryFeeObjects({
+        setDeliveryLocationObjects({
           ...snapshot.val(),
         });
-      else setDeliveryFeeObjects({});
+      else setDeliveryLocationObjects({});
     });
   }, []);
 
   const addOrEdit = (obj) => {
     console.log("inside addOrEdit");
     if (currentId === "") {
-      swal("Nice!", "A new delivery fee is added!", "success");
-      firebaseDb.ref("delivery/").push(obj, (err) => {
+      swal("Nice!", "A new delivery location is added!", "success");
+      firebaseDb.ref("deliveryLocations/").push(obj, (err) => {
         if (err) console.log(err);
         else setCurrentId("");
+        console.log("added succesfully");
       });
     } else {
-      swal("Nice!", "This delivery fee is updated!", "success");
-      firebaseDb.ref(`delivery/${currentId}`).set(obj, (err) => {
+      swal("Nice!", "This delivery location is updated!", "success");
+      firebaseDb.ref(`deliveryLocations/${currentId}`).set(obj, (err) => {
         if (err) console.log(err);
         else setCurrentId("");
       });
@@ -39,7 +40,7 @@ const DeliveryLocationList = () => {
 
   const onDelete = (key) => {
     if (window.confirm("Are you sure to delete this record?")) {
-      firebaseDb.ref(`delivery/${key}`).remove((err) => {
+      firebaseDb.ref(`deliveryLocations/${key}`).remove((err) => {
         if (err) console.log(err);
         else setCurrentId("");
       });
@@ -55,7 +56,7 @@ const DeliveryLocationList = () => {
           </h2>
           <div className="mt-4">
             <DeliveryLocationForm
-              {...{ addOrEdit, currentId, deliveryFeeObjects }}
+              {...{ addOrEdit, currentId, deliveryLocationObjects }}
             />
           </div>
 
@@ -84,16 +85,19 @@ const DeliveryLocationList = () => {
                         <th>
                           <strong>BARANGAY</strong>
                         </th>
+                        <th>
+                          <strong>STATUS</strong>
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.keys(deliveryFeeObjects).map((id) => {
+                      {Object.keys(deliveryLocationObjects).map((id) => {
                         return (
                           <tr key={id}>
                             <td>
                               <div className="d-flex">
                                 <Link
-                                  to="/products-unit"
+                                  to="/settings"
                                   onClick={() => {
                                     setCurrentId(id);
                                     window.scrollTo(0, 0);
@@ -103,7 +107,7 @@ const DeliveryLocationList = () => {
                                   <i className="fa fa-pencil"></i>
                                 </Link>
                                 <Link
-                                  to="/products-unit"
+                                  to="/settings"
                                   onClick={() => {
                                     onDelete(id);
                                   }}
@@ -113,11 +117,13 @@ const DeliveryLocationList = () => {
                                 </Link>
                               </div>
                             </td>
-                            <td>{deliveryFeeObjects[id].location}</td>
-                            <td>{deliveryFeeObjects[id].deliveryFee}</td>
-                            <td>{deliveryFeeObjects[id].dateAdded}</td>
+                            <td>{deliveryLocationObjects[id].region}</td>
+                            <td>{deliveryLocationObjects[id].province}</td>
+                            <td>{deliveryLocationObjects[id].city}</td>
+                            <td>{deliveryLocationObjects[id].barangay}</td>
                             <td>
-                              {deliveryFeeObjects[id].isActive === "false" ? (
+                              {deliveryLocationObjects[id].isActive ===
+                              "false" ? (
                                 <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
                                 <Badge variant="success light"> ACTIVE </Badge>

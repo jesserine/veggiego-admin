@@ -3,22 +3,25 @@ import firebaseDb from "../../../firebase";
 
 const DeliveryLocationForm = (props) => {
   const initialFieldValues = {
-    location: "",
-    deliveryFee: "",
+    region: "",
+    province: "",
+    city: "",
+    barangay: "",
+    completeLocation: "",
     dateAdded: new Date().toLocaleString(),
     isActive: "true",
   };
 
   var [values, setValues] = useState(initialFieldValues);
-  var [deliveryFeeObjects, setDeliveryFeeObjects] = useState({});
+  var [deliveryLocationObjects, setDeliveryLocationObjects] = useState({});
 
   useEffect(() => {
-    firebaseDb.ref("deliverylocations/").on("value", (snapshot) => {
+    firebaseDb.ref("deliveryLocations/").on("value", (snapshot) => {
       if (snapshot.val() != null)
-        setDeliveryFeeObjects({
+        setDeliveryLocationObjects({
           ...snapshot.val(),
         });
-      else setDeliveryFeeObjects({});
+      else setDeliveryLocationObjects({});
     });
   }, []);
 
@@ -29,9 +32,9 @@ const DeliveryLocationForm = (props) => {
       });
     else
       setValues({
-        ...props.deliveryFeeObjects[props.currentId],
+        ...props.deliveryLocationObjects[props.currentId],
       });
-  }, [props.currentId, props.deliveryFeeObjects]);
+  }, [props.currentId, props.deliveryLocationObjects]);
 
   const handleInputChange = (e) => {
     var { name, value } = e.target;
@@ -48,7 +51,7 @@ const DeliveryLocationForm = (props) => {
     window.location.reload(false);
   };
 
-  const enabled = values.location != null && values.deliveryFee >= 0;
+  const enabled = values.city != null && values.barangay != null;
   return (
     <Fragment>
       <div className="row">
@@ -68,9 +71,9 @@ const DeliveryLocationForm = (props) => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Location"
+                        placeholder="Region"
                         name="region"
-                        value={values.location}
+                        value={values.region}
                         onChange={handleInputChange}
                         required
                       />
@@ -80,9 +83,9 @@ const DeliveryLocationForm = (props) => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Location"
+                        placeholder="Province"
                         name="province"
-                        value={values.location}
+                        value={values.province}
                         onChange={handleInputChange}
                         required
                       />
@@ -94,9 +97,9 @@ const DeliveryLocationForm = (props) => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Location"
+                        placeholder="City"
                         name="city"
-                        value={values.location}
+                        value={values.city}
                         onChange={handleInputChange}
                         required
                       />
@@ -106,9 +109,9 @@ const DeliveryLocationForm = (props) => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Location"
+                        placeholder="Barangay"
                         name="barangay"
-                        value={values.location}
+                        value={values.barangay}
                         onChange={handleInputChange}
                         required
                       />
@@ -120,8 +123,8 @@ const DeliveryLocationForm = (props) => {
                       <input
                         type="text"
                         className="form-control"
-                        name="location"
-                        value={values.deliveryFee}
+                        name="completeLocation"
+                        value={values.completeLocation}
                         onChange={handleInputChange}
                         disabled
                       />
@@ -161,8 +164,8 @@ const DeliveryLocationForm = (props) => {
                         type="submit"
                         value={
                           props.currentId === ""
-                            ? "Add Delivery Fee"
-                            : "Update Delivery Fee"
+                            ? "Add Delivery Location"
+                            : "Update Delivery Location"
                         }
                         className="btn btn-primary"
                         disabled={!enabled}
