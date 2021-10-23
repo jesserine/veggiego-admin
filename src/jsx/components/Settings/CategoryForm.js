@@ -1,4 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { Button } from "react-bootstrap";
+
 import firebaseDb from "../../../firebase";
 const CategoryForm = (props) => {
   const initialFieldValues = {
@@ -39,17 +41,9 @@ const CategoryForm = (props) => {
     });
   };
 
-  const [imageUrl, setImageUrl] = useState();
-
-  if (typeof imageUrl !== "undefined" && imageUrl != null) {
-    values.productImage = imageUrl;
-  }
-
-  const handleFormSubmit = (e) => {
-    console.log("inside handleFormSubmit");
-    e.preventDefault();
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
     props.addOrEdit(values);
-    window.location.reload(false);
   };
 
   const enabled = values.categoryName != null;
@@ -62,6 +56,16 @@ const CategoryForm = (props) => {
               <h4 className="card-title">
                 {props.currentId === "" ? "Add" : "Update"} Category
               </h4>
+              {props.currentId !== "" && (
+                <Button
+                  onClick={() => {
+                    props.setCurrentId("");
+                  }}
+                  className="btn btn-primary light btn-xs  mr-1"
+                >
+                  Add new Product Category
+                </Button>
+              )}
             </div>
             <div className="card-body">
               <div className="basic-form">
@@ -85,10 +89,9 @@ const CategoryForm = (props) => {
                       <input
                         type="checkbox"
                         className="custom-control-input"
-                        value={values.isActive}
+                        checked={values.isActive}
                         onChange={handleInputChange}
                         id="isActiveCategory"
-                        required
                       />
                       <label
                         className="custom-control-label"

@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
-import { Row, Col, Card, Table, Badge } from "react-bootstrap";
+import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
 
 import { Link } from "react-router-dom";
 import CategoryForm from "./CategoryForm";
@@ -21,7 +21,6 @@ const CategoryList = () => {
   }, []);
 
   const addOrEdit = (obj) => {
-    console.log("inside addOrEdit");
     if (currentId === "") {
       swal("Nice!", "A new category is added!", "success");
       firebaseDb.ref("category/").push(obj, (err) => {
@@ -54,7 +53,9 @@ const CategoryList = () => {
             Product Category Settings
           </h2>
           <div className="mt-4">
-            <CategoryForm {...{ addOrEdit, currentId, categoryObjects }} />
+            <CategoryForm
+              {...{ addOrEdit, currentId, setCurrentId, categoryObjects }}
+            />
           </div>
 
           <Row>
@@ -67,18 +68,14 @@ const CategoryList = () => {
                   <Table responsive>
                     <thead>
                       <tr>
-                        <th>
-                          <strong></strong>
-                        </th>
+                        <th></th>
                         <th>
                           <strong>NAME</strong>
                         </th>
                         <th>
-                          <strong>DATE ADDDED</strong>
-                        </th>
-                        <th>
                           <strong>STATUS</strong>
                         </th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -86,36 +83,36 @@ const CategoryList = () => {
                         return (
                           <tr key={id}>
                             <td>
-                              <div className="d-flex">
-                                <Link
-                                  to="/products-category"
-                                  onClick={() => {
-                                    setCurrentId(id);
-                                    window.scrollTo(0, 0);
-                                  }}
-                                  className="btn btn-primary shadow btn-xs sharp mr-1"
-                                >
-                                  <i className="fa fa-pencil"></i>
-                                </Link>
-                                <Link
-                                  to="/products-category"
-                                  onClick={() => {
-                                    onDelete(id);
-                                  }}
-                                  className="btn btn-danger shadow btn-xs sharp"
-                                >
-                                  <i className="fa fa-trash"></i>
-                                </Link>
-                              </div>
+                              <Button
+                                onClick={() => {
+                                  setCurrentId(id);
+                                  window.scrollTo({
+                                    top: 0,
+                                    behavior: "smooth",
+                                  });
+                                }}
+                                className="btn btn-primary btn-xs  mr-1"
+                              >
+                                Edit
+                              </Button>
                             </td>
                             <td>{categoryObjects[id].categoryName}</td>
-                            <td>{categoryObjects[id].dateAdded}</td>
                             <td>
                               {categoryObjects[id].isActive === "false" ? (
-                                <Badge variant="danger light"> Inactive </Badge>
+                                <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
-                                <Badge variant="success light"> Active </Badge>
+                                <Badge variant="success light"> ACTIVE </Badge>
                               )}
+                            </td>
+                            <td>
+                              <Button
+                                onClick={() => {
+                                  onDelete(id);
+                                }}
+                                className="btn btn-danger btn-xs  mr-1"
+                              >
+                                Delete
+                              </Button>
                             </td>
                           </tr>
                         );

@@ -99,7 +99,7 @@ const RiderRequestForm = (props) => {
                         type="submit"
                         value="Accept Changes"
                         className="btn btn-primary btn-block"
-                        disabled={viewMode}
+                        disabled
                       />
                     </div>
                   </div>
