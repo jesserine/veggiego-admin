@@ -47,6 +47,7 @@ import RidersList from "./components/Riders/RidersList";
 import OrdersList from "./components/Orders/OrdersList";
 import DeliveryFeeList from "./components/Settings/DeliveryFeeList";
 import CustomerOrder from "./components/Orders/CustomerOrder";
+import DeliveryLocation from "./components/Settings/DeliveryLocationList";
 
 /// Products
 import ProductsList from "./components/Products/ProductsList";
@@ -153,6 +154,7 @@ const Markup = ({ showProfileSideBar }) => {
     { url: "orders", component: OrdersList },
     { url: "orders-deliveryfee", component: DeliveryFeeList },
     { url: "customer-order", component: CustomerOrder },
+    { url: "delivery-location", component: DeliveryLocation },
 
     // Products
     { url: "products", component: ProductsList },
