@@ -101,7 +101,7 @@ const CategoryList = () => {
                               {categoryObjects[id].isActive === "false" ? (
                                 <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
-                                <Badge variant="success light"> ACTIVE </Badge>
+                                <Badge variant="primary light"> ACTIVE </Badge>
                               )}
                             </td>
                             <td>

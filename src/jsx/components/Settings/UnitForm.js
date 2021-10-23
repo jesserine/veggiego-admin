@@ -48,27 +48,9 @@ const UnitForm = (props) => {
     });
   };
 
-  const [imageUrl, setImageUrl] = useState();
-  const readImages = async (e) => {
-    const file = e.target.files[0];
-    const id = uuid();
-    const imagesRef = storage.ref("images").child(id);
-
-    await imagesRef.put(file);
-    imagesRef.getDownloadURL().then((url) => {
-      setImageUrl(url);
-    });
-  };
-
-  if (typeof imageUrl !== "undefined" && imageUrl != null) {
-    values.productImage = imageUrl;
-  }
-
-  const handleFormSubmit = (e) => {
-    console.log("inside handleFormSubmit");
-    e.preventDefault();
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
     props.addOrEdit(values);
-    window.location.reload(false);
   };
 
   const enabled = values.unitName != null;

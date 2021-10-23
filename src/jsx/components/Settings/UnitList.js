@@ -1,19 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import firebaseDb from "../../../firebase";
-import PageTitle from "../../layouts/PageTitle";
-import { storage } from "../../../firebase";
-import { v4 as uuid } from "uuid";
 import swal from "sweetalert";
-import swalMessage from "@sweetalert/with-react";
-import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Badge,
-  Dropdown,
-  ProgressBar,
-} from "react-bootstrap";
+import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
 
 import { Link } from "react-router-dom";
 import UnitForm from "./UnitForm";
@@ -99,25 +87,18 @@ const UnitList = () => {
                           <tr key={id}>
                             <td>
                               <div className="d-flex">
-                                <Link
-                                  to="/products-unit"
+                                <Button
                                   onClick={() => {
                                     setCurrentId(id);
-                                    window.scrollTo(0, 0);
+                                    window.scrollTo({
+                                      top: 0,
+                                      behavior: "smooth",
+                                    });
                                   }}
-                                  className="btn btn-primary shadow btn-xs sharp mr-1"
+                                  className="btn btn-primary btn-xs  mr-1"
                                 >
-                                  <i className="fa fa-pencil"></i>
-                                </Link>
-                                <Link
-                                  to="/products-unit"
-                                  onClick={() => {
-                                    onDelete(id);
-                                  }}
-                                  className="btn btn-danger shadow btn-xs sharp"
-                                >
-                                  <i className="fa fa-trash"></i>
-                                </Link>
+                                  Edit
+                                </Button>
                               </div>
                             </td>
                             <td>{unitObjects[id].unitName}</td>
@@ -125,10 +106,20 @@ const UnitList = () => {
                             <td>{unitObjects[id].dateAdded}</td>
                             <td>
                               {unitObjects[id].isActive === "false" ? (
-                                <Badge variant="danger light"> Inactive </Badge>
+                                <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
-                                <Badge variant="success light"> Active </Badge>
+                                <Badge variant="primary light"> ACTIVE </Badge>
                               )}
+                            </td>
+                            <td>
+                              <Button
+                                onClick={() => {
+                                  onDelete(id);
+                                }}
+                                className="btn btn-danger btn-xs  mr-1"
+                              >
+                                Delete
+                              </Button>
                             </td>
                           </tr>
                         );

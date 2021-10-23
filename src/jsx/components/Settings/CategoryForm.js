@@ -33,8 +33,12 @@ const CategoryForm = (props) => {
       });
   }, [props.currentId, props.categoryObjects]);
 
-  const handleInputChange = (e) => {
-    var { name, value } = e.target;
+  const handleInputChange = (event) => {
+    // var { name, value } = e.target;
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
     setValues({
       ...values,
       [name]: value,
