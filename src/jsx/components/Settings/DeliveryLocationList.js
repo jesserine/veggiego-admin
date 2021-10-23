@@ -63,7 +63,7 @@ const DeliveryLocationList = () => {
             <Col lg={12}>
               <Card>
                 <Card.Header>
-                  <Card.Title>Delivery Fee</Card.Title>
+                  <Card.Title>Delivery Locations</Card.Title>
                 </Card.Header>
                 <Card.Body>
                   <Table responsive>

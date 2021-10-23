@@ -13,7 +13,7 @@ const DeliveryLocationForm = (props) => {
   var [deliveryFeeObjects, setDeliveryFeeObjects] = useState({});
 
   useEffect(() => {
-    firebaseDb.ref("delivery/").on("value", (snapshot) => {
+    firebaseDb.ref("deliverylocations/").on("value", (snapshot) => {
       if (snapshot.val() != null)
         setDeliveryFeeObjects({
           ...snapshot.val(),
@@ -56,20 +56,58 @@ const DeliveryLocationForm = (props) => {
           <div className="card">
             <div className="card-header">
               <h4 className="card-title">
-                {props.currentId === "" ? "Add" : "Update"} Delivery Fee
+                {props.currentId === "" ? "Add" : "Update"} Delivery Location
               </h4>
             </div>
             <div className="card-body">
               <div className="basic-form">
                 <form onSubmit={handleFormSubmit}>
                   <div className="form-row">
-                    <div className="form-group col-md-12">
-                      <label>Location</label>
+                    <div className="form-group col-md-6">
+                      <label>Region</label>
                       <input
                         type="text"
                         className="form-control"
                         placeholder="Location"
-                        name="location"
+                        name="region"
+                        value={values.location}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label>Province</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Location"
+                        name="province"
+                        value={values.location}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group col-md-6">
+                      <label>City</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Location"
+                        name="city"
+                        value={values.location}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label>Barangay</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Location"
+                        name="barangay"
                         value={values.location}
                         onChange={handleInputChange}
                         required
@@ -78,15 +116,14 @@ const DeliveryLocationForm = (props) => {
                   </div>
                   <div className="form-row">
                     <div className="form-group col-md-12">
-                      <label>Delivery Fee</label>
+                      <label>Complete Location</label>
                       <input
-                        type="number"
+                        type="text"
                         className="form-control"
-                        placeholder="0"
-                        name="deliveryFee"
+                        name="location"
                         value={values.deliveryFee}
                         onChange={handleInputChange}
-                        required
+                        disabled
                       />
                     </div>
                   </div>
