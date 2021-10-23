@@ -105,7 +105,7 @@ const UnitList = () => {
                             <td>{unitObjects[id].abbreviation}</td>
                             <td>{unitObjects[id].dateAdded}</td>
                             <td>
-                              {unitObjects[id].isActive === "false" ? (
+                              {!unitObjects[id].isActive ? (
                                 <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
                                 <Badge variant="primary light"> ACTIVE </Badge>

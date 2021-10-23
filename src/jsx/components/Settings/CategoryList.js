@@ -3,7 +3,6 @@ import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
 import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
 
-import { Link } from "react-router-dom";
 import CategoryForm from "./CategoryForm";
 
 const CategoryList = () => {
@@ -98,7 +97,7 @@ const CategoryList = () => {
                             </td>
                             <td>{categoryObjects[id].categoryName}</td>
                             <td>
-                              {categoryObjects[id].isActive === "false" ? (
+                              {!categoryObjects[id].isActive ? (
                                 <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
                                 <Badge variant="primary light"> ACTIVE </Badge>

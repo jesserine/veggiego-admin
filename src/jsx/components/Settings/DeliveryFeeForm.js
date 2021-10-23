@@ -40,19 +40,20 @@ const DeliveryFeeForm = (props) => {
       });
   }, [props.currentId, props.deliveryFeeObjects]);
 
-  const handleInputChange = (e) => {
-    var { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
     setValues({
       ...values,
       [name]: value,
     });
   };
 
-  const handleFormSubmit = (e) => {
-    console.log("inside handleFormSubmit");
-    e.preventDefault();
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
     props.addOrEdit(values);
-    window.location.reload(false);
   };
 
   const enabled = values.location != null && values.deliveryFee >= 0;
@@ -98,31 +99,22 @@ const DeliveryFeeForm = (props) => {
                     </div>
                   </div>
                   <div className="form-row">
-                    <label className="col-form-label col-sm-3 pt-0">
-                      Is Active?
-                    </label>
-                    <div className="col-sm-9">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value="true"
-                          onChange={handleInputChange}
-                          defaultChecked
-                        />
-                        <label className="form-check-label">Yes</label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value="false"
-                          onChange={handleInputChange}
-                        />
-                        <label className="form-check-label">No</label>
-                      </div>
+                    <div className="custom-control custom-checkbox mb-3">
+                      <input
+                        name="isActive"
+                        type="checkbox"
+                        defaultChecked={values.isActive}
+                        checked={values.isActive}
+                        onChange={handleInputChange}
+                        className="custom-control-input"
+                        id="isActiveChkBox"
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="isActiveChkBox"
+                      >
+                        Is Active?
+                      </label>
                     </div>
                   </div>
                   <div className="form-row">

@@ -1,12 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import firebaseDb from "../../../firebase";
-import { storage } from "../../../firebase";
-import { v4 as uuid } from "uuid";
-
-import PageTitle from "../../layouts/PageTitle";
-import { SplitButton, ButtonGroup, Dropdown } from "react-bootstrap";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
 const UnitForm = (props) => {
   const initialFieldValues = {
@@ -40,8 +33,11 @@ const UnitForm = (props) => {
       });
   }, [props.currentId, props.unitObjects]);
 
-  const handleInputChange = (e) => {
-    var { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
     setValues({
       ...values,
       [name]: value,
@@ -96,31 +92,22 @@ const UnitForm = (props) => {
                     </div>
                   </div>
                   <div className="form-row">
-                    <label className="col-form-label col-sm-3 pt-0">
-                      Is Active?
-                    </label>
-                    <div className="col-sm-9">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value="true"
-                          onChange={handleInputChange}
-                          defaultChecked
-                        />
-                        <label className="form-check-label">Yes</label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value="false"
-                          onChange={handleInputChange}
-                        />
-                        <label className="form-check-label">No</label>
-                      </div>
+                    <div className="custom-control custom-checkbox mb-3">
+                      <input
+                        name="isActive"
+                        type="checkbox"
+                        defaultChecked={values.isActive}
+                        checked={values.isActive}
+                        onChange={handleInputChange}
+                        className="custom-control-input"
+                        id="isActiveChkBox"
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="isActiveChkBox"
+                      >
+                        Is Active?
+                      </label>
                     </div>
                   </div>
                   <div className="form-row">

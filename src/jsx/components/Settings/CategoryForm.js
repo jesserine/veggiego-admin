@@ -91,15 +91,17 @@ const CategoryForm = (props) => {
                   <div className="form-row">
                     <div className="custom-control custom-checkbox mb-3">
                       <input
+                        name="isActive"
                         type="checkbox"
-                        className="custom-control-input"
+                        defaultChecked={values.isActive}
                         checked={values.isActive}
                         onChange={handleInputChange}
-                        id="isActiveCategory"
+                        className="custom-control-input"
+                        id="isActiveChkBox"
                       />
                       <label
                         className="custom-control-label"
-                        htmlFor="customCheckBox1"
+                        htmlFor="isActiveChkBox"
                       >
                         Is Active?
                       </label>
