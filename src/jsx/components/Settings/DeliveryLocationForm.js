@@ -3,11 +3,11 @@ import firebaseDb from "../../../firebase";
 
 const DeliveryLocationForm = (props) => {
   const initialFieldValues = {
-    region: "",
+    region: "Region VIII",
     province: "",
     city: "",
     barangay: "",
-    completeLocation: "",
+    completeLocation: "test",
     dateAdded: new Date().toLocaleString(),
     isActive: "true",
   };
@@ -47,6 +47,7 @@ const DeliveryLocationForm = (props) => {
   const handleFormSubmit = (e) => {
     console.log("inside handleFormSubmit");
     e.preventDefault();
+    console.log(values);
     props.addOrEdit(values);
     window.location.reload(false);
   };
@@ -68,27 +69,41 @@ const DeliveryLocationForm = (props) => {
                   <div className="form-row">
                     <div className="form-group col-md-6">
                       <label>Region</label>
-                      <input
-                        type="text"
+                      <select
+                        defaultValue="Region VIII"
+                        id="inputState"
                         className="form-control"
-                        placeholder="Region"
                         name="region"
                         value={values.region}
                         onChange={handleInputChange}
                         required
-                      />
+                        // disabled={viewMode}
+                      >
+                        <option value="Region VIII" defaultValue>
+                          Region VIII
+                        </option>
+                      </select>
                     </div>
                     <div className="form-group col-md-6">
                       <label>Province</label>
-                      <input
-                        type="text"
+                      <select
+                        defaultValue="Select Vehicle"
+                        id="inputState"
                         className="form-control"
-                        placeholder="Province"
                         name="province"
                         value={values.province}
                         onChange={handleInputChange}
                         required
-                      />
+                        // disabled={viewMode}
+                      >
+                        <option value="Province">Choose Province..</option>
+                        <option value="Motorcycle">Eastern Samar</option>
+                        <option value="Car">Leyte</option>
+                        <option value="Van">Northern Samar</option>
+                        <option value="Truck">Samar (Western Samar)</option>
+                        <option value="Van">Southern Leyte</option>
+                        <option value="Truck">Biliran</option>
+                      </select>
                     </div>
                   </div>
                   <div className="form-row">

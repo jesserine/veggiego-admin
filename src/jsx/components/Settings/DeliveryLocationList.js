@@ -24,10 +24,14 @@ const DeliveryLocationList = () => {
     console.log("inside addOrEdit");
     if (currentId === "") {
       swal("Nice!", "A new delivery location is added!", "success");
-      firebaseDb.ref("deliveryLocations/").push(obj, (err) => {
-        if (err) console.log(err);
-        else setCurrentId("");
-        console.log("added succesfully");
+      console.log(obj);
+      firebaseDb.ref(`deliveryLocations/`).push(obj, (err) => {
+        if (err) {
+          console.log(err);
+        } else setCurrentId("");
+        {
+          console.log("added succesfully");
+        }
       });
     } else {
       swal("Nice!", "This delivery location is updated!", "success");
