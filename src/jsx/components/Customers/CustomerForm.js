@@ -108,7 +108,7 @@ const CustomerForm = (props) => {
               {props.currentId !== "" ? (
                 <Button
                   // variant="primary btn-rounded"
-                  className="btn-sm btn-warning"
+                  className="btn-sm btn-warning light"
                   onClick={() => {
                     setViewMode(!viewMode);
                     if (viewMode) {
@@ -134,13 +134,6 @@ const CustomerForm = (props) => {
                     }
                   }}
                 >
-                  {/* <span className="btn-icon-left text-primary">
-                    {viewMode ? (
-                      <i className="fa fa-pencil" />
-                    ) : (
-                      <i className="fa fa-eye" />
-                    )}
-                  </span> */}
                   {viewMode ? "Edit Customer" : "View Customer"}
                 </Button>
               ) : null}

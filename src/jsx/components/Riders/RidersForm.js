@@ -1,12 +1,8 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 
-import PageTitle from "../../layouts/PageTitle";
-import { SplitButton, ButtonGroup, Dropdown, Button } from "react-bootstrap";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { Button } from "react-bootstrap";
 
 const RidersForm = (props) => {
   const initialFieldValues = {
@@ -36,8 +32,11 @@ const RidersForm = (props) => {
     }
   }, [props.currentId, props.riderList]);
 
-  const handleInputChange = (e) => {
-    var { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
     setValues({
       ...values,
       [name]: value,
@@ -62,11 +61,9 @@ const RidersForm = (props) => {
     values.riderImage = imageUrl;
   }
 
-  const handleFormSubmit = (e) => {
-    console.log("inside handleFormSubmit");
-    e.preventDefault();
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
     props.addOrEdit(values);
-    window.location.reload(false);
   };
 
   return (
@@ -81,19 +78,12 @@ const RidersForm = (props) => {
               </h4>
               {props.currentId !== "" ? (
                 <Button
-                  variant="primary btn-rounded"
+                  className="btn-sm btn-warning light"
                   onClick={() => {
                     setViewMode(!viewMode);
                   }}
                 >
-                  <span className="btn-icon-left text-primary">
-                    {viewMode ? (
-                      <i className="fa fa-pencil" />
-                    ) : (
-                      <i className="fa fa-eye" />
-                    )}
-                  </span>
-                  {viewMode ? "Edit " : "View "}
+                  {viewMode ? "Edit Rider" : "View Rider"}
                 </Button>
               ) : null}
             </div>
@@ -144,6 +134,7 @@ const RidersForm = (props) => {
                         onChange={handleInputChange}
                         required
                         disabled={viewMode}
+                        maxLength={11}
                       />
                     </div>
                   </div>
@@ -227,33 +218,23 @@ const RidersForm = (props) => {
                   </div>
 
                   <div className="form-row">
-                    <label className="col-form-label col-sm-3 pt-0">
-                      Is Active?
-                    </label>
-                    <div className="col-sm-9">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value={values.isActive}
-                          onChange={handleInputChange}
-                          defaultChecked
-                          disabled={viewMode}
-                        />
-                        <label className="form-check-label">Yes</label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value={values.isActive}
-                          onChange={handleInputChange}
-                          disabled={viewMode}
-                        />
-                        <label className="form-check-label">No</label>
-                      </div>
+                    <div className="custom-control custom-checkbox mb-3">
+                      <input
+                        name="isActive"
+                        type="checkbox"
+                        defaultChecked={values.isActive}
+                        checked={values.isActive}
+                        onChange={handleInputChange}
+                        className="custom-control-input"
+                        id="isActiveChkBox"
+                        disabled={viewMode}
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="isActiveChkBox"
+                      >
+                        Is Active?
+                      </label>
                     </div>
                   </div>
 

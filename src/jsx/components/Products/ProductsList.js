@@ -245,6 +245,9 @@ const ProductsList = () => {
                             <th>
                               <strong>PRICE</strong>
                             </th>
+                            <th>
+                              <strong>STATUS</strong>
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -272,6 +275,17 @@ const ProductsList = () => {
                                 </td>
                                 <td>{productList[id].unit}</td>
                                 <td>₱ {productList[id].price}</td>
+                                <td>
+                                  {!productList[id].isActive ? (
+                                    <Badge variant="danger light">
+                                      INACTIVE
+                                    </Badge>
+                                  ) : (
+                                    <Badge variant="primary light">
+                                      ACTIVE
+                                    </Badge>
+                                  )}
+                                </td>
                               </tr>
                             );
                           })}

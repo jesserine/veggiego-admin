@@ -35,8 +35,11 @@ const ProductsForm = (props) => {
     }
   }, [props.currentId, props.productList]);
 
-  const handleInputChange = (e) => {
-    var { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
     setValues({
       ...values,
       [name]: value,
@@ -61,11 +64,9 @@ const ProductsForm = (props) => {
     values.productImage = imageUrl;
   }
 
-  const handleFormSubmit = (e) => {
-    console.log("inside handleFormSubmit");
-    e.preventDefault();
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
     props.addOrEdit(values);
-    window.location.reload(false);
   };
 
   return (
@@ -85,19 +86,12 @@ const ProductsForm = (props) => {
                 </h4>
                 {props.currentId !== "" ? (
                   <Button
-                    variant="primary btn-rounded"
+                    className="btn-sm btn-warning light"
                     onClick={() => {
                       setViewMode(!viewMode);
                     }}
                   >
-                    <span className="btn-icon-left text-primary">
-                      {viewMode ? (
-                        <i className="fa fa-pencil" />
-                      ) : (
-                        <i className="fa fa-eye" />
-                      )}
-                    </span>
-                    {viewMode ? "Edit " : "View "}
+                    {viewMode ? "Edit Product" : "View Product"}
                   </Button>
                 ) : null}
               </div>
@@ -151,17 +145,16 @@ const ProductsForm = (props) => {
                           value={values.category}
                           onChange={handleInputChange}
                           required
+                          disabled={viewMode}
                         >
                           <option value="">Choose Category..</option>
                           {Object.keys(categoryList).map((id) => {
                             return (
                               <React.Fragment key={id}>
-                                {categoryList[id].isActive == "true" ? (
+                                {categoryList[id].isActive && (
                                   <option value={categoryList[id].categoryName}>
                                     {categoryList[id].categoryName}
                                   </option>
-                                ) : (
-                                  ""
                                 )}
                               </React.Fragment>
                             );
@@ -187,12 +180,10 @@ const ProductsForm = (props) => {
                           {Object.keys(unitList).map((id) => {
                             return (
                               <React.Fragment key={id}>
-                                {unitList[id].isActive == "true" ? (
+                                {unitList[id].isActive && (
                                   <option value={unitList[id].unitName}>
                                     {unitList[id].unitName}
                                   </option>
-                                ) : (
-                                  ""
                                 )}
                               </React.Fragment>
                             );
@@ -238,33 +229,23 @@ const ProductsForm = (props) => {
                     </div>
 
                     <div className="form-row">
-                      <label className="col-form-label col-sm-3 pt-0">
-                        Is Active?
-                      </label>
-                      <div className="col-sm-9">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="isActive"
-                            value="true"
-                            onChange={handleInputChange}
-                            defaultChecked
-                            disabled={viewMode}
-                          />
-                          <label className="form-check-label">Yes</label>
-                        </div>
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="isActive"
-                            value="false"
-                            onChange={handleInputChange}
-                            disabled={viewMode}
-                          />
-                          <label className="form-check-label">No</label>
-                        </div>
+                      <div className="custom-control custom-checkbox mb-3">
+                        <input
+                          name="isActive"
+                          type="checkbox"
+                          defaultChecked={values.isActive}
+                          checked={values.isActive}
+                          onChange={handleInputChange}
+                          className="custom-control-input"
+                          id="isActiveChkBox"
+                          disabled={viewMode}
+                        />
+                        <label
+                          className="custom-control-label"
+                          htmlFor="isActiveChkBox"
+                        >
+                          Is Active?
+                        </label>
                       </div>
                     </div>
                     <div className="form-row">
