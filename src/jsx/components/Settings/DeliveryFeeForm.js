@@ -3,8 +3,6 @@ import { Button } from "react-bootstrap";
 import Select from "react-select";
 import { useDataContext } from "../../../contexts/DataContext";
 
-import firebaseDb from "../../../firebase";
-
 const DeliveryFeeForm = (props) => {
   const { deliveryLocationList } = useDataContext();
   const [deliveryLocation, setDeliveryLocation] = useState();
@@ -120,15 +118,6 @@ const DeliveryFeeForm = (props) => {
                           IndicatorSeparator: () => null,
                         }}
                       />
-                      {/* <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Location"
-                        name="location"
-                        value={values.location}
-                        onChange={handleInputChange}
-                        required
-                      /> */}
                     </div>
                   </div>
                   <div className="form-row">

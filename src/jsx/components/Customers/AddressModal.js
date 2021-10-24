@@ -1,78 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import {
-  regions,
-  provinces,
-  cities,
-  barangays,
-} from "select-philippines-address";
+import Select from "react-select";
+
+import { useDataContext } from "../../../contexts/DataContext";
 
 const AddressModal = (props) => {
-  const [regionData, setRegion] = useState([]);
-  const [provinceData, setProvince] = useState([]);
-  const [cityData, setCity] = useState([]);
-  const [barangayData, setBarangay] = useState([]);
-
-  const [regionAddr, setRegionAddr] = useState("");
-  const [provinceAddr, setProvinceAddr] = useState("");
-  const [cityAddr, setCityAddr] = useState("");
-  const [barangayAddr, setBarangayAddr] = useState("");
+  const { deliveryLocationList } = useDataContext();
+  const [deliveryLocation, setDeliveryLocation] = useState();
   const [streetAddr, setStreetAddr] = useState("");
 
-  const [regionList, setRegionList] = useState([
-    "Region VIII (Eastern Visayas)",
-  ]);
-
-  const region = () => {
-    regions().then((response) => {
-      console.log("response", response);
-      setRegion(response);
+  // prepares delivery locations data for combobox
+  const deliveryOptions = [];
+  if (deliveryLocationList) {
+    Object.keys(deliveryLocationList).map((id) => {
+      return deliveryOptions.push({
+        value: deliveryLocationList[id].completeLocation,
+        label: deliveryLocationList[id].completeLocation,
+        location: deliveryLocationList[id],
+      });
     });
-  };
-  const province = (e) => {
-    setRegionAddr(e.target.selectedOptions[0].text);
-    provinces(e.target.value).then((response) => {
-      setProvince(response);
-      setCity([]);
-      setBarangay([]);
-    });
-  };
+  }
 
-  const city = (e) => {
-    setProvinceAddr(e.target.selectedOptions[0].text);
-    cities(e.target.value).then((response) => {
-      setCity(response);
-    });
-  };
+  // styles for combobox
+  const customStyles = {
+    option: (provided, state) => ({
+      color: state.isSelected ? "green" : "",
+      padding: 20,
+    }),
+    control: () => ({
+      // none of react-select's styles are passed to <Control />
+      width: 500,
+    }),
+    singleValue: (provided, state) => {
+      const opacity = state.isDisabled ? 0.5 : 1;
+      const transition = "opacity 300ms";
 
-  const barangay = (e) => {
-    setCityAddr(e.target.selectedOptions[0].text);
-    barangays(e.target.value).then((response) => {
-      setBarangay(response);
-    });
+      return { ...provided, opacity, transition };
+    },
   };
-
-  const brgy = (e) => {
-    setBarangayAddr(e.target.selectedOptions[0].text);
-  };
-
-  useEffect(() => {
-    region();
-  }, []);
 
   const saveAddress = () => {
     props.handleMultipleCustomerAddress({
-      region: regionAddr,
-      province: provinceAddr,
-      city: cityAddr,
-      barangay: barangayAddr,
+      location: deliveryLocation.location,
       street: streetAddr,
     });
   };
 
   return (
     <div className="bootstrap-modal">
-      {" "}
       <Modal
         className="fade modal-container bd-example-modal-lg"
         show={props.isOpen}
@@ -92,96 +67,32 @@ const AddressModal = (props) => {
           <div className="basic-form">
             <form onSubmit={(e) => e.preventDefault()}>
               <div className="form-row">
-                <div className="form-group col-md-6">
-                  <label>Region</label>
-                  <select
-                    defaultValue={"option"}
-                    id="inputState"
-                    className="form-control"
-                    onChange={province}
-                    onSelect={region}
-                  >
-                    {regionData[8] && (
-                      <option
-                        value={regionData[8].region_code}
-                        key={regionData[8].region_code}
-                      >
-                        {regionData[8].region_name}
-                      </option>
-                    )}
-
-                    {regionData &&
-                      regionData.length > 0 &&
-                      regionData.map((item) => (
-                        <option key={item.region_code} value={item.region_code}>
-                          {item.region_name}
-                        </option>
-                      ))}
-                  </select>
+                <div className="form-group col-md-12">
+                  <label>Location</label>
+                  <Select
+                    className={"form-control"}
+                    name="location"
+                    defaultValue={"Choose Location"}
+                    onChange={setDeliveryLocation}
+                    options={deliveryOptions}
+                    styles={customStyles}
+                    components={{
+                      DropdownIndicator: () => null,
+                      IndicatorSeparator: () => null,
+                    }}
+                  />
+                  {/* <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Location"
+                        name="location"
+                        value={values.location}
+                        onChange={handleInputChange}
+                        required
+                      /> */}
                 </div>
-                <div className="form-group col-md-6">
-                  <label>Province</label>
-                  <select
-                    defaultValue={"option"}
-                    id="inputState"
-                    className="form-control"
-                    onChange={city}
-                  >
-                    <option value="option" disabled>
-                      Select Province...
-                    </option>
-                    {provinceData &&
-                      provinceData.length > 0 &&
-                      provinceData.map((item) => (
-                        <option
-                          key={item.province_code}
-                          value={item.province_code}
-                        >
-                          {item.province_name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-                <div className="form-group col-md-6">
-                  <label>City</label>
-                  <select
-                    defaultValue={"option"}
-                    id="inputState"
-                    className="form-control"
-                    onChange={barangay}
-                  >
-                    <option value="option" disabled>
-                      Select City...
-                    </option>
-                    {cityData &&
-                      cityData.length > 0 &&
-                      cityData.map((item) => (
-                        <option key={item.city_code} value={item.city_code}>
-                          {item.city_name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-                <div className="form-group col-md-6">
-                  <label>Barangay</label>
-                  <select
-                    defaultValue={"option"}
-                    id="inputState"
-                    className="form-control"
-                    onChange={brgy}
-                  >
-                    <option value="option" disabled>
-                      Select Barangay...
-                    </option>
-                    {barangayData &&
-                      barangayData.length > 0 &&
-                      barangayData.map((item) => (
-                        <option key={item.brgy_code} value={item.brgy_code}>
-                          {item.brgy_name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
+              </div>
+              <div className="form-row">
                 <div className="form-group col-md-12">
                   <label>Street Name, Building, House No.</label>
                   <input
@@ -192,11 +103,8 @@ const AddressModal = (props) => {
                   />
                 </div>
               </div>
-              {/* end */}
             </form>
           </div>
-          <p>Full Address</p>
-          {streetAddr}, {barangayAddr}, {cityAddr}, {provinceAddr}, {regionAddr}
         </Modal.Body>
         <Modal.Footer>
           <Button
