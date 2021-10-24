@@ -1,13 +1,16 @@
 import React, { Fragment, useState, useEffect } from "react";
 import firebaseDb from "../../../firebase";
+import { Button } from "react-bootstrap";
 
 const DeliveryLocationForm = (props) => {
   const initialFieldValues = {
-    region: "Region VIII",
+    region: "Region VIII (Eastern Visayas)",
     province: "",
     city: "",
     barangay: "",
-    completeLocation: "test",
+    completeLocation: "",
+    longitude: "",
+    latitude: "",
     dateAdded: new Date().toLocaleString(),
     isActive: "true",
   };
@@ -36,20 +39,20 @@ const DeliveryLocationForm = (props) => {
       });
   }, [props.currentId, props.deliveryLocationObjects]);
 
-  const handleInputChange = (e) => {
-    var { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
     setValues({
       ...values,
       [name]: value,
     });
   };
 
-  const handleFormSubmit = (e) => {
-    console.log("inside handleFormSubmit");
-    e.preventDefault();
-    console.log(values);
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
     props.addOrEdit(values);
-    window.location.reload(false);
   };
 
   const enabled = values.city != null && values.barangay != null;
@@ -62,6 +65,16 @@ const DeliveryLocationForm = (props) => {
               <h4 className="card-title">
                 {props.currentId === "" ? "Add" : "Update"} Delivery Location
               </h4>
+              {props.currentId !== "" && (
+                <Button
+                  onClick={() => {
+                    props.setCurrentId("");
+                  }}
+                  className="btn btn-primary light btn-xs  mr-1"
+                >
+                  Add new Delivery Location
+                </Button>
+              )}
             </div>
             <div className="card-body">
               <div className="basic-form">
@@ -70,39 +83,44 @@ const DeliveryLocationForm = (props) => {
                     <div className="form-group col-md-6">
                       <label>Region</label>
                       <select
-                        defaultValue="Region VIII"
                         id="inputState"
                         className="form-control"
                         name="region"
                         value={values.region}
                         onChange={handleInputChange}
                         required
-                        // disabled={viewMode}
+                        defaultValue="Region VIII (Eastern Visayas)"
                       >
-                        <option value="Region VIII" defaultValue>
-                          Region VIII
+                        <option>Choose Province</option>
+                        <option
+                          value="Region VIII (Eastern Visayas)"
+                          defaultValue
+                        >
+                          Region VIII (Eastern Visayas)
                         </option>
                       </select>
                     </div>
                     <div className="form-group col-md-6">
                       <label>Province</label>
                       <select
-                        defaultValue="Select Vehicle"
+                        defaultValue="Leyte"
                         id="inputState"
                         className="form-control"
                         name="province"
                         value={values.province}
                         onChange={handleInputChange}
                         required
-                        // disabled={viewMode}
                       >
-                        <option value="Province">Choose Province..</option>
-                        <option value="Motorcycle">Eastern Samar</option>
-                        <option value="Car">Leyte</option>
-                        <option value="Van">Northern Samar</option>
-                        <option value="Truck">Samar (Western Samar)</option>
-                        <option value="Van">Southern Leyte</option>
-                        <option value="Truck">Biliran</option>
+                        <option value="Eastern Samar">Eastern Samar</option>
+                        <option value="Leyte" defaultValue>
+                          Leyte
+                        </option>
+                        <option value="Northern Samar">Northern Samar</option>
+                        <option value="Samar (Western Samar)">
+                          Samar (Western Samar)
+                        </option>
+                        <option value="Southern Leyte">Southern Leyte</option>
+                        <option value="Biliran">Biliran</option>
                       </select>
                     </div>
                   </div>
@@ -112,19 +130,30 @@ const DeliveryLocationForm = (props) => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="City"
+                        placeholder="Enter a City"
                         name="city"
                         value={values.city}
                         onChange={handleInputChange}
                         required
                       />
+                      {/* <select
+                        defaultValue="Select City"
+                        id="inputState"
+                        className="form-control"
+                        name="city"
+                        value={values.city}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="Ormoc City">Ormoc City</option>
+                      </select> */}
                     </div>
                     <div className="form-group col-md-6">
                       <label>Barangay</label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Barangay"
+                        placeholder="Enter a Barangay"
                         name="barangay"
                         value={values.barangay}
                         onChange={handleInputChange}
@@ -132,6 +161,7 @@ const DeliveryLocationForm = (props) => {
                       />
                     </div>
                   </div>
+
                   <div className="form-row">
                     <div className="form-group col-md-12">
                       <label>Complete Location</label>
@@ -143,34 +173,52 @@ const DeliveryLocationForm = (props) => {
                         onChange={handleInputChange}
                         disabled
                       />
+                      {values.region + ", " + values.province}
                     </div>
                   </div>
                   <div className="form-row">
-                    <label className="col-form-label col-sm-3 pt-0">
-                      Is Active?
-                    </label>
-                    <div className="col-sm-9">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value="true"
-                          onChange={handleInputChange}
-                          defaultChecked
-                        />
-                        <label className="form-check-label">Yes</label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="isActive"
-                          value="false"
-                          onChange={handleInputChange}
-                        />
-                        <label className="form-check-label">No</label>
-                      </div>
+                    <div className="form-group col-md-6">
+                      <label>Longitude</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Longitude"
+                        name="longitude"
+                        value={values.longitude}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label>Latitude</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Latitude"
+                        name="latitude"
+                        value={values.latitude}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="custom-control custom-checkbox mb-3">
+                      <input
+                        name="isActive"
+                        type="checkbox"
+                        defaultChecked={values.isActive}
+                        checked={values.isActive}
+                        onChange={handleInputChange}
+                        className="custom-control-input"
+                        id="isActiveChkBox"
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="isActiveChkBox"
+                      >
+                        Is Active?
+                      </label>
                     </div>
                   </div>
                   <div className="form-row">

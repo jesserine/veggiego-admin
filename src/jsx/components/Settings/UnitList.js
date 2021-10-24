@@ -52,7 +52,9 @@ const UnitList = () => {
         <div className="col-xl-12 col-lg-12">
           <h2 className="text-black font-w600 mb-1">Product Unit Settings</h2>
           <div className="mt-4">
-            <UnitForm {...{ addOrEdit, currentId, unitObjects }} />
+            <UnitForm
+              {...{ addOrEdit, currentId, setCurrentId, unitObjects }}
+            />
           </div>
           <Row>
             <Col lg={12}>

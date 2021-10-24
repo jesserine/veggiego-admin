@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import firebaseDb from "../../../firebase";
+import { Button } from "react-bootstrap";
 
 const UnitForm = (props) => {
   const initialFieldValues = {
@@ -59,6 +60,16 @@ const UnitForm = (props) => {
               <h4 className="card-title">
                 {props.currentId === "" ? "Add" : "Update"} Unit
               </h4>
+              {props.currentId !== "" && (
+                <Button
+                  onClick={() => {
+                    props.setCurrentId("");
+                  }}
+                  className="btn btn-primary light btn-xs  mr-1"
+                >
+                  Add new Product Unit
+                </Button>
+              )}
             </div>
             <div className="card-body">
               <div className="basic-form">

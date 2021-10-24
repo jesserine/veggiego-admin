@@ -51,7 +51,7 @@ const DeliveryFeeList = () => {
           <h2 className="text-black font-w600 mb-1">Delivery Fee Settings</h2>
           <div className="mt-4">
             <DeliveryFeeForm
-              {...{ addOrEdit, currentId, deliveryFeeObjects }}
+              {...{ addOrEdit, currentId, setCurrentId, deliveryFeeObjects }}
             />
           </div>
 

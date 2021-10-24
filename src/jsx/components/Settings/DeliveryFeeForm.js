@@ -1,12 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import firebaseDb from "../../../firebase";
-import { storage } from "../../../firebase";
-import { v4 as uuid } from "uuid";
-
-import PageTitle from "../../layouts/PageTitle";
-import { SplitButton, ButtonGroup, Dropdown } from "react-bootstrap";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
 const DeliveryFeeForm = (props) => {
   const initialFieldValues = {
@@ -66,6 +60,16 @@ const DeliveryFeeForm = (props) => {
               <h4 className="card-title">
                 {props.currentId === "" ? "Add" : "Update"} Delivery Fee
               </h4>
+              {props.currentId !== "" && (
+                <Button
+                  onClick={() => {
+                    props.setCurrentId("");
+                  }}
+                  className="btn btn-primary light btn-xs  mr-1"
+                >
+                  Add new Delivery Fee
+                </Button>
+              )}
             </div>
             <div className="card-body">
               <div className="basic-form">

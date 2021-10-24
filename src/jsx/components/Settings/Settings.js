@@ -42,7 +42,7 @@ const Settings = () => {
         <title>Veggie Go | Settings </title>
       </Helmet>
       <div className="row">
-        <div className="col-xl-3 col-lg-3">
+        <div className="col-xl-2 col-lg-2">
           <Button
             onClick={() => {
               toggleAllButtons(false);
@@ -80,7 +80,7 @@ const Settings = () => {
             Supported Delivery Locations
           </Button>
         </div>
-        <div className="col-xl-9 col-lg-9">
+        <div className="col-xl-10 col-lg-10">
           <SettingsArea />
         </div>
       </div>
