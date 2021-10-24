@@ -40,7 +40,7 @@ const OrdersForm = (props) => {
     productImage: "",
   };
 
-  const { productList, unitList, deliveryLocList } = useDataContext();
+  const { productList, unitList, deliveryFeeList } = useDataContext();
 
   var [values, setValues] = useState(initialFieldValues);
   var [productValues, setProductValues] = useState(initialProductValues);
@@ -149,12 +149,12 @@ const OrdersForm = (props) => {
 
   // prepares delivery data for combobox
   const deliveryOptions = [];
-  if (deliveryLocList) {
-    Object.keys(deliveryLocList).map((id) => {
+  if (deliveryFeeList) {
+    Object.keys(deliveryFeeList).map((id) => {
       return deliveryOptions.push({
-        value: deliveryLocList[id].location,
-        label: deliveryLocList[id].location,
-        delivery: deliveryLocList[id],
+        value: deliveryFeeList[id].location,
+        label: deliveryFeeList[id].location,
+        delivery: deliveryFeeList[id],
       });
     });
   }

@@ -1,8 +1,13 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
+import Select from "react-select";
+import { useDataContext } from "../../../contexts/DataContext";
+
 import firebaseDb from "../../../firebase";
 
 const DeliveryFeeForm = (props) => {
+  const { deliveryLocationList } = useDataContext();
+  const [deliveryLocation, setDeliveryLocation] = useState();
   const initialFieldValues = {
     location: "",
     deliveryFee: "",
@@ -11,20 +16,9 @@ const DeliveryFeeForm = (props) => {
   };
 
   var [values, setValues] = useState(initialFieldValues);
-  var [deliveryFeeObjects, setDeliveryFeeObjects] = useState({});
 
   useEffect(() => {
-    firebaseDb.ref("delivery/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setDeliveryFeeObjects({
-          ...snapshot.val(),
-        });
-      else setDeliveryFeeObjects({});
-    });
-  }, []);
-
-  useEffect(() => {
-    if (props.currentId == "")
+    if (props.currentId === "")
       setValues({
         ...initialFieldValues,
       });
@@ -48,6 +42,43 @@ const DeliveryFeeForm = (props) => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     props.addOrEdit(values);
+  };
+
+  // prepares delivery locations data for combobox
+  const deliveryOptions = [];
+  if (deliveryLocationList) {
+    Object.keys(deliveryLocationList).map((id) => {
+      return deliveryOptions.push({
+        value: deliveryLocationList[id].completeLocation,
+        label: deliveryLocationList[id].completeLocation,
+        location: deliveryLocationList[id],
+      });
+    });
+  }
+
+  useEffect(() => {
+    setValues((prev) => ({
+      ...prev,
+      location: deliveryLocation && deliveryLocation.value,
+    }));
+  }, [deliveryLocation]);
+
+  // styles for combobox
+  const customStyles = {
+    option: (provided, state) => ({
+      color: state.isSelected ? "green" : "",
+      padding: 20,
+    }),
+    control: () => ({
+      // none of react-select's styles are passed to <Control />
+      width: 500,
+    }),
+    singleValue: (provided, state) => {
+      const opacity = state.isDisabled ? 0.5 : 1;
+      const transition = "opacity 300ms";
+
+      return { ...provided, opacity, transition };
+    },
   };
 
   const enabled = values.location != null && values.deliveryFee >= 0;
@@ -77,7 +108,19 @@ const DeliveryFeeForm = (props) => {
                   <div className="form-row">
                     <div className="form-group col-md-12">
                       <label>Location</label>
-                      <input
+                      <Select
+                        className={"form-control"}
+                        name="location"
+                        defaultValue={"Choose Location"}
+                        onChange={setDeliveryLocation}
+                        options={deliveryOptions}
+                        styles={customStyles}
+                        components={{
+                          DropdownIndicator: () => null,
+                          IndicatorSeparator: () => null,
+                        }}
+                      />
+                      {/* <input
                         type="text"
                         className="form-control"
                         placeholder="Location"
@@ -85,7 +128,7 @@ const DeliveryFeeForm = (props) => {
                         value={values.location}
                         onChange={handleInputChange}
                         required
-                      />
+                      /> */}
                     </div>
                   </div>
                   <div className="form-row">

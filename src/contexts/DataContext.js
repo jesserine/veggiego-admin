@@ -13,7 +13,7 @@ export const DataProvider = ({ children }) => {
   const [productList, setProductList] = useState(null);
   const [orderList, setOrderList] = useState(null);
   const [unitList, setUnitList] = useState(null);
-  const [deliveryLocList, setDeliveryLocList] = useState(null);
+  const [deliveryFeeList, setDeliveryFeeList] = useState(null);
   const [categoryList, setCategoryList] = useState(null);
   const [deliveryLocationList, setDeliveryLocationList] = useState(null);
 
@@ -57,7 +57,7 @@ export const DataProvider = ({ children }) => {
 
   useEffect(() => {
     database.ref("delivery/").on("value", (snapshot) => {
-      setDeliveryLocList(snapshot.val());
+      setDeliveryFeeList(snapshot.val());
       setLoading(false);
     });
   }, []);
@@ -70,8 +70,8 @@ export const DataProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    database.ref("deliveryLoations/").on("value", (snapshot) => {
-      setCategoryList(snapshot.val());
+    database.ref("deliveryLocations/").on("value", (snapshot) => {
+      setDeliveryLocationList(snapshot.val());
       setLoading(false);
     });
   }, []);
@@ -83,7 +83,7 @@ export const DataProvider = ({ children }) => {
     productList,
     orderList,
     unitList,
-    deliveryLocList,
+    deliveryFeeList,
     categoryList,
     deliveryLocationList,
     setLoading,

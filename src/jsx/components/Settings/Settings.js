@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Button } from "react-bootstrap";
 import CategoryList from "./CategoryList";
@@ -68,7 +68,7 @@ const Settings = () => {
             }}
             className="btn btn-primary light btn-block"
           >
-            Delivery Fee
+            Delivery Fees
           </Button>
           <Button
             onClick={() => {

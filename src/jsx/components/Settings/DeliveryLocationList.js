@@ -69,7 +69,7 @@ const DeliveryLocationList = () => {
             <Col lg={12}>
               <Card>
                 <Card.Header>
-                  <Card.Title>Delivery Locations</Card.Title>
+                  <Card.Title>Supported Delivery Locations</Card.Title>
                 </Card.Header>
                 <Card.Body>
                   <Table responsive>
@@ -78,7 +78,7 @@ const DeliveryLocationList = () => {
                         <th>
                           <strong></strong>
                         </th>
-                        <th>
+                        {/* <th>
                           <strong>REGION</strong>
                         </th>
                         <th>
@@ -89,6 +89,15 @@ const DeliveryLocationList = () => {
                         </th>
                         <th>
                           <strong>BARANGAY</strong>
+                        </th> */}
+                        <th>
+                          <strong>LOCATION</strong>
+                        </th>
+                        <th>
+                          <strong>LATITUDE</strong>
+                        </th>
+                        <th>
+                          <strong>LONGITUDE</strong>
                         </th>
                         <th>
                           <strong>STATUS</strong>
@@ -114,10 +123,15 @@ const DeliveryLocationList = () => {
                               </Button>
                             </td>
 
-                            <td>{deliveryLocationObjects[id].region}</td>
+                            {/* <td>{deliveryLocationObjects[id].region}</td>
                             <td>{deliveryLocationObjects[id].province}</td>
                             <td>{deliveryLocationObjects[id].city}</td>
-                            <td>{deliveryLocationObjects[id].barangay}</td>
+                            <td>{deliveryLocationObjects[id].barangay}</td> */}
+                            <td>
+                              {deliveryLocationObjects[id].completeLocation}
+                            </td>
+                            <td>{deliveryLocationObjects[id].latitude}</td>
+                            <td>{deliveryLocationObjects[id].longitude}</td>
                             <td>
                               {!deliveryLocationObjects[id].isActive ? (
                                 <Badge variant="danger light"> INACTIVE </Badge>

@@ -5,10 +5,10 @@ import { Button } from "react-bootstrap";
 const DeliveryLocationForm = (props) => {
   const initialFieldValues = {
     region: "Region VIII (Eastern Visayas)",
-    province: "",
-    city: "",
+    province: "Leyte",
+    city: "Ormoc City",
     barangay: "",
-    completeLocation: "",
+    completeLocation: "Region VIII (Eastern Visayas), Leyte, Ormoc City",
     longitude: "",
     latitude: "",
     dateAdded: new Date().toLocaleString(),
@@ -29,7 +29,7 @@ const DeliveryLocationForm = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props.currentId == "")
+    if (props.currentId === "")
       setValues({
         ...initialFieldValues,
       });
@@ -47,6 +47,14 @@ const DeliveryLocationForm = (props) => {
     setValues({
       ...values,
       [name]: value,
+      completeLocation:
+        values.barangay +
+        ", " +
+        values.city +
+        ", " +
+        values.province +
+        ", " +
+        values.region,
     });
   };
 
@@ -111,10 +119,11 @@ const DeliveryLocationForm = (props) => {
                         onChange={handleInputChange}
                         required
                       >
-                        <option value="Eastern Samar">Eastern Samar</option>
                         <option value="Leyte" defaultValue>
                           Leyte
                         </option>
+                        <option value="Eastern Samar">Eastern Samar</option>
+
                         <option value="Northern Samar">Northern Samar</option>
                         <option value="Samar (Western Samar)">
                           Samar (Western Samar)
@@ -169,26 +178,20 @@ const DeliveryLocationForm = (props) => {
                         type="text"
                         className="form-control"
                         name="completeLocation"
-                        value={values.completeLocation}
-                        onChange={handleInputChange}
+                        value={
+                          values.barangay +
+                          ", " +
+                          values.city +
+                          ", " +
+                          values.province +
+                          ", " +
+                          values.region
+                        }
                         disabled
                       />
-                      {values.region + ", " + values.province}
                     </div>
                   </div>
                   <div className="form-row">
-                    <div className="form-group col-md-6">
-                      <label>Longitude</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Longitude"
-                        name="longitude"
-                        value={values.longitude}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
                     <div className="form-group col-md-6">
                       <label>Latitude</label>
                       <input
@@ -197,6 +200,18 @@ const DeliveryLocationForm = (props) => {
                         placeholder="Latitude"
                         name="latitude"
                         value={values.latitude}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className="form-group col-md-6">
+                      <label>Longitude</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Longitude"
+                        name="longitude"
+                        value={values.longitude}
                         onChange={handleInputChange}
                         required
                       />

@@ -271,7 +271,7 @@ const ProductsList = () => {
                                   {categoryBadge(productList[id].category)}
                                 </td>
                                 <td>{productList[id].unit}</td>
-                                <td>{productList[id].price}</td>
+                                <td>₱ {productList[id].price}</td>
                               </tr>
                             );
                           })}

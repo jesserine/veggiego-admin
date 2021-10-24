@@ -74,9 +74,9 @@ const DeliveryFeeList = () => {
                         <th>
                           <strong>DELIVERY FEE</strong>
                         </th>
-                        <th>
+                        {/* <th>
                           <strong>DATE ADDDED</strong>
-                        </th>
+                        </th> */}
                         <th>
                           <strong>STATUS</strong>
                         </th>
@@ -87,22 +87,26 @@ const DeliveryFeeList = () => {
                         return (
                           <tr key={id}>
                             <td>
-                              <Button
-                                onClick={() => {
-                                  setCurrentId(id);
-                                  window.scrollTo({
-                                    top: 0,
-                                    behavior: "smooth",
-                                  });
-                                }}
-                                className="btn btn-primary btn-xs  mr-1"
-                              >
-                                Edit
-                              </Button>
+                              {!["Free Delivery", "Custom"].includes(
+                                deliveryFeeObjects[id].location
+                              ) && (
+                                <Button
+                                  onClick={() => {
+                                    setCurrentId(id);
+                                    window.scrollTo({
+                                      top: 0,
+                                      behavior: "smooth",
+                                    });
+                                  }}
+                                  className="btn btn-primary btn-xs  mr-1"
+                                >
+                                  Edit
+                                </Button>
+                              )}
                             </td>
                             <td>{deliveryFeeObjects[id].location}</td>
-                            <td>{deliveryFeeObjects[id].deliveryFee}</td>
-                            <td>{deliveryFeeObjects[id].dateAdded}</td>
+                            <td>₱ {deliveryFeeObjects[id].deliveryFee}</td>
+                            {/* <td>{deliveryFeeObjects[id].dateAdded}</td> */}
                             <td>
                               {!deliveryFeeObjects[id].isActive ? (
                                 <Badge variant="danger light"> INACTIVE </Badge>
@@ -111,14 +115,18 @@ const DeliveryFeeList = () => {
                               )}
                             </td>
                             <td>
-                              <Button
-                                onClick={() => {
-                                  onDelete(id);
-                                }}
-                                className="btn btn-danger btn-xs  mr-1"
-                              >
-                                Delete
-                              </Button>
+                              {!["Free Delivery", "Custom"].includes(
+                                deliveryFeeObjects[id].location
+                              ) && (
+                                <Button
+                                  onClick={() => {
+                                    onDelete(id);
+                                  }}
+                                  className="btn btn-danger btn-xs  mr-1"
+                                >
+                                  Delete
+                                </Button>
+                              )}
                             </td>
                           </tr>
                         );
