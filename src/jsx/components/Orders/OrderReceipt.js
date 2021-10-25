@@ -2,17 +2,12 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useDataContext } from "../../../contexts/DataContext";
 import { Link } from "react-router-dom";
 import firebaseDb from "../../../firebase";
-import { storage } from "../../../firebase";
-import { v4 as uuid } from "uuid";
-import bg5 from "../../../images/big/customer-header.jpg";
-import { SplitButton, Row, Dropdown, Button } from "react-bootstrap";
+import { Dropdown, Button } from "react-bootstrap";
 import Select from "react-select";
 import { toast } from "react-toastify";
 
 const OrderReceipt = (props) => {
   const { riderList } = useDataContext();
-
-  const [showUpdateButton, setShowUpdateButton] = useState(false);
 
   // prepares rider data for combobox
   const [selectedRiderOption, setSelectedRiderOption] = useState({
@@ -243,7 +238,7 @@ const OrderReceipt = (props) => {
 
   return (
     <Fragment>
-      {props.currentOrder && props.currentId ? (
+      {props.currentOrder ? (
         <div className="row">
           <div className="col-lg-12">
             <div className="card">
@@ -340,7 +335,7 @@ const OrderReceipt = (props) => {
                               <Dropdown.Toggle variant="" size="s">
                                 {props.statusBadge(selectedOrderStatus)}
                               </Dropdown.Toggle>
-                              <Dropdown.Menu>
+                              <Dropdown.Menu show>
                                 <Dropdown.Item
                                   onSelect={() => handleOrderStatus("ACTIVE")}
                                 >
@@ -386,29 +381,19 @@ const OrderReceipt = (props) => {
                                 >
                                   {props.statusBadge("CANCELLED")}
                                 </Dropdown.Item>
-                              </Dropdown.Menu>{" "}
-                              {/* <span>
-                                <Button
-                                  onClick={orderStatusChangeHandler}
-                                  className="btn btn-primary shadow btn-xs sharp"
-                                  style={{ marginLeft: -15 }}
-                                >
-                                  <i className="fa fa-check"></i>
-                                </Button>
-                              </span> */}
+                              </Dropdown.Menu>
                             </Dropdown>
                           </div>
                         ) : (
-                          <div style={{ marginTop: 20, marginLeft: 20 }}>
+                          <div
+                            onClick={orderStatusChangeHandler}
+                            style={{
+                              marginTop: 20,
+                              marginLeft: 20,
+                              cursor: "pointer",
+                            }}
+                          >
                             {props.statusBadge(props.currentOrder.status)}
-                            <span>
-                              <Button
-                                onClick={orderStatusChangeHandler}
-                                className="btn btn-warning shadow btn-xs sharp ml-1"
-                              >
-                                <i className="fa fa-pencil"></i>
-                              </Button>
-                            </span>
                           </div>
                         )}
                       </span>
@@ -420,7 +405,7 @@ const OrderReceipt = (props) => {
                               <Dropdown.Toggle variant="" size="s">
                                 {props.statusBadge(selectedPaymentStatus)}
                               </Dropdown.Toggle>
-                              <Dropdown.Menu>
+                              <Dropdown.Menu show>
                                 <Dropdown.Item
                                   onSelect={() => handlePaymentStatus("PAID")}
                                 >
@@ -434,30 +419,20 @@ const OrderReceipt = (props) => {
                                   {props.statusBadge("NOT PAID")}
                                 </Dropdown.Item>
                               </Dropdown.Menu>
-                              {/* <span>
-                                <Button
-                                  onClick={paymentStatusChangeHandler}
-                                  className="btn btn-primary shadow btn-xs sharp"
-                                  style={{ marginLeft: -15 }}
-                                >
-                                  <i className="fa fa-check"></i>
-                                </Button>
-                              </span> */}
                             </Dropdown>
                           </div>
                         ) : (
-                          <div style={{ marginTop: 20, marginLeft: 20 }}>
+                          <div
+                            onClick={paymentStatusChangeHandler}
+                            style={{
+                              marginTop: 20,
+                              marginLeft: 20,
+                              cursor: "pointer",
+                            }}
+                          >
                             {props.statusBadge(
                               props.currentOrder.paymentStatus
                             )}
-                            <span>
-                              <Button
-                                onClick={paymentStatusChangeHandler}
-                                className="btn btn-warning shadow btn-xs sharp ml-1"
-                              >
-                                <i className="fa fa-pencil"></i>
-                              </Button>
-                            </span>
                           </div>
                         )}
                       </span>
@@ -500,7 +475,6 @@ const OrderReceipt = (props) => {
                     </table>
                   </div>
                   <div className="row">
-                    <div className="col-lg-4 col-sm-5"> </div>
                     <div className="col-lg-4 col-sm-5 ml-auto">
                       <table className="table table-clear">
                         <tbody>

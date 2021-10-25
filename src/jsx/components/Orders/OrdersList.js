@@ -92,6 +92,17 @@ const OrdersList = () => {
     setCurrentId("");
   };
 
+  // View delivery receipt - Triggers every order status filter change
+  useEffect(() => {
+    console.log("a change in orderList!");
+    const currentOrders = filteredOrders(orderList, filterStatus);
+    const latestOrder =
+      Object.keys(currentOrders)[Object.keys(currentOrders).length - 1];
+
+    setCurrentId(latestOrder);
+    setCurrentOrder(currentOrders[latestOrder]);
+  }, [filterStatus]);
+
   const statusBadge = (status) => {
     if (status) {
       if (status.includes("PREORDER")) {
@@ -142,19 +153,20 @@ const OrdersList = () => {
   };
 
   // View delivery receipt - Triggers every order status filter change
-  useEffect(() => {
-    if (orderValues) {
-      if (Object.keys(orderValues).length > 0) {
-        setCurrentOrder({
-          ...orderValues[
-            Object.keys(orderValues)[Object.keys(orderValues).length - 1]
-          ],
-        });
-      } else {
-        setCurrentOrder("");
-      }
-    }
-  }, [orderValues]);
+  // useEffect(() => {
+  //   console.log("change filter");
+  //   if (orderList) {
+  //     if (Object.keys(orderList).length > 0) {
+  //       setCurrentOrder({
+  //         ...orderList[
+  //           Object.keys(orderList)[Object.keys(orderList).length - 1]
+  //         ],
+  //       });
+  //     } else {
+  //       setCurrentOrder("");
+  //     }
+  //   }
+  // }, [orderList]);
 
   return (
     <Fragment>
@@ -205,12 +217,12 @@ const OrdersList = () => {
                               onSelect={() => handleFilterStatus("ALL")}
                             >
                               {statusBadge("ALL")}
-                            </Dropdown.Item>{" "}
+                            </Dropdown.Item>
                             <Dropdown.Item
                               onSelect={() => handleFilterStatus("ACTIVE")}
                             >
                               {statusBadge("ACTIVE")}
-                            </Dropdown.Item>{" "}
+                            </Dropdown.Item>
                             <Dropdown.Item
                               onSelect={() => handleFilterStatus("PREORDER")}
                             >
@@ -313,6 +325,7 @@ const OrdersList = () => {
                                   setCurrentId(orderId);
                                   setCurrentOrder({ ...orderList[orderId] });
                                 }}
+                                style={{ cursor: "pointer" }}
                               >
                                 <td>
                                   {statusBadge(orderList[orderId].status)}
