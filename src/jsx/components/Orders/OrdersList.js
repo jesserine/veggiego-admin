@@ -94,14 +94,15 @@ const OrdersList = () => {
 
   // View delivery receipt - Triggers every order status filter change
   useEffect(() => {
-    console.log("a change in orderList!");
-    const currentOrders = filteredOrders(orderList, filterStatus);
-    const latestOrder =
-      Object.keys(currentOrders)[Object.keys(currentOrders).length - 1];
+    if (orderList) {
+      const currentOrders = filteredOrders(orderList, filterStatus);
+      const latestOrder =
+        Object.keys(currentOrders)[Object.keys(currentOrders).length - 1];
 
-    setCurrentId(latestOrder);
-    setCurrentOrder(currentOrders[latestOrder]);
-  }, [filterStatus]);
+      setCurrentId(latestOrder);
+      setCurrentOrder(currentOrders[latestOrder]);
+    }
+  }, [orderList, filterStatus]);
 
   const statusBadge = (status) => {
     if (status) {
@@ -130,25 +131,27 @@ const OrdersList = () => {
   };
 
   const filteredOrders = (orderList, status) => {
-    if (status === "ALL") {
-      return Object.keys(orderList)
-        .filter((orderId) =>
-          orderList[orderId].customer.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-        )
-        .reduce((res, key) => ((res[key] = orderList[key]), res), {});
-    } else {
-      var filteredOrders = Object.keys(orderList)
-        .filter(
-          (orderId) =>
-            orderList[orderId].status === status &&
+    if (orderList) {
+      if (status === "ALL") {
+        return Object.keys(orderList)
+          .filter((orderId) =>
             orderList[orderId].customer.name
               .toLowerCase()
               .includes(searchTerm.toLowerCase())
-        )
-        .reduce((res, key) => ((res[key] = orderList[key]), res), {});
-      return filteredOrders;
+          )
+          .reduce((res, key) => ((res[key] = orderList[key]), res), {});
+      } else {
+        var filteredOrders = Object.keys(orderList)
+          .filter(
+            (orderId) =>
+              orderList[orderId].status === status &&
+              orderList[orderId].customer.name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+          )
+          .reduce((res, key) => ((res[key] = orderList[key]), res), {});
+        return filteredOrders;
+      }
     }
   };
 
@@ -167,6 +170,12 @@ const OrdersList = () => {
   //     }
   //   }
   // }, [orderList]);
+
+  if (!orderList) {
+    return <h1>Loading...</h1>;
+  }
+
+  console.log("orderList", orderList);
 
   return (
     <Fragment>

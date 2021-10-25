@@ -15,24 +15,27 @@ const OrderReceipt = (props) => {
     value: "Not Assigned",
     rider: "Not Assigned",
   });
+
   const riderOptions = [];
-  Object.keys(riderList).map((id) => {
-    return riderOptions.push({
-      value: riderList[id].riderName,
-      label: (
-        <div>
-          <img
-            src={riderList[id].riderImage}
-            height="30px"
-            width="30px"
-            alt={riderList[id].riderName}
-          />
-          {riderList[id].riderName}
-        </div>
-      ),
-      rider: riderList[id],
+  if (riderList) {
+    Object.keys(riderList).map((id) => {
+      return riderOptions.push({
+        value: riderList[id].riderName,
+        label: (
+          <div>
+            <img
+              src={riderList[id].riderImage}
+              height="30px"
+              width="30px"
+              alt={riderList[id].riderName}
+            />
+            {riderList[id].riderName}
+          </div>
+        ),
+        rider: riderList[id],
+      });
     });
-  });
+  }
 
   // Order and Payment Status edit mode handler
   const [editOrderStatusMode, setEditOrderStatusMode] = useState(false);
@@ -235,6 +238,10 @@ const OrderReceipt = (props) => {
     }
     return showButton;
   };
+
+  if (!riderList) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <Fragment>
