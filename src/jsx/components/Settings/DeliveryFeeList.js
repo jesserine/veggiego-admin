@@ -84,7 +84,7 @@ const DeliveryFeeList = () => {
                         <input
                           className="form-control"
                           type="search"
-                          placeholder="Search Unit"
+                          placeholder="Search Delivery Location"
                           aria-label="Search"
                           onChange={(event) =>
                             setSearchTerm(event.target.value)

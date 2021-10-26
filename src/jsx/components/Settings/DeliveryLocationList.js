@@ -4,20 +4,23 @@ import swal from "sweetalert";
 import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
 
 import DeliveryLocationForm from "./DeliveryLocationForm";
+import { useDataContext } from "../../../contexts/DataContext";
 
 const DeliveryLocationList = () => {
   var [deliveryLocationObjects, setDeliveryLocationObjects] = useState({});
   var [currentId, setCurrentId] = useState("");
+  var [searchTerm, setSearchTerm] = useState("");
+  const { deliveryLocationList, setDeliveryLocationList } = useDataContext();
 
-  useEffect(() => {
-    firebaseDb.ref("deliveryLocations/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setDeliveryLocationObjects({
-          ...snapshot.val(),
-        });
-      else setDeliveryLocationObjects({});
-    });
-  }, []);
+  // useEffect(() => {
+  //   firebaseDb.ref("deliveryLocations/").on("value", (snapshot) => {
+  //     if (snapshot.val() != null)
+  //       setDeliveryLocationObjects({
+  //         ...snapshot.val(),
+  //       });
+  //     else setDeliveryLocationObjects({});
+  //   });
+  // }, []);
 
   const addOrEdit = (obj) => {
     console.log("inside addOrEdit");
@@ -47,6 +50,19 @@ const DeliveryLocationList = () => {
     }
   };
 
+  const filteredDeliveryLocations = (deliveryLocationList, searchTerm) => {
+    if (!searchTerm) {
+      return deliveryLocationList;
+    }
+    return Object.keys(deliveryLocationList)
+      .filter((id) =>
+        deliveryLocationList[id].completeLocation
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      )
+      .reduce((res, key) => ((res[key] = deliveryLocationList[key]), res), {});
+  };
+
   return (
     <Fragment>
       <div className="row">
@@ -60,7 +76,7 @@ const DeliveryLocationList = () => {
                 addOrEdit,
                 currentId,
                 setCurrentId,
-                deliveryLocationObjects,
+                deliveryLocationList,
               }}
             />
           </div>
@@ -72,6 +88,21 @@ const DeliveryLocationList = () => {
                   <Card.Title>Supported Delivery Locations</Card.Title>
                 </Card.Header>
                 <Card.Body>
+                  <div className="search_bar dropdown show mb-3">
+                    <div className="dropdown-menushow">
+                      <form onSubmit={(e) => e.preventDefault()}>
+                        <input
+                          className="form-control"
+                          type="search"
+                          placeholder="Search Delivery Location"
+                          aria-label="Search"
+                          onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                          }
+                        />
+                      </form>
+                    </div>
+                  </div>
                   <Table responsive>
                     <thead>
                       <tr>
@@ -105,7 +136,12 @@ const DeliveryLocationList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.keys(deliveryLocationObjects).map((id) => {
+                      {Object.keys(
+                        filteredDeliveryLocations(
+                          deliveryLocationList,
+                          searchTerm
+                        )
+                      ).map((id) => {
                         return (
                           <tr key={id}>
                             <td>
@@ -127,13 +163,11 @@ const DeliveryLocationList = () => {
                             <td>{deliveryLocationObjects[id].province}</td>
                             <td>{deliveryLocationObjects[id].city}</td>
                             <td>{deliveryLocationObjects[id].barangay}</td> */}
+                            <td>{deliveryLocationList[id].completeLocation}</td>
+                            <td>{deliveryLocationList[id].latitude}</td>
+                            <td>{deliveryLocationList[id].longitude}</td>
                             <td>
-                              {deliveryLocationObjects[id].completeLocation}
-                            </td>
-                            <td>{deliveryLocationObjects[id].latitude}</td>
-                            <td>{deliveryLocationObjects[id].longitude}</td>
-                            <td>
-                              {!deliveryLocationObjects[id].isActive ? (
+                              {!deliveryLocationList[id].isActive ? (
                                 <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
                                 <Badge variant="primary light"> ACTIVE </Badge>
