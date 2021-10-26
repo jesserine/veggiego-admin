@@ -21,7 +21,6 @@ const OrdersList = () => {
   useEffect(() => {
     if (location.state) {
       const { isAdded, isUpdated } = location.state;
-      console.log(location.state);
       setTimeout(async () => {
         if (isAdded) {
           toast.success("Order successfully placed!", {
@@ -155,27 +154,9 @@ const OrdersList = () => {
     }
   };
 
-  // View delivery receipt - Triggers every order status filter change
-  // useEffect(() => {
-  //   console.log("change filter");
-  //   if (orderList) {
-  //     if (Object.keys(orderList).length > 0) {
-  //       setCurrentOrder({
-  //         ...orderList[
-  //           Object.keys(orderList)[Object.keys(orderList).length - 1]
-  //         ],
-  //       });
-  //     } else {
-  //       setCurrentOrder("");
-  //     }
-  //   }
-  // }, [orderList]);
-
   if (!orderList) {
     return <h1>Loading...</h1>;
   }
-
-  console.log("orderList", orderList);
 
   return (
     <Fragment>

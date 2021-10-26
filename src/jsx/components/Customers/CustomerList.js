@@ -92,6 +92,101 @@ const CustomerList = () => {
       .reduce((res, key) => ((res[key] = customerList[key]), res), {});
   };
 
+  if (!customerList) {
+    return <h1>Loading...</h1>;
+  }
+
+  const CustomerTable = () => {
+    return (
+      <Row>
+        <Col lg={12}>
+          <Card>
+            <Card.Header>
+              <Card.Title></Card.Title>
+              <span className="float-right">
+                <Button
+                  className="btn-sm btn-primary btn-block"
+                  onClick={() => {
+                    setCurrentId("");
+                  }}
+                >
+                  Add new customer
+                </Button>
+              </span>
+            </Card.Header>
+            <Card.Body>
+              <div className="search_bar dropdown show mb-3">
+                <div className="dropdown-menushow">
+                  <form onSubmit={(e) => e.preventDefault()}>
+                    <input
+                      className="form-control"
+                      type="search"
+                      placeholder="Search Customer"
+                      aria-label="Search"
+                      onChange={(event) => setSearchTerm(event.target.value)}
+                    />
+                  </form>
+                </div>
+              </div>
+              <Table responsive hover>
+                <thead>
+                  <tr>
+                    <th>
+                      <strong>NAME</strong>
+                    </th>
+                    <th>
+                      <strong>CONTACT NUMBER</strong>
+                    </th>
+                    <th>
+                      <strong>ADDRESS</strong>
+                    </th>
+                    <th>
+                      <strong>LANDMARK</strong>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(filteredCustomers(customerList, searchTerm))
+                    .slice(0)
+                    .reverse()
+                    .map((id) => {
+                      return (
+                        <tr
+                          key={id}
+                          onClick={() => {
+                            setCurrentId(id);
+                            toast.success(
+                              "Viewing customer '" +
+                                customerList[id].name +
+                                "'",
+                              {
+                                position: "bottom-left",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                              }
+                            );
+                          }}
+                        >
+                          <td>{customerList[id].name}</td>
+                          <td>{customerList[id].contactNumber}</td>
+                          <td>{JSON.stringify(customerList[id].address)}</td>
+                          <td>{customerList[id].landmark}</td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    );
+  };
+
   return (
     <Fragment>
       <Helmet>
@@ -108,96 +203,7 @@ const CustomerList = () => {
           <CustomerForm {...{ addOrEdit, currentId, customerList }} />
         </div>
         <div className="col-xl-8 col-lg-6">
-          <Row>
-            <Col lg={12}>
-              <Card>
-                <Card.Header>
-                  <Card.Title></Card.Title>
-                  <span className="float-right">
-                    <Button
-                      className="btn-sm btn-primary btn-block"
-                      onClick={() => {
-                        setCurrentId("");
-                      }}
-                    >
-                      Add new customer
-                    </Button>
-                  </span>
-                </Card.Header>
-                <Card.Body>
-                  <div className="search_bar dropdown show mb-3">
-                    <div className="dropdown-menushow">
-                      <form onSubmit={(e) => e.preventDefault()}>
-                        <input
-                          className="form-control"
-                          type="search"
-                          placeholder="Search Customer"
-                          aria-label="Search"
-                          onChange={(event) =>
-                            setSearchTerm(event.target.value)
-                          }
-                        />
-                      </form>
-                    </div>
-                  </div>
-                  <Table responsive hover>
-                    <thead>
-                      <tr>
-                        <th>
-                          <strong>NAME</strong>
-                        </th>
-                        <th>
-                          <strong>CONTACT NUMBER</strong>
-                        </th>
-                        <th>
-                          <strong>ADDRESS</strong>
-                        </th>
-                        <th>
-                          <strong>LANDMARK</strong>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.keys(filteredCustomers(customerList, searchTerm))
-                        .slice(0)
-                        .reverse()
-                        .map((id) => {
-                          return (
-                            <tr
-                              key={id}
-                              onClick={() => {
-                                setCurrentId(id);
-                                toast.success(
-                                  "Viewing customer '" +
-                                    customerList[id].name +
-                                    "'",
-                                  {
-                                    position: "bottom-left",
-                                    autoClose: 3000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                  }
-                                );
-                              }}
-                            >
-                              <td>{customerList[id].name}</td>
-                              <td>{customerList[id].contactNumber}</td>
-                              <td>
-                                {JSON.stringify(customerList[id].address)}
-                              </td>
-                              <td>{customerList[id].landmark}</td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </Table>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+          <CustomerTable />
         </div>
       </div>
     </Fragment>
