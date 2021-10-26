@@ -43,6 +43,7 @@ const AddressModal = (props) => {
     props.handleMultipleCustomerAddress({
       location: deliveryLocation.location,
       street: streetAddr,
+      default: false,
     });
   };
 

@@ -7,20 +7,9 @@ import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
 import CategoryForm from "./CategoryForm";
 
 const CategoryList = () => {
-  const { categoryList, setCategoryList } = useDataContext();
-  // var [categoryObjects, setCategoryObjects] = useState({});
+  const { categoryList } = useDataContext();
   var [currentId, setCurrentId] = useState("");
   var [searchTerm, setSearchTerm] = useState("");
-
-  // useEffect(() => {
-  //   firebaseDb.ref("category/").on("value", (snapshot) => {
-  //     if (snapshot.val() != null)
-  //       setCategoryObjects({
-  //         ...snapshot.val(),
-  //       });
-  //     else setCategoryObjects({});
-  //   });
-  // }, []);
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
@@ -60,6 +49,9 @@ const CategoryList = () => {
       .reduce((res, key) => ((res[key] = categoryList[key]), res), {});
   };
 
+  if (!categoryList) {
+    return <h1>Loading...</h1>;
+  }
   return (
     <Fragment>
       <div className="row">

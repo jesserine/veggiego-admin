@@ -3,7 +3,15 @@ import { Helmet } from "react-helmet";
 import { useDataContext } from "../../../contexts/DataContext";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
-import { Row, Col, Card, Table, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Table,
+  Button,
+  Badge,
+  ListGroup,
+} from "react-bootstrap";
 
 import { toast } from "react-toastify";
 import CustomerForm from "./CustomerForm";
@@ -138,7 +146,7 @@ const CustomerList = () => {
                       <strong>CONTACT NUMBER</strong>
                     </th>
                     <th>
-                      <strong>ADDRESS</strong>
+                      <strong>DEFAULT ADDRESS</strong>
                     </th>
                     <th>
                       <strong>LANDMARK</strong>
@@ -153,27 +161,31 @@ const CustomerList = () => {
                       return (
                         <tr
                           key={id}
+                          style={{ cursor: "pointer" }}
                           onClick={() => {
                             setCurrentId(id);
-                            toast.success(
-                              "Viewing customer '" +
-                                customerList[id].name +
-                                "'",
-                              {
-                                position: "bottom-left",
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                              }
-                            );
+                            window.scrollTo({
+                              top: 0,
+                              behavior: "smooth",
+                            });
                           }}
                         >
                           <td>{customerList[id].name}</td>
                           <td>{customerList[id].contactNumber}</td>
-                          <td>{JSON.stringify(customerList[id].address)}</td>
+                          <td>
+                            {customerList[id].address.map((address, i) => {
+                              return (
+                                address.default && (
+                                  <p>
+                                    {address.street},{" "}
+                                    {address.location.barangay},{" "}
+                                    {address.location.city},{" "}
+                                    {address.location.province}
+                                  </p>
+                                )
+                              );
+                            })}
+                          </td>
                           <td>{customerList[id].landmark}</td>
                         </tr>
                       );
