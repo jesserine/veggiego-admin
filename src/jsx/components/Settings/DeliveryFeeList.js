@@ -4,20 +4,23 @@ import swal from "sweetalert";
 import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
 
 import DeliveryFeeForm from "./DeliveryFeeForm";
+import { useDataContext } from "../../../contexts/DataContext";
 
 const DeliveryFeeList = () => {
   var [deliveryFeeObjects, setDeliveryFeeObjects] = useState({});
   var [currentId, setCurrentId] = useState("");
+  const { deliveryFeeList, setDeliveryFeeList } = useDataContext();
+  var [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    firebaseDb.ref("delivery/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setDeliveryFeeObjects({
-          ...snapshot.val(),
-        });
-      else setDeliveryFeeObjects({});
-    });
-  }, []);
+  // useEffect(() => {
+  //   firebaseDb.ref("delivery/").on("value", (snapshot) => {
+  //     if (snapshot.val() != null)
+  //       setDeliveryFeeObjects({
+  //         ...snapshot.val(),
+  //       });
+  //     else setDeliveryFeeObjects({});
+  //   });
+  // }, []);
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
@@ -44,6 +47,19 @@ const DeliveryFeeList = () => {
     }
   };
 
+  const filteredDeliveryFee = (deliveryFeeList, searchTerm) => {
+    if (!searchTerm) {
+      return deliveryFeeList;
+    }
+    return Object.keys(deliveryFeeList)
+      .filter((id) =>
+        deliveryFeeList[id].location
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      )
+      .reduce((res, key) => ((res[key] = deliveryFeeList[key]), res), {});
+  };
+
   return (
     <Fragment>
       <div className="row">
@@ -51,7 +67,7 @@ const DeliveryFeeList = () => {
           <h2 className="text-black font-w600 mb-1">Delivery Fee Settings</h2>
           <div className="mt-4">
             <DeliveryFeeForm
-              {...{ addOrEdit, currentId, setCurrentId, deliveryFeeObjects }}
+              {...{ addOrEdit, currentId, setCurrentId, deliveryFeeList }}
             />
           </div>
 
@@ -62,6 +78,21 @@ const DeliveryFeeList = () => {
                   <Card.Title>Delivery Fee</Card.Title>
                 </Card.Header>
                 <Card.Body>
+                  <div className="search_bar dropdown show mb-3">
+                    <div className="dropdown-menushow">
+                      <form onSubmit={(e) => e.preventDefault()}>
+                        <input
+                          className="form-control"
+                          type="search"
+                          placeholder="Search Unit"
+                          aria-label="Search"
+                          onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                          }
+                        />
+                      </form>
+                    </div>
+                  </div>
                   <Table responsive>
                     <thead>
                       <tr>
@@ -83,12 +114,14 @@ const DeliveryFeeList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.keys(deliveryFeeObjects).map((id) => {
+                      {Object.keys(
+                        filteredDeliveryFee(deliveryFeeList, searchTerm)
+                      ).map((id) => {
                         return (
                           <tr key={id}>
                             <td>
                               {!["Free Delivery", "Custom"].includes(
-                                deliveryFeeObjects[id].location
+                                deliveryFeeList[id].location
                               ) && (
                                 <Button
                                   onClick={() => {
@@ -104,11 +137,11 @@ const DeliveryFeeList = () => {
                                 </Button>
                               )}
                             </td>
-                            <td>{deliveryFeeObjects[id].location}</td>
-                            <td>₱ {deliveryFeeObjects[id].deliveryFee}</td>
+                            <td>{deliveryFeeList[id].location}</td>
+                            <td>₱ {deliveryFeeList[id].deliveryFee}</td>
                             {/* <td>{deliveryFeeObjects[id].dateAdded}</td> */}
                             <td>
-                              {!deliveryFeeObjects[id].isActive ? (
+                              {!deliveryFeeList[id].isActive ? (
                                 <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
                                 <Badge variant="primary light"> ACTIVE </Badge>
@@ -116,7 +149,7 @@ const DeliveryFeeList = () => {
                             </td>
                             <td>
                               {!["Free Delivery", "Custom"].includes(
-                                deliveryFeeObjects[id].location
+                                deliveryFeeList[id].location
                               ) && (
                                 <Button
                                   onClick={() => {
