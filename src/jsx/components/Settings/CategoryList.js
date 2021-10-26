@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { useDataContext } from "../../../contexts/DataContext";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
 import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
@@ -6,18 +7,20 @@ import { Row, Col, Card, Table, Badge, Button } from "react-bootstrap";
 import CategoryForm from "./CategoryForm";
 
 const CategoryList = () => {
-  var [categoryObjects, setCategoryObjects] = useState({});
+  const { categoryList, setCategoryList } = useDataContext();
+  // var [categoryObjects, setCategoryObjects] = useState({});
   var [currentId, setCurrentId] = useState("");
+  var [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    firebaseDb.ref("category/").on("value", (snapshot) => {
-      if (snapshot.val() != null)
-        setCategoryObjects({
-          ...snapshot.val(),
-        });
-      else setCategoryObjects({});
-    });
-  }, []);
+  // useEffect(() => {
+  //   firebaseDb.ref("category/").on("value", (snapshot) => {
+  //     if (snapshot.val() != null)
+  //       setCategoryObjects({
+  //         ...snapshot.val(),
+  //       });
+  //     else setCategoryObjects({});
+  //   });
+  // }, []);
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
@@ -44,6 +47,19 @@ const CategoryList = () => {
     }
   };
 
+  const filteredCategory = (categoryList, searchTerm) => {
+    if (!searchTerm) {
+      return categoryList;
+    }
+    return Object.keys(categoryList)
+      .filter((id) =>
+        categoryList[id].categoryName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      )
+      .reduce((res, key) => ((res[key] = categoryList[key]), res), {});
+  };
+
   return (
     <Fragment>
       <div className="row">
@@ -53,7 +69,7 @@ const CategoryList = () => {
           </h2>
           <div className="mt-4">
             <CategoryForm
-              {...{ addOrEdit, currentId, setCurrentId, categoryObjects }}
+              {...{ addOrEdit, currentId, setCurrentId, categoryList }}
             />
           </div>
 
@@ -64,6 +80,21 @@ const CategoryList = () => {
                   <Card.Title>Product Categories</Card.Title>
                 </Card.Header>
                 <Card.Body>
+                  <div className="search_bar dropdown show mb-3">
+                    <div className="dropdown-menushow">
+                      <form onSubmit={(e) => e.preventDefault()}>
+                        <input
+                          className="form-control"
+                          type="search"
+                          placeholder="Search Category"
+                          aria-label="Search"
+                          onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                          }
+                        />
+                      </form>
+                    </div>
+                  </div>
                   <Table responsive>
                     <thead>
                       <tr>
@@ -78,7 +109,9 @@ const CategoryList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.keys(categoryObjects).map((id) => {
+                      {Object.keys(
+                        filteredCategory(categoryList, searchTerm)
+                      ).map((id) => {
                         return (
                           <tr key={id}>
                             <td>
@@ -95,9 +128,9 @@ const CategoryList = () => {
                                 Edit
                               </Button>
                             </td>
-                            <td>{categoryObjects[id].categoryName}</td>
+                            <td>{categoryList[id].categoryName}</td>
                             <td>
-                              {!categoryObjects[id].isActive ? (
+                              {!categoryList[id].isActive ? (
                                 <Badge variant="danger light"> INACTIVE </Badge>
                               ) : (
                                 <Badge variant="primary light"> ACTIVE </Badge>
