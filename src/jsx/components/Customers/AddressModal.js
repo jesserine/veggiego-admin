@@ -45,6 +45,7 @@ const AddressModal = (props) => {
       street: streetAddr,
       default: false,
     });
+    props.toggleModal(false);
   };
 
   return (
@@ -82,20 +83,11 @@ const AddressModal = (props) => {
                       IndicatorSeparator: () => null,
                     }}
                   />
-                  {/* <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Location"
-                        name="location"
-                        value={values.location}
-                        onChange={handleInputChange}
-                        required
-                      /> */}
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group col-md-12">
-                  <label>Street Name, Building, House No.</label>
+                  <label>House No., Street Name, Building</label>
                   <input
                     type="text"
                     className="form-control"

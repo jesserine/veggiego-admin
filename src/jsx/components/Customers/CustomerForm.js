@@ -1,12 +1,9 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import firebaseDb from "../../../firebase";
 import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 
-import { toast } from "react-toastify";
-import { ListGroup, Badge, Modal, Button } from "react-bootstrap";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { Badge, Button } from "react-bootstrap";
 import AddressModal from "./AddressModal";
 import bg5 from "../../../images/big/customer-header.jpg";
 
@@ -76,30 +73,30 @@ const CustomerForm = (props) => {
   const handleAddressModalState = (e) => {
     setAddressModal(e);
   };
-  const [customerAddress, setCustomerAddress] = useState({
-    address: [],
-  });
 
   const handleMultipleCustomerAddress = (address) => {
-    setCustomerAddress({
-      address: [...customerAddress.address, address],
-    });
-
     setValues((prev) => ({
       ...prev,
-      address: [...customerAddress.address, address],
+      address: [...values.address, address],
     }));
   };
-
-  // console.log("customerAddress", customerAddress.address);
-  // console.log("values", values);
-
   const handleDefaultAddress = () => {
     console.log("set as default", values.address);
   };
 
   const editAddress = (address, index) => {
     console.log("editing address", address, index);
+
+    // setAddressModal(true);
+  };
+
+  const deleteAddress = (address, index) => {
+    const filteredArr = values.address.filter((item) => item !== address);
+
+    setValues((prev) => ({
+      ...prev,
+      address: filteredArr,
+    }));
   };
 
   const CustomerEditForm = () => {
@@ -161,28 +158,39 @@ const CustomerForm = (props) => {
                     className="d-flex justify-content-between align-items-center "
                     key={i}
                   >
-                    <Button
-                      onClick={() => editAddress(address, i)}
-                      className="btn btn-primary shadow btn-xs sharp ml-2 mr-4"
-                    >
-                      <i className="fa fa-pencil"></i>
-                    </Button>
-                    <strong>
-                      {address.street}, {address.location.barangay},{" "}
-                      {address.location.city}, {address.location.province}
-                    </strong>
-
-                    {!address.default ? (
+                    <div style={{ width: "15%" }}>
                       <Button
-                        variant="primary light btn-xs"
-                        className="ml-4"
-                        onClick={() => handleDefaultAddress(address, i)}
+                        onClick={() => deleteAddress(address, i)}
+                        className="btn btn-danger shadow btn-xs sharp"
                       >
-                        SET AS DEFAULT
+                        <i className="fa fa-times"></i>
                       </Button>
-                    ) : (
-                      <div style={{ width: 50 }}></div>
-                    )}
+                      <Button
+                        onClick={() => editAddress(address, i)}
+                        className="btn btn-primary shadow btn-xs sharp ml-1 mr-1"
+                      >
+                        <i className="fa fa-pencil"></i>
+                      </Button>
+                    </div>
+                    <div style={{ width: "60%" }}>
+                      <strong>
+                        {address.street}, {address.location.barangay},{" "}
+                        {address.location.city}, {address.location.province}
+                      </strong>
+                    </div>
+                    <div style={{ width: "25%" }}>
+                      {!address.default ? (
+                        <Button
+                          variant="primary light btn-xs"
+                          className="ml-4"
+                          onClick={() => handleDefaultAddress(address, i)}
+                        >
+                          Set as Default
+                        </Button>
+                      ) : (
+                        <div style={{ width: 50 }}></div>
+                      )}
+                    </div>
                   </div>
                   <hr></hr>
                 </>
@@ -296,18 +304,21 @@ const CustomerForm = (props) => {
                       className="d-flex justify-content-between align-items-center ml-4"
                       key={i}
                     >
-                      <strong>
-                        {address.street}, {address.location.barangay},{" "}
-                        {address.location.city}, {address.location.province}
-                      </strong>
-
-                      {address.default ? (
-                        <Badge variant="primary" className="ml-4" pill>
-                          DEFAULT
-                        </Badge>
-                      ) : (
-                        <div style={{ width: 70 }}></div>
-                      )}
+                      <div style={{ width: "70%" }}>
+                        <strong>
+                          {address.street}, {address.location.barangay},{" "}
+                          {address.location.city}, {address.location.province}
+                        </strong>
+                      </div>
+                      <div style={{ width: "30%" }}>
+                        {address.default ? (
+                          <Badge variant="primary" className="ml-4" pill>
+                            DEFAULT
+                          </Badge>
+                        ) : (
+                          <div style={{ width: 70 }}></div>
+                        )}
+                      </div>
                     </div>
                   </>
                 );
@@ -385,6 +396,7 @@ const CustomerForm = (props) => {
             isOpen={addressModal}
             toggleModal={handleAddressModalState}
             handleMultipleCustomerAddress={handleMultipleCustomerAddress}
+            // editAddress={editAddressData}
           />
         </div>
       </div>

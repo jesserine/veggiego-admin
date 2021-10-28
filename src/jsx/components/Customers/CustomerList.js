@@ -1,21 +1,12 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useDataContext } from "../../../contexts/DataContext";
 import firebaseDb from "../../../firebase";
 import swal from "sweetalert";
-import {
-  Row,
-  Col,
-  Card,
-  Table,
-  Button,
-  Badge,
-  ListGroup,
-} from "react-bootstrap";
+import { Row, Col, Card, Table, Button } from "react-bootstrap";
 
 import { toast } from "react-toastify";
 import CustomerForm from "./CustomerForm";
-import AddressModal from "./AddressModal";
 
 const CustomerList = () => {
   /// Get customer list from context provider
@@ -26,6 +17,7 @@ const CustomerList = () => {
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
+      //new customer profile
       firebaseDb
         .ref("customer/")
         .push(obj)
@@ -57,10 +49,33 @@ const CustomerList = () => {
         obj,
       }));
     } else {
-      swal("Nice!", "This customer profile is updated!", "success");
+      //update customer profile
       firebaseDb.ref(`customer/${currentId}`).set(obj, (err) => {
-        if (err) console.log(err);
-        else setCurrentId("");
+        if (err) {
+          toast.error("An error has occurred " + err, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        } else {
+          toast.success("Customer has been updated", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setCurrentId("");
+        }
+        // Update context state
+
+        setCustomerList({ ...customerList, [currentId]: obj });
       });
     }
   };
@@ -211,10 +226,10 @@ const CustomerList = () => {
         </div>
       </div>
       <div className="row">
-        <div className="col-xl-4 col-lg-6">
+        <div className="col-xl-5 col-lg-5">
           <CustomerForm {...{ addOrEdit, currentId, customerList }} />
         </div>
-        <div className="col-xl-8 col-lg-6">
+        <div className="col-xl-7 col-lg-7">
           <CustomerTable />
         </div>
       </div>
