@@ -7,7 +7,11 @@ import { useDataContext } from "../../../contexts/DataContext";
 const AddressModal = (props) => {
   const { deliveryLocationList } = useDataContext();
   const [deliveryLocation, setDeliveryLocation] = useState();
-  const [streetAddr, setStreetAddr] = useState("");
+  const [streetAddr, setStreetAddr] = useState();
+
+  // if (props.address) {
+  //   setStreetAddr(props.address.street);
+  // }
 
   // prepares delivery locations data for combobox
   const deliveryOptions = [];
@@ -43,9 +47,16 @@ const AddressModal = (props) => {
     props.handleMultipleCustomerAddress({
       location: deliveryLocation.location,
       street: streetAddr,
+      landmark: "Landmark",
+      contact: "096127128731237",
       default: false,
     });
     props.toggleModal(false);
+  };
+
+  const closeModal = () => {
+    props.toggleModal(false);
+    setStreetAddr("");
   };
 
   return (
@@ -56,12 +67,8 @@ const AddressModal = (props) => {
         size="lg"
       >
         <Modal.Header>
-          <Modal.Title>Add Address</Modal.Title>
-          <Button
-            variant=""
-            className="close"
-            onClick={() => props.toggleModal(false)}
-          >
+          <Modal.Title>Add Address </Modal.Title>
+          <Button variant="" className="close" onClick={closeModal}>
             <span>&times;</span>
           </Button>
         </Modal.Header>
@@ -91,6 +98,7 @@ const AddressModal = (props) => {
                   <input
                     type="text"
                     className="form-control"
+                    defaultValue={props.address ? props.address.street : ""}
                     value={streetAddr}
                     onChange={(event) => setStreetAddr(event.target.value)}
                   />
@@ -100,10 +108,7 @@ const AddressModal = (props) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="danger light"
-            onClick={() => props.toggleModal(false)}
-          >
+          <Button variant="danger light" onClick={closeModal}>
             Close
           </Button>
           <Button

@@ -188,18 +188,19 @@ const CustomerList = () => {
                           <td>{customerList[id].name}</td>
                           <td>{customerList[id].contactNumber}</td>
                           <td>
-                            {customerList[id].address.map((address, i) => {
-                              return (
-                                address.default && (
-                                  <p>
-                                    {address.street},{" "}
-                                    {address.location.barangay},{" "}
-                                    {address.location.city},{" "}
-                                    {address.location.province}
-                                  </p>
-                                )
-                              );
-                            })}
+                            {customerList[id].address &&
+                              customerList[id].address.map((address, i) => {
+                                return (
+                                  address.default && (
+                                    <p>
+                                      {address.street},{" "}
+                                      {address.location.barangay},{" "}
+                                      {address.location.city},{" "}
+                                      {address.location.province}
+                                    </p>
+                                  )
+                                );
+                              })}
                           </td>
                           <td>{customerList[id].landmark}</td>
                         </tr>
