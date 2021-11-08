@@ -227,94 +227,6 @@ const CustomerForm = (props) => {
     },
   };
 
-  const CustomerViewForm = () => {
-    return (
-      <div className="">
-        <div
-          className="text-center p-3 overlay-box "
-          style={{ backgroundImage: `url(${bg5})` }}
-        >
-          <h3 className="mt-3 mb-1 text-white">{values.name}</h3>
-          <p className="text-white mb-0">Customer</p>
-        </div>
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item d-flex justify-content-between">
-            <span className="mb-0">Contact Number</span>
-            <strong className="text-muted">{values.contactNumber}</strong>
-          </li>
-          {values.address && (
-            <li className="list-group-item  ">
-              <span className="mb-0">Address</span>
-
-              {values.address &&
-                values.address.map((address, i) => {
-                  return (
-                    <>
-                      <hr></hr>
-
-                      <div
-                        className="d-flex justify-content-between align-items-center ml-4"
-                        key={i}
-                      >
-                        <div style={{ width: "70%" }}>
-                          <strong>
-                            {address.street}, {address.location.barangay},{" "}
-                            {address.location.city}, {address.location.province}
-                          </strong>
-                        </div>
-                        <div style={{ width: "30%" }}>
-                          {address.default ? (
-                            <Badge variant="primary" className="ml-4" pill>
-                              DEFAULT
-                            </Badge>
-                          ) : (
-                            <div style={{ width: 70 }}></div>
-                          )}
-                        </div>
-                      </div>
-                    </>
-                  );
-                })}
-            </li>
-          )}
-
-          <li className="list-group-item d-flex justify-content-between">
-            <span className="mb-0">Landmark</span>
-            <strong className="text-muted">{values.landmark} </strong>
-          </li>
-          {values.housePicture && (
-            <li className="list-group-item ">
-              <p className="mb-0">House Photo</p>
-              <div className="profile-photo">
-                <img
-                  src={values.housePicture}
-                  className="img-fluid rounded-square"
-                  alt="profile"
-                />
-              </div>
-            </li>
-          )}
-        </ul>
-        <div className="form-row">
-          <div className="form-group mt-5 col-md-12">
-            <Link
-              to={{
-                pathname: "/customer-order",
-                state: {
-                  user: values,
-                  userId: props.currentId,
-                },
-              }}
-              className="btn btn-warning btn-block"
-            >
-              Create Order
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <Fragment>
       <div className="row">
@@ -338,240 +250,238 @@ const CustomerForm = (props) => {
             </div>
             <div className="card-body">
               <div className="basic-form">
-                {viewMode ? (
-                  <CustomerViewForm />
-                ) : (
-                  <form onSubmit={handleFormSubmit}>
-                    <div className="form-group row">
-                      <label className="col-sm-3 col-form-label">Name</label>
-                      <div className="col-sm-9 ">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Name"
-                          name="name"
-                          value={values.name}
-                          onChange={handleInputChange}
-                          required
-                          disabled={viewMode}
-                        />
-                      </div>
+                <form onSubmit={handleFormSubmit}>
+                  <div className="form-group row">
+                    <label className="col-sm-3 col-form-label">Name</label>
+                    <div className="col-sm-9 ">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Name"
+                        name="name"
+                        value={values.name}
+                        onChange={handleInputChange}
+                        required
+                        disabled={viewMode}
+                      />
                     </div>
-
-                    <h4> Addresses</h4>
-                    <hr></hr>
-                    <div className="form-group row">
-                      <label className="col-sm-3 col-form-label">
-                        Street Address
-                      </label>
-                      <div className="col-sm-9">
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="street"
-                          value={currentAddress.street}
-                          onChange={handleCurrentAddressChange}
-                          disabled={viewMode}
-                        />
+                  </div>
+                  <h4> Addresses</h4>
+                  <hr></hr>
+                  {!viewMode && (
+                    <>
+                      <div className="form-group row">
+                        <label className="col-sm-3 col-form-label">
+                          Street Address
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="street"
+                            value={currentAddress.street}
+                            onChange={handleCurrentAddressChange}
+                            disabled={viewMode}
+                          />
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="form-group row">
-                      <label className="col-sm-3 col-form-label">
-                        Location
-                      </label>
-                      <div className="col-sm-9">
-                        <Select
-                          className={"form-control"}
-                          name="location"
-                          defaultValue={"Choose Location"}
-                          value={deliveryLocation}
-                          onChange={setDeliveryLocation}
-                          options={deliveryOptions}
-                          styles={customStyles}
-                          components={{
-                            DropdownIndicator: () => null,
-                            IndicatorSeparator: () => null,
-                          }}
-                        />
+                      <div className="form-group row">
+                        <label className="col-sm-3 col-form-label">
+                          Location
+                        </label>
+                        <div className="col-sm-9">
+                          <Select
+                            className={"form-control"}
+                            name="location"
+                            defaultValue={"Choose Location"}
+                            value={deliveryLocation}
+                            onChange={setDeliveryLocation}
+                            options={deliveryOptions}
+                            styles={customStyles}
+                            components={{
+                              DropdownIndicator: () => null,
+                              IndicatorSeparator: () => null,
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="form-group row">
-                      <label className="col-sm-3 col-form-label">Contact</label>
-                      <div className="col-sm-9">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="09-xxx-xxx-xxx"
-                          name="contactNumber"
-                          value={currentAddress.contactNumber}
-                          onChange={handleCurrentAddressChange}
-                          required
-                          disabled={viewMode}
-                          maxLength={11}
-                        />
+                      <div className="form-group row">
+                        <label className="col-sm-3 col-form-label">
+                          Contact
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="09-xxx-xxx-xxx"
+                            name="contactNumber"
+                            value={currentAddress.contactNumber}
+                            onChange={handleCurrentAddressChange}
+                            required
+                            disabled={viewMode}
+                            maxLength={11}
+                          />
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="form-group row">
-                      <label className="col-sm-3 col-form-label">
-                        Landmark
-                      </label>
-                      <div className="col-sm-9">
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="landmark"
-                          value={currentAddress.landmark}
-                          onChange={handleCurrentAddressChange}
-                          disabled={viewMode}
-                        />
+                      <div className="form-group row">
+                        <label className="col-sm-3 col-form-label">
+                          Landmark
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="landmark"
+                            value={currentAddress.landmark}
+                            onChange={handleCurrentAddressChange}
+                            disabled={viewMode}
+                          />
+                        </div>
                       </div>
-                    </div>
+                      <div className="form-group row">
+                        <label className="col-sm-3 col-form-label">
+                          House Picture
+                        </label>
+                        <div className="col-sm-9">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={readImages}
+                            disabled={viewMode}
+                          />
+                          <input
+                            className="form-control"
+                            name="housePicture"
+                            value={currentAddress.housePicture}
+                            onChange={handleCurrentAddressChange}
+                            disabled={true}
+                          />
+                          {currentAddress.index < 0 ? (
+                            <Button
+                              className="btn btn-primary btn-sm pull-right mt-2 ml-2"
+                              onClick={addCustomerAddress}
+                            >
+                              Add Address
+                            </Button>
+                          ) : (
+                            <Button
+                              className="btn btn-primary btn-sm pull-right mt-2 ml-2"
+                              onClick={saveCustomerAddress}
+                            >
+                              Save Address
+                            </Button>
+                          )}
 
-                    <div className="form-group row">
-                      <label className="col-sm-3 col-form-label">
-                        House Picture
-                      </label>
-                      <div className="col-sm-9">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={readImages}
-                          disabled={viewMode}
-                        />
-                        <input
-                          className="form-control"
-                          name="housePicture"
-                          value={currentAddress.housePicture}
-                          onChange={handleCurrentAddressChange}
-                          disabled={true}
-                        />
-                        {currentAddress.index < 0 ? (
                           <Button
-                            className="btn btn-primary btn-sm pull-right mt-2 ml-2"
-                            onClick={addCustomerAddress}
+                            className="btn btn-warning light btn-sm pull-right mt-2 "
+                            onClick={clearAddressForm}
                           >
-                            Add Address
+                            Clear
                           </Button>
-                        ) : (
-                          <Button
-                            className="btn btn-primary btn-sm pull-right mt-2 ml-2"
-                            onClick={saveCustomerAddress}
-                          >
-                            Save Address
-                          </Button>
-                        )}
-
-                        <Button
-                          className="btn btn-warning light btn-sm pull-right mt-2 "
-                          onClick={clearAddressForm}
-                        >
-                          Clear
-                        </Button>
+                        </div>
                       </div>
-                    </div>
+                    </>
+                  )}
 
-                    <div className="form-group row ml-4 mr-3">
-                      {values.address &&
-                        values.address.map((address, i) => {
-                          return (
-                            <>
+                  <div className="form-group row ml-4 mr-3">
+                    {values.address &&
+                      values.address.map((address, i) => {
+                        return (
+                          <>
+                            <div
+                              style={{
+                                width: "100%",
+                                marginLeft: 20,
+                                justifyContent: "stretch",
+                              }}
+                            >
+                              <div style={{ flexDirection: "row" }}>
+                                <strong>
+                                  {address.street && address.street + ","}{" "}
+                                  {address.location.barangay},{" "}
+                                  {address.location.city},{" "}
+                                  {address.location.province}
+                                  <br></br>
+                                </strong>
+                                {address.landmark}
+                                <br></br>
+                                {address.contactNumber}
+                              </div>
                               <div
                                 style={{
-                                  width: "100%",
-                                  marginLeft: 20,
-                                  justifyContent: "stretch",
+                                  flexDirection: "row",
+                                  paddingTop: 5,
                                 }}
+                                className="pull-right"
                               >
-                                <div style={{ flexDirection: "row" }}>
-                                  <strong>
-                                    {address.street},{" "}
-                                    {address.location.barangay},{" "}
-                                    {address.location.city},{" "}
-                                    {address.location.province}
-                                    <br></br>
-                                  </strong>
-                                  {address.landmark}
-                                  <br></br>
-                                  {address.contactNumber}
-                                </div>
-                                <div
-                                  style={{
-                                    flexDirection: "row",
-                                    paddingTop: 5,
-                                  }}
-                                  className="pull-right"
-                                >
-                                  {!address.default && (
-                                    <Button
-                                      variant="warning light btn-xs ml-1 "
-                                      className="ml-4"
-                                      onClick={() =>
-                                        handleDefaultAddress(address, i)
-                                      }
-                                    >
-                                      Set as Default
-                                    </Button>
-                                  )}
-                                  {values.address.length > 1 && (
-                                    <Button
-                                      onClick={() => deleteAddress(address, i)}
-                                      className="btn btn-danger light btn-xs ml-1 "
-                                    >
-                                      Remove
-                                    </Button>
-                                  )}
-
+                                {!address.default && (
+                                  <Button
+                                    variant="warning light btn-xs ml-1 "
+                                    className="ml-4"
+                                    onClick={() =>
+                                      handleDefaultAddress(address, i)
+                                    }
+                                  >
+                                    Set as Default
+                                  </Button>
+                                )}
+                                {values.address.length > 1 && (
+                                  <Button
+                                    onClick={() => deleteAddress(address, i)}
+                                    className="btn btn-danger light btn-xs ml-1 "
+                                  >
+                                    Remove
+                                  </Button>
+                                )}
+                                {!viewMode && (
                                   <Button
                                     onClick={() => editAddress(address, i)}
                                     className="btn btn-primary light btn-xs  ml-1 mr-1"
                                   >
                                     Edit
                                   </Button>
-                                </div>
+                                )}
                               </div>
-                              <hr></hr>
-                            </>
-                          );
-                        })}
-                    </div>
+                            </div>
+                            <hr></hr>
+                          </>
+                        );
+                      })}
+                  </div>
 
-                    <div className="form-group row">
-                      <div className="col-sm-1">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            onChange={handleInputChange}
-                            defaultChecked
-                            disabled={viewMode}
-                          />
-                        </div>
+                  <div className="form-group row">
+                    <div className="col-sm-1">
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          onChange={handleInputChange}
+                          defaultChecked
+                          disabled={viewMode}
+                        />
                       </div>
-                      <label className="col-sm-11 col-form-label">
-                        Is Customer Active?
-                      </label>
                     </div>
-                    {!viewMode && (
-                      <div className="form-row">
-                        <div className="form-group mt-4 col-md-12 mt-5">
-                          <input
-                            type="submit"
-                            value={
-                              props.currentId === ""
-                                ? "Save Customer"
-                                : "Update Customer"
-                            }
-                            className="btn btn-primary btn-block"
-                            disabled={viewMode}
-                          />
-                        </div>
+                    <label className="col-sm-11 col-form-label">
+                      Is Customer Active?
+                    </label>
+                  </div>
+                  {!viewMode && (
+                    <div className="form-row">
+                      <div className="form-group mt-4 col-md-12 mt-5">
+                        <input
+                          type="submit"
+                          value={
+                            props.currentId === ""
+                              ? "Save Customer"
+                              : "Update Customer"
+                          }
+                          className="btn btn-primary btn-block"
+                          disabled={viewMode}
+                        />
                       </div>
-                    )}
-                  </form>
-                )}
+                    </div>
+                  )}
+                </form>
               </div>
             </div>
           </div>

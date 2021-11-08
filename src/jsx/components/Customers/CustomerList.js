@@ -186,14 +186,23 @@ const CustomerList = () => {
                           }}
                         >
                           <td>{customerList[id].name}</td>
-                          <td>{customerList[id].contactNumber}</td>
+                          <td>
+                            {customerList[id].address &&
+                              customerList[id].address.map((address, i) => {
+                                return (
+                                  address.default && (
+                                    <p>{address.contactNumber}</p>
+                                  )
+                                );
+                              })}
+                          </td>
                           <td>
                             {customerList[id].address &&
                               customerList[id].address.map((address, i) => {
                                 return (
                                   address.default && (
                                     <p>
-                                      {address.street},{" "}
+                                      {address.street && address.street + ","}{" "}
                                       {address.location.barangay},{" "}
                                       {address.location.city},{" "}
                                       {address.location.province}
@@ -202,7 +211,14 @@ const CustomerList = () => {
                                 );
                               })}
                           </td>
-                          <td>{customerList[id].landmark}</td>
+                          <td>
+                            {customerList[id].address &&
+                              customerList[id].address.map((address, i) => {
+                                return (
+                                  address.default && <p>{address.landmark}</p>
+                                );
+                              })}
+                          </td>
                         </tr>
                       );
                     })}
