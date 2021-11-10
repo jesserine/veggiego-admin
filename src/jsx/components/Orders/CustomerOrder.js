@@ -30,9 +30,7 @@ const CustomerOrder = (props) => {
         value: customerList[id].name,
         label: (
           <div>
-            <p>
-              {customerList[id].name} | {customerList[id].address}
-            </p>
+            <p>{customerList[id].name}</p>
           </div>
         ),
         customer: customerList[id],
@@ -41,12 +39,22 @@ const CustomerOrder = (props) => {
     });
   }
 
+  console.log("selected customer", selectedOption);
+
+  const [selectedAddress, setSelectedAddress] = useState();
+
   useEffect(() => {
     if (selectedOption) {
       const { customer, customerId } = selectedOption;
       setCurrentCustomer(customer);
       setCurrentCustomerId(customerId);
       setSelectedOption(null);
+
+      customer.address.map((address) => {
+        if (address.default) {
+          setSelectedAddress(address);
+        }
+      });
     }
   }, [selectedOption]);
 
@@ -122,27 +130,49 @@ const CustomerOrder = (props) => {
                 <li className="list-group-item d-flex justify-content-between">
                   <span className="mb-0">Contact Number</span>{" "}
                   <strong className="text-muted">
-                    {" "}
-                    {currentCustomer.contactNumber}{" "}
+                    {selectedAddress.contactNumber}
                   </strong>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
                   <span className="mb-0">Address</span>{" "}
                   <strong className="text-muted" align="right">
-                    {currentCustomer.address}
+                    {selectedAddress.street && selectedAddress.street + ","}{" "}
+                    {selectedAddress.location.barangay},{" "}
+                    {selectedAddress.location.city},{" "}
+                    {selectedAddress.location.province}
                   </strong>
                 </li>
                 <li className="list-group-item d-flex justify-content-between">
                   <span className="mb-0">Landmark</span>{" "}
                   <strong className="text-muted">
-                    {currentCustomer.landmark}{" "}
+                    {selectedAddress.landmark}
                   </strong>
                 </li>
               </ul>
               <div className="card-footer border-0 mt-0">
-                <button className="btn btn-primary btn-lg btn-block">
-                  <i className="las la-map-marked" /> Change Delivery Address
-                </button>
+                <div className="form-group">
+                  <b>Select another address</b>
+                  <select
+                    defaultValue={"option"}
+                    className="form-control form-control-lg"
+                    // value={order.productName}
+                    // onChange={(event) => handleInputChange(index, event)}
+                  >
+                    {currentCustomer &&
+                      currentCustomer.address.map((address, i) => {
+                        return (
+                          <>
+                            <option>
+                              {address.street && address.street + ","}{" "}
+                              {address.location.barangay},{" "}
+                              {address.location.city},{" "}
+                              {address.location.province}
+                            </option>
+                          </>
+                        );
+                      })}
+                  </select>
+                </div>
               </div>
             </div>
           </div>

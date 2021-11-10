@@ -4,6 +4,7 @@ import { storage } from "../../../firebase";
 import { v4 as uuid } from "uuid";
 import { useDataContext } from "../../../contexts/DataContext";
 import Select from "react-select";
+import { toast } from "react-toastify";
 
 import { Badge, Button } from "react-bootstrap";
 import AddressModal from "./AddressModal";
@@ -94,18 +95,27 @@ const CustomerForm = (props) => {
     });
   }
 
-  // const handleMultipleCustomerAddress = (address) => {
-  //   if (values.address.length < 1) {
-  //     address.default = true;
-  //   }
-  //   setValues((prev) => ({
-  //     ...prev,
-  //     address: [...values.address, address],
-  //   }));
-  // };
+  const handleDefaultAddress = (address, index) => {
+    editAddress(address, index, false);
 
-  const handleDefaultAddress = () => {
-    console.log("set as default", values.address);
+    const updatedAddressList = values.address.slice();
+
+    //flip all default status to false
+    updatedAddressList.map((address) => {
+      address.default = false;
+    });
+
+    updatedAddressList[index] = {
+      ...updatedAddressList[index],
+      default: true,
+    };
+
+    // console.log("saving address... ", updatedAddressList);
+
+    setValues({
+      ...values,
+      address: updatedAddressList,
+    });
   };
 
   const initialCurrentAddressFields = {
@@ -122,12 +132,14 @@ const CustomerForm = (props) => {
     initialCurrentAddressFields
   );
 
-  const editAddress = (address, index) => {
-    console.log("editing address", address, index);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+  const editAddress = (address, index, scroll) => {
+    if (scroll) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+
     setDeliveryLocation({
       name: address.location.completeLocation,
       label: address.location.completeLocation,
@@ -146,13 +158,13 @@ const CustomerForm = (props) => {
   };
 
   const addCustomerAddress = () => {
-    console.log("adding address...");
-
+    console.log("add customer address", currentAddress);
+    const totalAddresses = values.address ? values.address.length : 0;
     const updatedAddressList = values.address.slice();
 
     const newAddress = {
       contactNumber: currentAddress.contactNumber,
-      default: currentAddress.default,
+      default: totalAddresses < 1 ? true : false,
       housePicture: currentAddress.housePicture
         ? currentAddress.housePicture
         : "https://firebasestorage.googleapis.com/v0/b/veggiego-d20b9.appspot.com/o/static%2Flocation.png?alt=media&token=0c270c28-f81d-4ac3-a574-04e74edb3325",
@@ -208,6 +220,10 @@ const CustomerForm = (props) => {
     setCurrentAddress(initialCurrentAddressFields);
     setDeliveryLocation(null);
   };
+
+  useEffect(() => {
+    clearAddressForm();
+  }, [props.currentId]);
 
   // styles for combobox
   const customStyles = {
@@ -317,7 +333,6 @@ const CustomerForm = (props) => {
                             name="contactNumber"
                             value={currentAddress.contactNumber}
                             onChange={handleCurrentAddressChange}
-                            required
                             disabled={viewMode}
                             maxLength={11}
                           />
@@ -414,7 +429,7 @@ const CustomerForm = (props) => {
                                 }}
                                 className="pull-right"
                               >
-                                {!address.default && (
+                                {!viewMode && !address.default && (
                                   <Button
                                     variant="warning light btn-xs ml-1 "
                                     className="ml-4"
@@ -425,7 +440,7 @@ const CustomerForm = (props) => {
                                     Set as Default
                                   </Button>
                                 )}
-                                {values.address.length > 1 && (
+                                {!viewMode && values.address.length > 1 && (
                                   <Button
                                     onClick={() => deleteAddress(address, i)}
                                     className="btn btn-danger light btn-xs ml-1 "
@@ -433,13 +448,21 @@ const CustomerForm = (props) => {
                                     Remove
                                   </Button>
                                 )}
-                                {!viewMode && (
+                                {!viewMode ? (
                                   <Button
-                                    onClick={() => editAddress(address, i)}
+                                    onClick={() =>
+                                      editAddress(address, i, true)
+                                    }
                                     className="btn btn-primary light btn-xs  ml-1 mr-1"
                                   >
                                     Edit
                                   </Button>
+                                ) : (
+                                  address.default && (
+                                    <Badge variant="primary light">
+                                      DEFAULT
+                                    </Badge>
+                                  )
                                 )}
                               </div>
                             </div>
