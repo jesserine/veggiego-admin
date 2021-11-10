@@ -44,6 +44,10 @@ const CustomerOrder = (props) => {
   const [selectedAddress, setSelectedAddress] = useState();
 
   useEffect(() => {
+    console.log(props);
+  }, []);
+
+  useEffect(() => {
     if (selectedOption) {
       const { customer, customerId } = selectedOption;
       setCurrentCustomer(customer);

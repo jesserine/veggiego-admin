@@ -253,6 +253,7 @@ const CustomerForm = (props) => {
                 {props.currentId === "" ? "Add " : viewMode ? "View " : "Edit "}
                 Customer
               </h4>
+
               {props.currentId !== "" ? (
                 <Button
                   className="btn-sm btn-warning light"

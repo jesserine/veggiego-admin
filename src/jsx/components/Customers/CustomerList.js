@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDataContext } from "../../../contexts/DataContext";
 import firebaseDb from "../../../firebase";
@@ -119,118 +120,6 @@ const CustomerList = () => {
     return <h1>Loading...</h1>;
   }
 
-  const CustomerTable = () => {
-    return (
-      <Row>
-        <Col lg={12}>
-          <Card>
-            <Card.Header>
-              <Card.Title></Card.Title>
-              <span className="float-right">
-                <Button
-                  className="btn-sm btn-primary btn-block"
-                  onClick={() => {
-                    setCurrentId("");
-                  }}
-                >
-                  Add new customer
-                </Button>
-              </span>
-            </Card.Header>
-            <Card.Body>
-              <div className="search_bar dropdown show mb-3">
-                <div className="dropdown-menushow">
-                  <form onSubmit={(e) => e.preventDefault()}>
-                    <input
-                      className="form-control"
-                      type="search"
-                      placeholder="Search Customer"
-                      aria-label="Search"
-                      onChange={(event) => setSearchTerm(event.target.value)}
-                    />
-                  </form>
-                </div>
-              </div>
-              <Table responsive hover>
-                <thead>
-                  <tr>
-                    <th>
-                      <strong>NAME</strong>
-                    </th>
-                    <th>
-                      <strong>CONTACT NUMBER</strong>
-                    </th>
-                    <th>
-                      <strong>DEFAULT ADDRESS</strong>
-                    </th>
-                    <th>
-                      <strong>LANDMARK</strong>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(filteredCustomers(customerList, searchTerm))
-                    .slice(0)
-                    .reverse()
-                    .map((id) => {
-                      return (
-                        <tr
-                          key={id}
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setCurrentId(id);
-                            window.scrollTo({
-                              top: 0,
-                              behavior: "smooth",
-                            });
-                          }}
-                        >
-                          <td>{customerList[id].name}</td>
-                          <td>
-                            {customerList[id].address &&
-                              customerList[id].address.map((address, i) => {
-                                return (
-                                  address.default && (
-                                    <p>{address.contactNumber}</p>
-                                  )
-                                );
-                              })}
-                          </td>
-                          <td>
-                            {customerList[id].address &&
-                              customerList[id].address.map((address, i) => {
-                                return (
-                                  address.default && (
-                                    <p>
-                                      {address.street && address.street + ","}{" "}
-                                      {address.location.barangay},{" "}
-                                      {address.location.city},{" "}
-                                      {address.location.province}
-                                    </p>
-                                  )
-                                );
-                              })}
-                          </td>
-                          <td>
-                            {customerList[id].address &&
-                              customerList[id].address.map((address, i) => {
-                                return (
-                                  address.default && <p>{address.landmark}</p>
-                                );
-                              })}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    );
-  };
-
   return (
     <Fragment>
       <Helmet>
@@ -247,7 +136,134 @@ const CustomerList = () => {
           <CustomerForm {...{ addOrEdit, currentId, customerList }} />
         </div>
         <div className="col-xl-7 col-lg-7">
-          <CustomerTable />
+          <Row>
+            <Col lg={12}>
+              <Card>
+                <Card.Header>
+                  <Card.Title></Card.Title>
+                  <span className="float-right">
+                    <Button
+                      className="btn-sm btn-primary btn-block"
+                      onClick={() => {
+                        setCurrentId("");
+                      }}
+                    >
+                      Add new customer
+                    </Button>
+                  </span>
+                </Card.Header>
+                <Card.Body>
+                  <div className="search_bar dropdown show mb-3">
+                    <div className="dropdown-menushow">
+                      <form onSubmit={(e) => e.preventDefault()}>
+                        <input
+                          className="form-control"
+                          type="search"
+                          placeholder="Search Customer"
+                          aria-label="Search"
+                          onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                          }
+                        />
+                      </form>
+                    </div>
+                  </div>
+                  <Table responsive hover>
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>
+                          <strong>NAME</strong>
+                        </th>
+                        <th>
+                          <strong>CONTACT NUMBER</strong>
+                        </th>
+                        <th>
+                          <strong>DEFAULT ADDRESS</strong>
+                        </th>
+                        <th>
+                          <strong>LANDMARK</strong>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.keys(filteredCustomers(customerList, searchTerm))
+                        .slice(0)
+                        .reverse()
+                        .map((id) => {
+                          return (
+                            <tr
+                              key={id}
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setCurrentId(id);
+                                window.scrollTo({
+                                  top: 0,
+                                  behavior: "smooth",
+                                });
+                              }}
+                            >
+                              <td>
+                                {" "}
+                                <Link
+                                  to={{
+                                    pathname: "/customer-order",
+                                    state: {
+                                      user: customerList,
+                                      userId: id,
+                                    },
+                                  }}
+                                  className="btn btn-sm btn-warning light"
+                                >
+                                  Create Order
+                                </Link>
+                              </td>
+                              <td>{customerList[id].name}</td>
+                              <td>
+                                {customerList[id].address &&
+                                  customerList[id].address.map((address, i) => {
+                                    return (
+                                      address.default && (
+                                        <p>{address.contactNumber}</p>
+                                      )
+                                    );
+                                  })}
+                              </td>
+                              <td>
+                                {customerList[id].address &&
+                                  customerList[id].address.map((address, i) => {
+                                    return (
+                                      address.default && (
+                                        <p>
+                                          {address.street &&
+                                            address.street + ","}{" "}
+                                          {address.location.barangay},{" "}
+                                          {address.location.city},{" "}
+                                          {address.location.province}
+                                        </p>
+                                      )
+                                    );
+                                  })}
+                              </td>
+                              <td>
+                                {customerList[id].address &&
+                                  customerList[id].address.map((address, i) => {
+                                    return (
+                                      address.default && (
+                                        <p>{address.landmark}</p>
+                                      )
+                                    );
+                                  })}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </Table>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
         </div>
       </div>
     </Fragment>
