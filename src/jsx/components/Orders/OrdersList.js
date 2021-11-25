@@ -327,7 +327,10 @@ const OrdersList = () => {
                                 </td>
                                 <td>{orderList[orderId].customer.name}</td>
                                 <td>
-                                  {orderList[orderId].customer.contactNumber}
+                                  {
+                                    orderList[orderId].deliveryAddress
+                                      .contactNumber
+                                  }
                                 </td>
                                 <td>₱{orderList[orderId].grandTotal}</td>
                                 <td>{orderList[orderId].dateOfDelivery}</td>

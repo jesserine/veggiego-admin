@@ -17,10 +17,19 @@ const CustomerOrder = (props) => {
 
   var [currentId, setCurrentId] = useState("");
   const location = useLocation();
-  const { user, userId, orderId, order } = location.state;
-  console.log(location.state);
+
+  //from update order button
+  const { user, userId, orderId, order, deliveryAddress, customerId } =
+    location.state;
+
+  // console.log(location.state);
+
   const [currentCustomer, setCurrentCustomer] = useState(user);
-  const [currentCustomerId, setCurrentCustomerId] = useState();
+  const [currentCustomerId, setCurrentCustomerId] = useState(
+    customerId && customerId
+  );
+
+  // console.log("currentCustomerId", currentCustomerId);
 
   const [selectedOption, setSelectedOption] = useState(null);
   const options = [];
@@ -39,14 +48,11 @@ const CustomerOrder = (props) => {
     });
   }
 
-  console.log("selected customer", selectedOption);
+  // console.log("selected customer", selectedOption);
 
   const [selectedAddress, setSelectedAddress] = useState();
 
-  useEffect(() => {
-    console.log(props);
-  }, []);
-
+  //when a customer is selected, set selectedAddress based on the customer's default address
   useEffect(() => {
     if (selectedOption) {
       const { customer, customerId } = selectedOption;
@@ -54,13 +60,24 @@ const CustomerOrder = (props) => {
       setCurrentCustomerId(customerId);
       setSelectedOption(null);
 
+      // console.log(customer, customerId);
+
       customer.address.map((address) => {
         if (address.default) {
           setSelectedAddress(address);
+          // console.log("selectedAddress", address);
         }
       });
     }
   }, [selectedOption]);
+
+  //from update order, set deliveryAddress to selectedAddress state
+  useEffect(() => {
+    if (deliveryAddress) {
+      setSelectedAddress(deliveryAddress);
+      // console.log("deliveryAddress", deliveryAddress);
+    }
+  }, []);
 
   const addOrEdit = (obj) => {
     if (currentId === "") {
@@ -77,6 +94,14 @@ const CustomerOrder = (props) => {
       });
     }
   };
+
+  const handleChangeDeliveryAddress = (address, index) => {
+    setSelectedAddress(address);
+    setChangeDeliveryAddress(!changeDeliveryAddress);
+    console.log(address);
+  };
+
+  const [changeDeliveryAddress, setChangeDeliveryAddress] = useState(false);
 
   /*********************************
   --- STYLING ---
@@ -108,83 +133,107 @@ const CustomerOrder = (props) => {
     <Fragment>
       <div className="row">
         {currentCustomer ? (
-          <div className="col-xl-4 col-xxl-4 col-lg-12 col-sm-12">
-            <div className="card overflow-hidden">
-              <div
-                className="text-center p-3 overlay-box "
-                style={{ backgroundImage: `url(${bg5})` }}
-              >
-                <h3 className="mt-3 mb-1 text-white">{currentCustomer.name}</h3>
-                <p className="text-white mb-0">Customer</p>
-                {!location.state.user && (
-                  <span className="float-right">
-                    <Button
-                      onClick={() => {
-                        setCurrentCustomer(null);
-                      }}
-                      className="btn btn-warning btn-xs mr-1"
-                    >
-                      {/* <i className="fa fa-pencil"></i> */}
-                      Change Customer
-                    </Button>
-                  </span>
-                )}
-              </div>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item d-flex justify-content-between">
-                  <span className="mb-0">Contact Number</span>{" "}
-                  <strong className="text-muted">
-                    {selectedAddress.contactNumber}
-                  </strong>
-                </li>
-                <li className="list-group-item d-flex justify-content-between">
-                  <span className="mb-0">Address</span>{" "}
-                  <strong className="text-muted" align="right">
-                    {selectedAddress.street && selectedAddress.street + ","}{" "}
-                    {selectedAddress.location.barangay},{" "}
-                    {selectedAddress.location.city},{" "}
-                    {selectedAddress.location.province}
-                  </strong>
-                </li>
-                <li className="list-group-item d-flex justify-content-between">
-                  <span className="mb-0">Landmark</span>{" "}
-                  <strong className="text-muted">
-                    {selectedAddress.landmark}
-                  </strong>
-                </li>
-              </ul>
-              <div className="card-footer border-0 mt-0">
-                <div className="form-group">
-                  <b>Select another address</b>
-                  <select
-                    defaultValue={"option"}
-                    className="form-control form-control-lg"
-                    // value={order.productName}
-                    // onChange={(event) => handleInputChange(index, event)}
-                  >
-                    {currentCustomer &&
-                      currentCustomer.address.map((address, i) => {
-                        return (
-                          <>
-                            <option>
-                              {address.street && address.street + ","}{" "}
-                              {address.location.barangay},{" "}
-                              {address.location.city},{" "}
-                              {address.location.province}
-                            </option>
-                          </>
-                        );
-                      })}
-                  </select>
+          selectedAddress && (
+            <div className="col-xl-4 col-xxl-4 col-lg-12 col-sm-12">
+              <div className="card overflow-hidden">
+                <div
+                  className="text-center p-3 overlay-box "
+                  style={{ backgroundImage: `url(${bg5})` }}
+                >
+                  <h3 className="mt-3 mb-1 text-white">
+                    {currentCustomer.name}
+                  </h3>
+                  <p className="text-white mb-0">Customer</p>
+                  {!location.state.user && (
+                    <span className="float-right">
+                      <Button
+                        onClick={() => {
+                          setCurrentCustomer(null);
+                        }}
+                        className="btn btn-warning btn-xs mr-1"
+                      >
+                        Change Customer
+                      </Button>
+                    </span>
+                  )}
+                </div>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item d-flex justify-content-between">
+                    <span className="mb-0">Contact Number</span>{" "}
+                    <strong className="text-muted">
+                      {selectedAddress.contactNumber}
+                    </strong>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between">
+                    <span className="mb-0">Address</span>{" "}
+                    <strong className="text-muted" align="right">
+                      {selectedAddress.street && selectedAddress.street + ","}{" "}
+                      {selectedAddress.location.barangay},{" "}
+                      {selectedAddress.location.city},{" "}
+                      {selectedAddress.location.province}
+                    </strong>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between">
+                    <span className="mb-0">Landmark</span>{" "}
+                    <strong className="text-muted">
+                      {selectedAddress.landmark}
+                    </strong>
+                  </li>
+                </ul>
+                <div className="card-footer border-0 mt-0">
+                  <div className="form-group">
+                    {changeDeliveryAddress ? (
+                      <>
+                        {currentCustomer.address &&
+                          currentCustomer.address.map((address, i) => {
+                            return (
+                              <div className={"row"}>
+                                <div className={"col-xl-2"}>
+                                  <Button
+                                    className="btn btn-primary btn-xs mr-1 mt-3"
+                                    onClick={() =>
+                                      handleChangeDeliveryAddress(address, i)
+                                    }
+                                  >
+                                    Use
+                                  </Button>
+                                </div>
+                                <div className={"col-xl-10"}>
+                                  <strong>
+                                    {address.street && address.street + ","}{" "}
+                                    {address.location.barangay},{" "}
+                                    {address.location.city},{" "}
+                                    {address.location.province}
+                                    <br></br>
+                                  </strong>
+                                  {address.landmark}
+                                  <br></br>
+                                  {address.contactNumber}
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </>
+                    ) : (
+                      <Button
+                        className="mt-4"
+                        variant="primary"
+                        type="submit"
+                        onClick={() =>
+                          setChangeDeliveryAddress(!changeDeliveryAddress)
+                        }
+                      >
+                        Change Delivery Address
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )
         ) : (
           <div className="col-xl-4 col-xxl-4 col-lg-12 col-sm-12">
             <div className="card overflow-hidden">
-              {/* <p>Please select a user {JSON.stringify(customers)}</p> */}
-
               <div style={{ margin: 25 }}>
                 <label>Please select a customer</label>
                 <Select
@@ -214,6 +263,7 @@ const CustomerOrder = (props) => {
               userId,
               order,
               orderId,
+              selectedAddress,
             }}
           />
         </div>

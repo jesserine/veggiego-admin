@@ -4,8 +4,6 @@ import { useHistory } from "react-router-dom";
 import firebaseDb from "../../../firebase";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-import { createMuiTheme } from "@material-ui/core";
 import { toast } from "react-toastify";
 
 import { Button, Table } from "react-bootstrap";
@@ -40,7 +38,8 @@ const OrdersForm = (props) => {
     productImage: "",
   };
 
-  const { productList, unitList, deliveryFeeList } = useDataContext();
+  const { productList, unitList, deliveryFeeList, orderList } =
+    useDataContext();
 
   var [values, setValues] = useState(initialFieldValues);
   var [productValues, setProductValues] = useState(initialProductValues);
@@ -401,7 +400,7 @@ const OrdersForm = (props) => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     /// form validations...
-    var isValidForm = true;
+    let isValidForm = true;
     if (!values.customer) {
       toast.error("Please select a customer", {
         position: "bottom-right",
@@ -429,7 +428,9 @@ const OrdersForm = (props) => {
     }
 
     if (isValidForm) {
+      //update existing order in firebase...
       if (props.orderId) {
+        // console.log(props.currentCustomerId);
         firebaseDb
           .ref(`orders/${props.orderId}`)
           .update({
@@ -441,8 +442,9 @@ const OrdersForm = (props) => {
             deliveryLocation: values.deliveryLocation,
             deliveryFee: values.deliveryFee,
             dateOfDelivery: values.dateOfDelivery,
+            deliveryAddress: props.selectedAddress,
             customer: values.customer,
-            customerId: props.userId,
+            customerId: props.currentCustomerId,
             dateAdded: values.dateAdded,
             status: values.status,
             paymentStatus: values.paymentStatus,
@@ -467,7 +469,20 @@ const OrdersForm = (props) => {
               progress: undefined,
             });
           });
-      } else {
+      }
+      // add new order in firebase...
+      else {
+        // generate a non existing order number
+        let largest = 0;
+        Object.keys(orderList).map((order, index) => {
+          if (Number(orderList[order].orderNumber) > largest) {
+            largest = Number(orderList[order].orderNumber);
+          }
+        });
+        //new order number
+        largest = largest + 1;
+
+        // save to firebase
         firebaseDb
           .ref("orders/")
           .push({
@@ -479,11 +494,13 @@ const OrdersForm = (props) => {
             deliveryLocation: values.deliveryLocation,
             deliveryFee: values.deliveryFee,
             dateOfDelivery: values.dateOfDelivery,
+            deliveryAddress: props.selectedAddress,
             customer: values.customer,
-            customerId: props.userId,
+            customerId: props.currentCustomerId,
             dateAdded: values.dateAdded,
             status: values.status,
             paymentStatus: values.paymentStatus,
+            orderNumber: largest,
           })
           .then(() => {
             history.push({

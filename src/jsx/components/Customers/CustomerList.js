@@ -171,7 +171,7 @@ const CustomerList = () => {
                   <Table responsive hover>
                     <thead>
                       <tr>
-                        <th></th>
+                        {/* <th></th> */}
                         <th>
                           <strong>NAME</strong>
                         </th>
@@ -203,7 +203,7 @@ const CustomerList = () => {
                                 });
                               }}
                             >
-                              <td>
+                              {/* <td>
                                 {" "}
                                 <Link
                                   to={{
@@ -217,7 +217,7 @@ const CustomerList = () => {
                                 >
                                   Create Order
                                 </Link>
-                              </td>
+                              </td> */}
                               <td>{customerList[id].name}</td>
                               <td>
                                 {customerList[id].address &&

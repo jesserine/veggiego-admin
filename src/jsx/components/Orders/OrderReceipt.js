@@ -243,6 +243,8 @@ const OrderReceipt = (props) => {
     return <h1>Loading...</h1>;
   }
 
+  console.log("currentOrder", props.currentOrder);
+
   return (
     <Fragment>
       {props.currentOrder ? (
@@ -251,9 +253,9 @@ const OrderReceipt = (props) => {
             <div className="card">
               <div className="card-header">
                 <h4>
-                  <strong>Delivery Receipt</strong>{" "}
-                  {/* {props.currentId.substr(props.currentId.length - 5)} */}
-                  {props.currentId}
+                  <strong>Delivery Receipt</strong>
+                  {" VG-"}
+                  {props.currentOrder.orderNumber}
                 </h4>
                 <div className="pull-right">
                   <Link
@@ -262,8 +264,9 @@ const OrderReceipt = (props) => {
                       state: {
                         order: props.currentOrder,
                         user: props.currentOrder.customer,
-                        userId: props.currentOrder.customerId,
+                        customerId: props.currentOrder.customerId,
                         orderId: props.currentId,
+                        deliveryAddress: props.currentOrder.deliveryAddress,
                       },
                     }}
                     className="btn btn-warning btn-xs ml-1 pull-right"
@@ -286,18 +289,26 @@ const OrderReceipt = (props) => {
                     <div className="col-xl-6 col-sm-6 mb-4">
                       <h5>
                         Address:{" "}
-                        <strong>{props.currentOrder.customer.address}</strong>
+                        <strong>
+                          {props.currentOrder.deliveryAddress.street &&
+                            props.currentOrder.deliveryAddress.street}{" "}
+                          {", " +
+                            props.currentOrder.deliveryAddress.location
+                              .completeLocation}
+                        </strong>
                       </h5>
                       <h5>
                         Landmark:{" "}
-                        <strong>{props.currentOrder.customer.landmark}</strong>
+                        <strong>
+                          {props.currentOrder.deliveryAddress.landmark}
+                        </strong>
                       </h5>
                     </div>
                     <div className="col-xl-6 col-sm-6 mb-4">
                       <h5>
                         Phone:{" "}
                         <strong>
-                          {props.currentOrder.customer.contactNumber}
+                          {props.currentOrder.deliveryAddress.contactNumber}
                         </strong>
                       </h5>
                       <h5>
