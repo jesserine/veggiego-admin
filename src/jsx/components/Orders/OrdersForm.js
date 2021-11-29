@@ -178,7 +178,7 @@ const OrdersForm = (props) => {
 
   // add product to cart - this should update values state!
   const addToCart = () => {
-    if (selectedOption) {
+    if (selectedOption || customProductMode) {
       setValues((prev) => ({
         ...prev,
         deliveryFee:
@@ -191,15 +191,20 @@ const OrdersForm = (props) => {
         products: [...values.products, productValues],
       }));
 
-      toast.success(selectedOption.value + " added to cart!", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.success(
+        selectedOption
+          ? selectedOption.value
+          : productValues.productName + " added to cart!",
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
 
       clearProductValues(false);
     } else {
@@ -535,6 +540,9 @@ const OrdersForm = (props) => {
     }));
   }, [props.currentCustomer, props.currentCustomerId]);
 
+  /// custom product mode
+  const [customProductMode, setCustomProductMode] = useState(false);
+
   /*********************************
   --- STYLING ---
   ***********************************/
@@ -644,20 +652,33 @@ const OrdersForm = (props) => {
                   </div>
                   <div className="form-row ">
                     <div className="form-group col-md-3">
-                      <label>Product</label>
-                      <Select
-                        className={"form-control"}
-                        defaultValue={selectedOption}
-                        onChange={setSelectedOption}
-                        value={selectedOption}
-                        options={options}
-                        styles={customStyles}
-                        components={{
-                          DropdownIndicator: () => null,
-                          IndicatorSeparator: () => null,
-                        }}
-                        isDisabled={isEditingProduct}
-                      />
+                      <label>{customProductMode && "Custom"} Product</label>
+                      {customProductMode ? (
+                        <input
+                          type="text"
+                          onFocus={(event) => event.target.select()}
+                          className="form-control"
+                          placeholder="Enter custom product name"
+                          name="productName"
+                          value={productValues.productName}
+                          onChange={handleInputChange}
+                        />
+                      ) : (
+                        <Select
+                          className={"form-control"}
+                          defaultValue={selectedOption}
+                          onChange={setSelectedOption}
+                          value={selectedOption}
+                          options={options}
+                          styles={customStyles}
+                          components={{
+                            DropdownIndicator: () => null,
+                            IndicatorSeparator: () => null,
+                          }}
+                          isDisabled={isEditingProduct}
+                        />
+                      )}
+
                       <div className="searchBack" value={result}>
                         {result.map((result, index) => (
                           // <a href="orders" id={index}>
@@ -784,6 +805,15 @@ const OrdersForm = (props) => {
                         </Button>
                       )}
                     </div>
+                  </div>
+                  <div className="form-row ">
+                    <Button
+                      className="btn-sm"
+                      variant="warning light btn-square"
+                      onClick={() => setCustomProductMode(!customProductMode)}
+                    >
+                      Toggle Custom Product
+                    </Button>
                   </div>
                 </div>
               </div>

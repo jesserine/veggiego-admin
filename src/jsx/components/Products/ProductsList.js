@@ -97,6 +97,7 @@ const ProductsList = () => {
       switch (category.toUpperCase()) {
         // Product category
         case "BEST SELLER":
+        case "BEST SELLERS":
           return <Badge variant="info light">{category.toUpperCase()}</Badge>;
         case "FRUITS":
           return (
