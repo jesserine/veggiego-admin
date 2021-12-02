@@ -98,8 +98,12 @@ const OrdersList = () => {
       const latestOrder =
         Object.keys(currentOrders)[Object.keys(currentOrders).length - 1];
 
-      setCurrentId(latestOrder);
-      setCurrentOrder(currentOrders[latestOrder]);
+      if (currentId === "") {
+        setCurrentId(latestOrder);
+        setCurrentOrder(currentOrders[latestOrder]);
+      } else {
+        setCurrentId(latestOrder);
+      }
     }
   }, [orderList, filterStatus]);
 
