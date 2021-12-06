@@ -120,9 +120,11 @@ const DeliveryFeeList = () => {
                         return (
                           <tr key={id}>
                             <td>
-                              {!["Free Delivery", "Custom"].includes(
-                                deliveryFeeList[id].location
-                              ) && (
+                              {![
+                                "Free Delivery",
+                                "Custom",
+                                "Within the city",
+                              ].includes(deliveryFeeList[id].location) && (
                                 <Button
                                   onClick={() => {
                                     setCurrentId(id);
@@ -148,9 +150,11 @@ const DeliveryFeeList = () => {
                               )}
                             </td>
                             <td>
-                              {!["Free Delivery", "Custom"].includes(
-                                deliveryFeeList[id].location
-                              ) && (
+                              {![
+                                "Free Delivery",
+                                "Custom",
+                                "Within the city",
+                              ].includes(deliveryFeeList[id].location) && (
                                 <Button
                                   onClick={() => {
                                     onDelete(id);

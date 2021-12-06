@@ -12,6 +12,9 @@ import Select from "react-select";
 const OrdersForm = (props) => {
   const history = useHistory();
 
+  const DEFAULT_PRODUCT_IMAGE =
+    "https://firebasestorage.googleapis.com/v0/b/veggiego-d20b9.appspot.com/o/static%2Fharvest.png?alt=media&token=337c8c05-15dd-485c-86ad-f64c04c34832";
+
   var initialFieldValues = {
     products: [],
     notes: "",
@@ -91,7 +94,11 @@ const OrdersForm = (props) => {
         label: (
           <div>
             <img
-              src={productList[id].productImage}
+              src={
+                productList[id].productImage
+                  ? productList[id].productImage
+                  : DEFAULT_PRODUCT_IMAGE
+              }
               height="30px"
               width="30px"
               alt={productList[id].productName}
@@ -160,9 +167,9 @@ const OrdersForm = (props) => {
 
   // updates delivery data on combobox selection
   const [selectedDeliveryOption, setSelectedDeliveryOption] = useState({
-    value: "Free Delivery",
-    label: "Free Delivery",
-    delivery: { deliveryFee: Number(0), location: "Free Delivery" },
+    value: "Within the city",
+    label: "Within the city",
+    delivery: { deliveryFee: Number(30), location: "Within the city" },
   });
   useEffect(() => {
     if (selectedDeliveryOption !== null) {
@@ -721,7 +728,7 @@ const OrdersForm = (props) => {
                         {Object.keys(unitList).map((id) => {
                           return (
                             <React.Fragment key={id}>
-                              {unitList[id].isActive === "true" ? (
+                              {unitList[id].isActive ? (
                                 <option value={unitList[id].unitName}>
                                   {unitList[id].unitName}
                                 </option>

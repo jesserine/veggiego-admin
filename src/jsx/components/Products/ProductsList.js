@@ -16,6 +16,9 @@ import {
 
 import ProductsForm from "./ProductsForm";
 
+const DEFAULT_PRODUCT_IMAGE =
+  "https://firebasestorage.googleapis.com/v0/b/veggiego-d20b9.appspot.com/o/static%2Fharvest.png?alt=media&token=337c8c05-15dd-485c-86ad-f64c04c34832";
+
 const ProductsList = () => {
   /// Get product list from context provider
   const { productList } = useDataContext();
@@ -264,7 +267,11 @@ const ProductsList = () => {
                               >
                                 <td>
                                   <img
-                                    src={productList[id].productImage}
+                                    src={
+                                      productList[id].productImage
+                                        ? productList[id].productImage
+                                        : DEFAULT_PRODUCT_IMAGE
+                                    }
                                     className="rounded-lg mr-2"
                                     width="24"
                                     alt=""
