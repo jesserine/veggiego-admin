@@ -4,6 +4,9 @@ import { useHistory } from "react-router-dom";
 import firebaseDb from "../../../firebase";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Alert } from "react-bootstrap";
+import data from "../../components/bootstrap/alertData";
+
 import { toast } from "react-toastify";
 
 import { Button, Table } from "react-bootstrap";
@@ -576,6 +579,10 @@ const OrdersForm = (props) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  const isDirty = () => {
+    return Boolean(props.currentCustomer && values.products.length);
+  };
+
   if (!productList) {
     return <p>Loading...</p>;
   }
@@ -583,6 +590,8 @@ const OrdersForm = (props) => {
   if (!unitList) {
     return <p>Loading...</p>;
   }
+
+  console.log(values.products);
 
   return (
     <Fragment>
@@ -911,6 +920,7 @@ const OrdersForm = (props) => {
                     <label>Notes</label>
                     <textarea
                       className="form-control"
+                      placeholder="Add order/delivery notes here"
                       rows="4"
                       id="notes"
                       name="notes"
@@ -928,10 +938,34 @@ const OrdersForm = (props) => {
                     <h1>₱{numberWithCommas(Number(values.grandTotal))}</h1>
                   </div>
                 </div>
+                <div className="col">
+                  {!Boolean(props.currentCustomer) && (
+                    <Alert
+                      variant="danger"
+                      className="alert-dismissible fade show"
+                    >
+                      {data.emojis.error}
+                      Please select a customer
+                    </Alert>
+                  )}
 
-                <div className="form-row"></div>
+                  {!Boolean(values.products.length) && (
+                    <Alert
+                      variant="danger"
+                      className="alert-dismissible fade show"
+                    >
+                      {data.emojis.error}
+                      Please add a product
+                    </Alert>
+                  )}
+                </div>
                 <div className="form-group col-md-4">
-                  <Button className="mt-4" variant="primary" type="submit">
+                  <Button
+                    className="mt-4"
+                    variant="primary"
+                    type="submit"
+                    disabled={!isDirty()}
+                  >
                     {props.order ? "Update " : "Save "}Order
                   </Button>
                 </div>
