@@ -667,6 +667,20 @@ const OrdersForm = (props) => {
                     </div>
                   </div>
                   <div className="form-row ">
+                    <div className="form-group col mt-2 mt-sm-0">
+                      <label>Quantity</label>
+                      <input
+                        type="number"
+                        min={0}
+                        onFocus={(event) => event.target.select()}
+                        className="form-control"
+                        placeholder="0"
+                        name="productQty"
+                        value={productValues.productQty}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
                     <div className="form-group col-md-3">
                       <label>{customProductMode && "Custom"} Product</label>
                       {customProductMode ? (
@@ -702,20 +716,6 @@ const OrdersForm = (props) => {
                           // </a>
                         ))}
                       </div>
-                    </div>
-                    <div className="form-group col mt-2 mt-sm-0">
-                      <label>Quantity</label>
-                      <input
-                        type="number"
-                        min={0}
-                        onFocus={(event) => event.target.select()}
-                        className="form-control"
-                        placeholder="0"
-                        name="productQty"
-                        value={productValues.productQty}
-                        onChange={handleInputChange}
-                        required
-                      />
                     </div>
                     <div className="form-group col mt-2 mt-sm-0">
                       <label>Unit</label>
